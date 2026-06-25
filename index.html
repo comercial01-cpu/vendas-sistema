@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Re512YzpY3fuHt5sF1N4f_YUcAiDp9jfBZ_tqDguBe7OnLU2MXa_FmV_i5AXcgC8a4xpO55zJ_sO6pki-ceJBfIH0aCMxSz6hAYc4SCHrnboEv5EFryugRzcmu9Ih_EKsRUCYvW97ZpqxQOIZ3LX5qNWmyihV9rZ8Ru1Xs2y4JTFPpk-H7dPm3TreZ-aKmVFHx8TQZjXv4Ep3Zy_2iMN0jdSIdPm3Wzmo8xNX1M4Ymawym8QWvCScQ7yi5M50EaWtORUV6VrpqTvTRUFIfKbL9Pb1K3ufqL7FfZRG8_75-7qVN_U-CDhgTTmPnxkyynT" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=eL7MKTvL18JoN63h2CMEM9o4rd6hGZ83YqQnFuubrrb_W4PkOx3u44exMY2idr6cquhAzlKAVXqMkCbIe8HG0WabD9X-0U6h5uTaEVKj0btamNoRsW-oLEHf8jCzrLpu4Jvw5veaXZpvMEA0zDCKpuhB81yaazbDWsN8_ye2fqNT-4QNuH5-sJW3rGDhGePiuz3YcuYrHZOWYB0JCnqSQNuynaOLH8BDQTY7_R-OxlUfknXuz6DSeUEXCpy8AyzfdlXJ7aKXgSOB8ueevIMCBPBhSX9GxW-5p04xxa63QS-sinD3r65F37hZ3JqKJAc2" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
@@ -197,7 +197,7 @@ async function salvarPedido(){
   toast(editPedidoId?'Pedido atualizado':'Pedido salvo');
   await carregarPedidos();showSec('pedidos')
 }
-function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${p.status==='aprovado'?'ok':p.status==='aguardando_aprovacao'?'warn':'red'}">${p.status}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="exibirPedidoDetalhado('${p.id}','editar')">Editar</button> <button class="btn" onclick="exibirPedidoDetalhado('${p.id}','imprimir')">Imprimir</button> <button class="btn ok" onclick="exibirPedidoDetalhado('${p.id}','whatsapp')">WhatsApp</button> ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
+function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${p.status==='aprovado'?'ok':p.status==='aguardando_aprovacao'?'warn':'red'}">${p.status}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="exibirPedidoDetalhado('${p.id}','editar')">Editar</button> <button class="btn" onclick="exibirPedidoDetalhado('${p.id}','imprimir')">Imprimir</button> <button class="btn ok" onclick="exibirPedidoDetalhado('${p.id}','whatsapp')">WhatsApp</button> <button class="btn red" onclick="excluirPedido('${p.id}')">Excluir</button> ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
 async function buscarItensPedido(id){
   const {data,error}=await sb.from('pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});
   if(error){toast('Erro ao buscar itens do pedido: '+error.message);return []}
@@ -270,6 +270,20 @@ async function editarPedido(id){
   btnSalvarPedido.textContent='Atualizar Pedido'; btnCancelarEdicaoPedido.classList.remove('hidden'); renderCarrinho(); showSec('pedido'); titulo.textContent='Editar Pedido';
 }
 function cancelarEdicaoPedido(limpar=true){editPedidoId=null;btnSalvarPedido.textContent='Enviar Pedido';btnCancelarEdicaoPedido.classList.add('hidden');if(limpar){carrinho=[];pJust.value='';renderCarrinho()}}
+
+
+async function excluirPedido(id){
+  const pedido=(window.todosPedidos||[]).find(p=>p.id===id);
+  const numero=pedido?.numero||id;
+  if(!confirm(`Deseja realmente excluir o pedido ${numero}? Essa ação não pode ser desfeita.`)) return;
+  const itens=await sb.from('pedido_itens').delete().eq('pedido_id',id);
+  if(itens.error) return toast('Erro ao excluir itens: '+itens.error.message);
+  const {error}=await sb.from('pedidos').delete().eq('id',id);
+  if(error) return toast('Erro ao excluir pedido: '+error.message);
+  toast('Pedido excluído');
+  if(editPedidoId===id) cancelarEdicaoPedido();
+  await carregarPedidos();
+}
 
 async function aprovarPedido(id){await sb.from('pedidos').update({status:'aprovado',aprovado_por:usuario.id,aprovado_em:new Date().toISOString()}).eq('id',id);toast('Pedido aprovado');carregarPedidos()}
 async function recusarPedido(id){await sb.from('pedidos').update({status:'recusado'}).eq('id',id);toast('Pedido recusado');carregarPedidos()}
