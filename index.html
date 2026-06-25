@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=TnkgADc3lt8M-YHi4wXDt7O8J3TFEp0oijY8Cxesy0jNJbsz-phCWCPN0BBy6ZsTcHDf0eHdBQ9BwweBdKqb0fBAct_iyZ88QqTlspms_HMvUVA7PtP8vrWa-wdCYW1gbWsSb13Sr4di_G739-TBytQQD5_d1SDDKZiG5XcAyjrzPBM0ngJCuEvMtJ78y3tZSZU_13XOMRKToxVkEA4G1dqrrVqWmDrA0c7N2MdPFp0dl4yDYeZ_5-fCtsWhM82a_jZm-5XzI4Gj__5L1m59a9ous2ZiAHcw9dyI0ClxA4Ss2CfVlYhOvnX13-6HKaUp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=wf24g27om2dKMzLOpwOn4Q-CRIJZktCpXUBMznM60f1EWwmmd0AHQY12C7hsE15sU4jtbaLHQrW82oXYQRd3zM7h2VNIvuG58ZHFTMyFv5XFRLulF8M-re4RSvkJ6t8AEXzk01aaRM0SV0ClyIWIAvsajfOwsUuotQ5BgivPwDWvFlGP0Z7iLLcdtdHnMS2l9OtNY9KPaCAMfs3ElDCkHix4OH_g_BSt3h2bfVr5dCF0eqI70_KZ6q0meyO8Cbunkh_CBalkRKASq85iuV9J4egZ42boSJjzr9ATyAXdRuRW_hd2VyMjK9fdMPpLVOML" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
@@ -160,6 +160,14 @@
           <div class="field"><label>Link do PDF do catálogo</label><input id="cfgCatalogoUrl" placeholder="https://..."></div>
         </div>
         <button class="btn" onclick="salvarCatalogo()">Salvar Catálogo</button>
+        <div id="dropPdfCatalogo" class="import-box" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="soltarPdfCatalogo(event)">
+          <b>Arraste o PDF do catálogo aqui</b><br>
+          <span class="muted">O arquivo será enviado para o Supabase Storage e publicado para os clientes.</span>
+          <div class="import-actions">
+            <input id="inputPdfCatalogo" type="file" accept="application/pdf,.pdf" class="hidden" onchange="uploadCatalogoPdf(this.files[0])">
+            <button class="btn light" onclick="document.getElementById('inputPdfCatalogo').click()">Escolher PDF</button>
+          </div>
+        </div>
         <div id="catalogoGerentePreview" style="margin-top:12px"></div>
       </div>
     </section>
@@ -606,6 +614,39 @@ function renderCatalogo(){
   const box=document.getElementById('catalogoClienteBox'); if(box) box.innerHTML=html;
   const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
 }
+
+function soltarPdfCatalogo(event){
+  event.preventDefault();
+  const box=document.getElementById('dropPdfCatalogo'); if(box) box.classList.remove('drag');
+  const file=event.dataTransfer?.files?.[0];
+  uploadCatalogoPdf(file);
+}
+async function uploadCatalogoPdf(file){
+  if(!file) return;
+  const nomeOriginal=(file.name||'catalogo.pdf').toLowerCase();
+  if(file.type!=='application/pdf' && !nomeOriginal.endsWith('.pdf')) return toast('Envie apenas arquivo PDF');
+  toast('Enviando catálogo PDF...');
+  try{
+    const safeName=(file.name||'catalogo.pdf').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_');
+    const path=`catalogos/${Date.now()}_${safeName}`;
+    const {error}=await sb.storage.from('catalogos').upload(path,file,{upsert:true,contentType:'application/pdf'});
+    if(error){
+      console.error(error);
+      toast('Erro ao enviar PDF. Verifique se existe um bucket público chamado catalogos.');
+      return;
+    }
+    const {data}=sb.storage.from('catalogos').getPublicUrl(path);
+    const url=data?.publicUrl||'';
+    if(!url) return toast('PDF enviado, mas não consegui gerar o link público');
+    cfgCatalogoUrl.value=url;
+    if(!cfgCatalogoNome.value) cfgCatalogoNome.value=file.name.replace(/\.pdf$/i,'');
+    await salvarCatalogo();
+  }catch(e){
+    console.error(e);
+    toast('Não foi possível enviar o PDF do catálogo');
+  }
+}
+
 async function salvarCatalogo(){
   const nome=(cfgCatalogoNome.value||'Catálogo Sofisticatto').trim();
   const url=(cfgCatalogoUrl.value||'').trim();
