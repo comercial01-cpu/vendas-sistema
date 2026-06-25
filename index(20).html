@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sofisticatto Vendas</title>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<style>
+:root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#5a4fa3,#a988f5)}.login-card{background:#fff;width:100%;max-width:390px;padding:28px;border-radius:22px;box-shadow:0 20px 60px #0004}.logo{text-align:center;font-size:34px;font-style:italic;color:var(--roxo);margin-bottom:6px}.muted{color:#777;font-size:13px}.field{display:flex;flex-direction:column;gap:7px;margin:12px 0}.field label{font-weight:bold;font-size:13px}input,select,textarea{border:1px solid #ddd;border-radius:12px;padding:12px;font-size:15px;background:#fff}textarea{min-height:80px;resize:vertical}.btn{border:0;border-radius:12px;padding:12px 15px;cursor:pointer;font-weight:bold;background:var(--roxo);color:#fff}.btn:hover{opacity:.92}.btn.light{background:#eee;color:#333}.btn.ok{background:var(--ok)}.btn.red{background:var(--red)}.btn.yellow{background:var(--yellow);color:#222}.app{display:flex;min-height:100vh}.side{width:270px;background:#fff;padding:22px;box-shadow:0 0 20px #0001;display:flex;flex-direction:column;gap:12px;position:fixed;left:0;top:0;bottom:0;overflow:auto}.side h2{color:var(--roxo);font-style:italic;font-size:30px}.userbox{background:#f3f0ff;border-radius:14px;padding:12px;font-size:13px}.navbtn{text-align:left;background:#fff;color:var(--txt);border:1px solid #eee}.navbtn.active{background:var(--roxo);color:#fff}.main{margin-left:270px;padding:24px;width:calc(100% - 270px)}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 8px 22px #0000000d}.kpi{font-size:26px;font-weight:bold;color:var(--roxo);margin-top:8px}.section{display:none}.section.active{display:block}.row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:14px}.table th{background:#fafafa}.pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;background:#eee}.pill.ok{background:#dcfce7;color:#166534}.pill.warn{background:#fef3c7;color:#92400e}.pill.red{background:#fee2e2;color:#991b1b}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product-card{background:#fff;border-radius:18px;padding:15px;box-shadow:0 8px 22px #0000000d}.product-card img{width:100%;height:150px;object-fit:cover;border-radius:12px;background:#eee}.calcbox{background:#f6f3ff;border:1px dashed #b6a8ff;padding:12px;border-radius:14px;margin-top:10px;font-size:13px}.toast{position:fixed;right:20px;bottom:20px;background:#222;color:#fff;padding:14px 18px;border-radius:14px;box-shadow:0 10px 30px #0004;z-index:99}.mobile-menu{display:none}@media(max-width:900px){.app{display:block}.side{display:none;z-index:20}.side.open{display:flex}.mobile-menu{display:block}.main{margin:0;width:100%;padding:15px}.grid,.products,.row,.row3{grid-template-columns:1fr}.top{align-items:flex-start}.table th,.table td{font-size:12px;padding:8px}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="login-card">
+    <div class="logo">Sofisticatto</div>
+    <p class="muted" style="text-align:center;margin-bottom:18px">Sistema de Vendas</p>
+    <div class="field"><label>Email</label><input id="loginEmail" placeholder="gerente@sofisticatto.com"></div>
+    <div class="field"><label>Senha</label><input id="loginSenha" type="password" placeholder="123456"></div>
+    <button class="btn" style="width:100%" onclick="login()">Entrar</button>
+    <p class="muted" style="margin-top:12px;text-align:center">Login inicial: gerente@sofisticatto.com / 123456</p>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside id="side" class="side">
+    <h2>Sofisticatto</h2>
+    <div class="userbox"><b id="userNome"></b><br><span id="userRole"></span></div>
+    <button class="btn navbtn active" onclick="showSec('dashboard',this)">Dashboard</button>
+    <button class="btn navbtn" onclick="showSec('pedido',this)">Novo Pedido</button>
+    <button class="btn navbtn" onclick="showSec('pedidos',this)">Pedidos</button>
+    <button class="btn navbtn" onclick="showSec('clientes',this)">Clientes</button>
+    <button class="btn navbtn only-gerente" onclick="showSec('produtos',this)">Produtos/Catálogo</button>
+    <button class="btn navbtn only-gerente" onclick="showSec('usuarios',this)">Usuários</button>
+    <button class="btn navbtn only-gerente" onclick="showSec('config',this)">Configurações</button>
+    <button class="btn light" onclick="logout()">Sair</button>
+  </aside>
+
+  <main class="main">
+    <div class="top"><button class="btn mobile-menu" onclick="document.getElementById('side').classList.toggle('open')">☰ Menu</button><h1 id="titulo">Dashboard</h1></div>
+
+    <section id="dashboard" class="section active">
+      <div class="grid">
+        <div class="card"><p>Pedidos</p><div id="kPedidos" class="kpi">0</div></div>
+        <div class="card"><p>Total vendido</p><div id="kTotal" class="kpi">R$ 0,00</div></div>
+        <div class="card"><p>Aguardando aprovação</p><div id="kPend" class="kpi">0</div></div>
+        <div class="card"><p>Clientes</p><div id="kClientes" class="kpi">0</div></div>
+      </div>
+    </section>
+
+    <section id="pedido" class="section">
+      <div class="card">
+        <h2>Novo Pedido</h2>
+        <div class="row3">
+          <div class="field"><label>Cliente</label><select id="pCliente"></select></div>
+          <div class="field"><label>Desconto geral (%)</label><input id="pDesc" type="number" value="70" min="0" max="100" oninput="renderCarrinho()"></div>
+          <div class="field"><label>Justificativa do desconto</label><input id="pJust" placeholder="Obrigatório se passar da margem"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Adicionar produto</h3>
+        <div class="row3">
+          <div class="field"><label>Código</label><input id="buscaCodigo" oninput="buscarProdutoCodigo()" placeholder="Ex: 3080"></div>
+          <div class="field"><label>Quantidade</label><input id="qtdProd" type="number" value="1" min="1" oninput="previewProduto()"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn ok" onclick="addCarrinho()">Adicionar</button></div>
+        </div>
+        <div id="preview" class="calcbox hidden"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Carrinho</h3>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div>
+        <div class="calcbox" id="totaisPedido"></div>
+        <button class="btn" onclick="salvarPedido()">Enviar Pedido</button>
+      </div>
+    </section>
+
+    <section id="pedidos" class="section"><div class="card"><h2>Pedidos</h2><div id="listaPedidos"></div></div></section>
+
+    <section id="clientes" class="section">
+      <div class="card"><h2>Cadastro de Cliente</h2>
+        <div class="row3"><div class="field"><label>Nome Fantasia</label><input id="cNome"></div><div class="field"><label>CNPJ</label><input id="cCnpj"></div><div class="field"><label>WhatsApp</label><input id="cWhats"></div></div>
+        <div class="row3"><div class="field"><label>Email</label><input id="cEmail"></div><div class="field"><label>Cidade</label><input id="cCidade"></div><div class="field"><label>Estado</label><input id="cEstado"></div></div>
+        <div class="row"><div class="field"><label>Vendedora</label><select id="cVend"></select></div><div class="field"><label>Data do alerta</label><input id="cAlertaData" type="date"></div></div>
+        <div class="field"><label>Observações / alerta</label><textarea id="cObs"></textarea></div>
+        <button class="btn" onclick="salvarCliente()">Salvar Cliente</button>
+      </div>
+      <div class="card" style="margin-top:14px"><h2>Clientes</h2><div id="listaClientes"></div></div>
+    </section>
+
+    <section id="produtos" class="section">
+      <div class="card"><h2>Produto / Catálogo</h2>
+        <div class="row3"><div class="field"><label>Código</label><input id="prCodigo"></div><div class="field"><label>Nome</label><input id="prNome"></div><div class="field"><label>Preço catálogo</label><input id="prPreco" type="number" step="0.01"></div></div>
+        <div class="row3"><div class="field"><label>Categoria</label><input id="prCat"></div><div class="field"><label>Linha</label><input id="prLinha"></div><div class="field"><label>Unidades por caixa</label><input id="prCaixa" type="number" value="12"></div></div>
+        <button class="btn" onclick="salvarProduto()">Salvar Produto</button>
+      </div>
+      <div class="card" style="margin-top:14px"><h2>Produtos cadastrados</h2><div id="listaProdutos"></div></div>
+    </section>
+
+    <section id="usuarios" class="section">
+      <div class="card"><h2>Usuários</h2>
+        <div class="row3"><div class="field"><label>Nome</label><input id="uNome"></div><div class="field"><label>Email</label><input id="uEmail"></div><div class="field"><label>Senha</label><input id="uSenha"></div></div>
+        <div class="field"><label>Perfil</label><select id="uRole"><option value="vendedora">Vendedora</option><option value="cliente">Cliente</option><option value="gerente">Gerente</option></select></div>
+        <button class="btn" onclick="salvarUsuario()">Salvar Usuário</button>
+        <div id="listaUsuarios"></div>
+      </div>
+    </section>
+
+    <section id="config" class="section">
+      <div class="card"><h2>Configurações de Venda</h2>
+        <div class="field"><label>Desconto máximo sem aprovação da gerente (%)</label><input id="cfgDesc" type="number" step="0.01"></div>
+        <button class="btn" onclick="salvarConfig()">Salvar Configuração</button>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+// COLE AQUI OS DADOS DO SEU SUPABASE
+const SUPABASE_URL = 'COLE_AQUI_A_URL_DO_SUPABASE';
+const SUPABASE_KEY = 'COLE_AQUI_A_ANON_PUBLIC_KEY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let usuario=null, produtos=[], clientes=[], vendedoras=[], carrinho=[], prodAtual=null, config={desconto_aprovacao:70};
+const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3000)}
+async function login(){const email=loginEmail.value.trim();const senha=loginSenha.value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('email',email).eq('senha',senha).eq('ativo',true).single();if(error||!data)return toast('Login inválido');usuario=data;localStorage.setItem('sof_user',JSON.stringify(usuario));iniciar()}
+function logout(){localStorage.removeItem('sof_user');location.reload()}
+async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');await carregarTudo()}
+function showSec(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');titulo.textContent=btn?btn.textContent:'Dashboard';side.classList.remove('open')}
+async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho()}
+async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config=data;cfgDesc.value=data.desconto_aprovacao}}
+async function carregarUsuarios(){const {data}=await sb.from('usuarios').select('*').order('nome');vendedoras=(data||[]).filter(u=>u.role==='vendedora');window.todosUsuarios=data||[]}
+async function carregarProdutos(){const {data}=await sb.from('produtos').select('*').eq('ativo',true).order('nome');produtos=data||[]}
+async function carregarClientes(){let q=sb.from('clientes').select('*').eq('ativo',true).order('nome_fantasia');if(usuario.role==='vendedora')q=q.eq('vendedora_id',usuario.id);if(usuario.role==='cliente')q=q.eq('usuario_id',usuario.id);const {data}=await q;clientes=data||[];kClientes.textContent=clientes.length}
+async function carregarPedidos(){let q=sb.from('pedidos').select('*,clientes(nome_fantasia),usuarios(nome)').order('created_at',{ascending:false});if(usuario.role==='vendedora')q=q.eq('vendedora_id',usuario.id);if(usuario.role==='cliente'){const ids=clientes.map(c=>c.id); if(ids.length) q=q.in('cliente_id',ids)}const {data}=await q;const pedidos=data||[];kPedidos.textContent=pedidos.length;kTotal.textContent=money(pedidos.reduce((s,p)=>s+Number(p.total||0),0));kPend.textContent=pedidos.filter(p=>p.status==='aguardando_aprovacao').length;renderPedidos(pedidos)}
+function renderSelects(){pCliente.innerHTML=clientes.map(c=>`<option value="${c.id}">${c.nome_fantasia}</option>`).join('');cVend.innerHTML='<option value="">Selecione</option>'+vendedoras.map(v=>`<option value="${v.id}">${v.nome}</option>`).join('')}
+function buscarProdutoCodigo(){prodAtual=produtos.find(p=>p.codigo==buscaCodigo.value.trim());previewProduto()}
+function previewProduto(){if(!prodAtual){preview.classList.add('hidden');return}const q=Number(qtdProd.value)||1, cx=prodAtual.unidades_caixa||1, fechadas=Math.floor(q/cx), av=q%cx, desc=Number(pDesc.value)||0, pc=Number(prodAtual.preco_catalogo), pf=pc*(1-desc/100);preview.classList.remove('hidden');preview.innerHTML=`<b>${prodAtual.nome}</b><br>Código: ${prodAtual.codigo}<br>Valor catálogo: <b>${money(pc)}</b><br>Seu desconto: <b>${desc}%</b><br>Seu preço: <b>${money(pf)}</b><br>📦 Caixa fechada: <b>${cx} un</b> | Valor da caixa: <b>${money(pf*cx)}</b><br>${fechadas>0?'✅ '+fechadas+' caixa(s) fechada(s)<br>':''}${av>0?'➕ '+av+' unidade(s) avulsa(s)<br>':''}${av>0?'💡 Faltam '+(cx-av)+' unidade(s) para completar uma caixa.':''}`}
+function addCarrinho(){if(!prodAtual)return toast('Digite um código válido');const q=Number(qtdProd.value)||1;carrinho.push({...prodAtual,quantidade:q});renderCarrinho();buscaCodigo.value='';qtdProd.value=1;prodAtual=null;preview.classList.add('hidden')}
+function renderCarrinho(){const desc=Number(pDesc.value)||0;let subtotal=0,total=0;cartBody.innerHTML=carrinho.map((p,i)=>{const pc=Number(p.preco_catalogo), pf=pc*(1-desc/100), q=Number(p.quantidade), cx=p.unidades_caixa||1, fechadas=Math.floor(q/cx), av=q%cx;subtotal+=pc*q;total+=pf*q;return `<tr><td>${p.codigo}</td><td>${p.nome}</td><td>${q}</td><td>${fechadas} cx + ${av} un</td><td>${money(pc*q)}</td><td>${money(pf*q)}</td><td><button class="btn red" onclick="carrinho.splice(${i},1);renderCarrinho()">X</button></td></tr>`}).join('');totaisPedido.innerHTML=`Subtotal catálogo: <b>${money(subtotal)}</b><br>Desconto: <b>${desc}% (${money(subtotal-total)})</b><br>Total final: <b>${money(total)}</b><br>${desc>Number(config.desconto_aprovacao)?'<span class="pill warn">Vai para aprovação da gerente</span>':'<span class="pill ok">Dentro da margem sem aprovação</span>'}`;previewProduto()}
+async function salvarPedido(){if(!pCliente.value||!carrinho.length)return toast('Selecione cliente e produtos');const cliente=clientes.find(c=>c.id===pCliente.value);const desc=Number(pDesc.value)||0;const subtotal=carrinho.reduce((s,p)=>s+Number(p.preco_catalogo)*Number(p.quantidade),0);const total=subtotal*(1-desc/100);const status=desc>Number(config.desconto_aprovacao)?'aguardando_aprovacao':'aprovado';if(status==='aguardando_aprovacao'&&!pJust.value.trim())return toast('Informe a justificativa do desconto');const {data,error}=await sb.from('pedidos').insert({cliente_id:pCliente.value,vendedora_id:cliente.vendedora_id,criado_por:usuario.id,subtotal,desconto_percentual:desc,desconto_valor:subtotal-total,total,status,justificativa_desconto:pJust.value}).select().single();if(error)return toast(error.message);const itens=carrinho.map(p=>{const q=Number(p.quantidade),cx=p.unidades_caixa||1,pc=Number(p.preco_catalogo),pf=pc*(1-desc/100);return {pedido_id:data.id,produto_id:p.id,codigo:p.codigo,nome:p.nome,quantidade:q,unidades_caixa:cx,preco_catalogo:pc,desconto_percentual:desc,preco_unitario_final:pf,total_catalogo:pc*q,total_final:pf*q,caixas_fechadas:Math.floor(q/cx),unidades_avulsas:q%cx}});await sb.from('pedido_itens').insert(itens);carrinho=[];renderCarrinho();toast(status==='aguardando_aprovacao'?'Pedido enviado para aprovação':'Pedido aprovado automaticamente');await carregarPedidos();showSec('pedidos')}
+function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>`<tr><td>${p.numero}</td><td>${p.clientes?.nome_fantasia||''}</td><td><span class="pill ${p.status==='aprovado'?'ok':p.status==='aguardando_aprovacao'?'warn':'red'}">${p.status}</span></td><td>${p.desconto_percentual}%</td><td>${money(p.total)}</td><td>${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`).join('')}</table></div>`}
+async function aprovarPedido(id){await sb.from('pedidos').update({status:'aprovado',aprovado_por:usuario.id,aprovado_em:new Date().toISOString()}).eq('id',id);toast('Pedido aprovado');carregarPedidos()}
+async function recusarPedido(id){await sb.from('pedidos').update({status:'recusado'}).eq('id',id);toast('Pedido recusado');carregarPedidos()}
+async function salvarCliente(){const obj={nome_fantasia:cNome.value,cnpj:cCnpj.value,whatsapp:cWhats.value,email:cEmail.value,cidade:cCidade.value,estado:cEstado.value,vendedora_id:usuario.role==='vendedora'?usuario.id:cVend.value||null,observacoes:cObs.value,alerta_data:cAlertaData.value||null,alerta_mensagem:cObs.value};const {error}=await sb.from('clientes').insert(obj);if(error)return toast(error.message);toast('Cliente salvo');cNome.value=cCnpj.value=cWhats.value=cEmail.value=cCidade.value=cEstado.value=cObs.value='';await carregarClientes();renderSelects();renderClientes()}
+function renderClientes(){listaClientes.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Cliente</th><th>WhatsApp</th><th>Cidade</th><th>Vendedora</th><th>Observação</th></tr>${clientes.map(c=>`<tr><td>${c.nome_fantasia}</td><td>${c.whatsapp||''}</td><td>${c.cidade||''}/${c.estado||''}</td><td>${(vendedoras.find(v=>v.id===c.vendedora_id)||{}).nome||''}</td><td>${c.observacoes||''}</td></tr>`).join('')}</table></div>`}
+async function salvarProduto(){const obj={codigo:prCodigo.value,nome:prNome.value,preco_catalogo:Number(prPreco.value)||0,categoria:prCat.value,linha:prLinha.value,unidades_caixa:Number(prCaixa.value)||1};const {error}=await sb.from('produtos').upsert(obj,{onConflict:'codigo'});if(error)return toast(error.message);toast('Produto salvo');prCodigo.value=prNome.value=prPreco.value=prCat.value=prLinha.value='';await carregarProdutos();renderProdutos()}
+function renderProdutos(){listaProdutos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Caixa</th></tr>${produtos.map(p=>`<tr><td>${p.codigo}</td><td>${p.nome}</td><td>${p.categoria||''}</td><td>${money(p.preco_catalogo)}</td><td>${p.unidades_caixa} un</td></tr>`).join('')}</table></div>`}
+async function salvarUsuario(){const {error}=await sb.from('usuarios').insert({nome:uNome.value,email:uEmail.value,senha:uSenha.value,role:uRole.value});if(error)return toast(error.message);toast('Usuário salvo');uNome.value=uEmail.value=uSenha.value='';await carregarUsuarios();renderUsuarios();renderSelects()}
+function renderUsuarios(){listaUsuarios.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nome</th><th>Email</th><th>Perfil</th></tr>${(window.todosUsuarios||[]).map(u=>`<tr><td>${u.nome}</td><td>${u.email}</td><td>${u.role}</td></tr>`).join('')}</table></div>`}
+async function salvarConfig(){const {error}=await sb.from('configuracoes_venda').update({desconto_aprovacao:Number(cfgDesc.value),updated_at:new Date().toISOString()}).eq('id',1);if(error)return toast(error.message);toast('Configuração salva');await carregarConfig();renderCarrinho()}
+const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
+</script>
+</body>
+</html>
