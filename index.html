@@ -118,8 +118,8 @@
 
 <script>
 // COLE AQUI OS DADOS DO SEU SUPABASE
-const SUPABASE_URL = 'COLE_AQUI_A_URL_DO_SUPABASE';
-const SUPABASE_KEY = 'COLE_AQUI_A_ANON_PUBLIC_KEY';
+const SUPABASE_URL = 'https://bqyyaamhvrbdesmkerzo.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxeXlhYW1odnJiZGVzbWtlcnpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzODczOTMsImV4cCI6MjA5Nzk2MzM5M30.QrsLblc9mhQqFmxuwfUVOLwDN2lkv7gaj6mubgo9vFo';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let usuario=null, produtos=[], clientes=[], vendedoras=[], carrinho=[], prodAtual=null, config={desconto_aprovacao:70};
 const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
