@@ -4,11 +4,27 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=eL7MKTvL18JoN63h2CMEM9o4rd6hGZ83YqQnFuubrrb_W4PkOx3u44exMY2idr6cquhAzlKAVXqMkCbIe8HG0WabD9X-0U6h5uTaEVKj0btamNoRsW-oLEHf8jCzrLpu4Jvw5veaXZpvMEA0zDCKpuhB81yaazbDWsN8_ye2fqNT-4QNuH5-sJW3rGDhGePiuz3YcuYrHZOWYB0JCnqSQNuynaOLH8BDQTY7_R-OxlUfknXuz6DSeUEXCpy8AyzfdlXJ7aKXgSOB8ueevIMCBPBhSX9GxW-5p04xxa63QS-sinD3r65F37hZ3JqKJAc2" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=E4Sxnoh9IifFIae872TeLDqU5udLEtzU6dGKzOf_hlS6DTDMxiKrgHi_VHAOcP6iC7XQzrucGw07MXIcj9wFyCXMyklq35IuGbJO_pZ1GIrrENrCrJrBFtKibzAyCd8XJpcV2Gz7e3YQkXh4IQ0q_g2CBnRt7xAc3k3mvxhUcMQoMYSBlOoq8cvNT_pqTOwVWNhzmutgystp8hmK5Wjnka8wexdktHL5IQafzYPMX2eXqw1QRg5AAVmON-M_4C4p_qev-mOpuDpPDrqbP7z-Ib2QzGYalSSnyYesvu6EUbVzGTGs04g6YssLTQrl74fp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
-.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#5a4fa3,#a988f5)}.login-card{background:#fff;width:100%;max-width:390px;padding:28px;border-radius:22px;box-shadow:0 20px 60px #0004}.logo{text-align:center;font-size:34px;font-style:italic;color:var(--roxo);margin-bottom:6px}.muted{color:#777;font-size:13px}.field{display:flex;flex-direction:column;gap:7px;margin:12px 0}.field label{font-weight:bold;font-size:13px}input,select,textarea{border:1px solid #ddd;border-radius:12px;padding:12px;font-size:15px;background:#fff}textarea{min-height:80px;resize:vertical}.btn{border:0;border-radius:12px;padding:12px 15px;cursor:pointer;font-weight:bold;background:var(--roxo);color:#fff}.btn:hover{opacity:.92}.btn.light{background:#eee;color:#333}.btn.ok{background:var(--ok)}.btn.red{background:var(--red)}.btn.yellow{background:var(--yellow);color:#222}.app{display:flex;min-height:100vh}.side{width:270px;background:#fff;padding:22px;box-shadow:0 0 20px #0001;display:flex;flex-direction:column;gap:12px;position:fixed;left:0;top:0;bottom:0;overflow:auto}.side h2{color:var(--roxo);font-style:italic;font-size:30px}.userbox{background:#f3f0ff;border-radius:14px;padding:12px;font-size:13px}.navbtn{text-align:left;background:#fff;color:var(--txt);border:1px solid #eee}.navbtn.active{background:var(--roxo);color:#fff}.main{margin-left:270px;padding:24px;width:calc(100% - 270px)}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 8px 22px #0000000d}.kpi{font-size:26px;font-weight:bold;color:var(--roxo);margin-top:8px}.section{display:none}.section.active{display:block}.row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:14px}.table th{background:#fafafa}.pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;background:#eee}.pill.ok{background:#dcfce7;color:#166534}.pill.warn{background:#fef3c7;color:#92400e}.pill.red{background:#fee2e2;color:#991b1b}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product-card{background:#fff;border-radius:18px;padding:15px;box-shadow:0 8px 22px #0000000d}.product-card img{width:100%;height:150px;object-fit:cover;border-radius:12px;background:#eee}.calcbox{background:#f6f3ff;border:1px dashed #b6a8ff;padding:12px;border-radius:14px;margin-top:10px;font-size:13px}.toast{position:fixed;right:20px;bottom:20px;background:#222;color:#fff;padding:14px 18px;border-radius:14px;box-shadow:0 10px 30px #0004;z-index:99}.modal{position:fixed;inset:0;background:#0008;z-index:200;display:flex;align-items:center;justify-content:center;padding:18px}.modal-card{background:#fff;width:100%;max-width:980px;max-height:92vh;overflow:auto;border-radius:20px;box-shadow:0 20px 70px #0006}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid #eee}.modal-body{padding:20px}.modal-actions{display:flex;gap:10px;flex-wrap:wrap;padding:0 20px 20px}.pedido-resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.pedido-resumo div{background:#f6f3ff;border-radius:12px;padding:12px}.mobile-menu{display:none}@media(max-width:900px){.app{display:block}.side{display:none;z-index:20}.side.open{display:flex}.mobile-menu{display:block}.main{margin:0;width:100%;padding:15px}.grid,.products,.row,.row3{grid-template-columns:1fr}.top{align-items:flex-start}.table th,.table td{font-size:12px;padding:8px}}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#5a4fa3,#a988f5)}.login-card{background:#fff;width:100%;max-width:390px;padding:28px;border-radius:22px;box-shadow:0 20px 60px #0004}.logo{text-align:center;font-size:34px;font-style:italic;color:var(--roxo);margin-bottom:6px}.muted{color:#777;font-size:13px}.field{display:flex;flex-direction:column;gap:7px;margin:12px 0}.field label{font-weight:bold;font-size:13px}input,select,textarea{border:1px solid #ddd;border-radius:12px;padding:12px;font-size:15px;background:#fff}textarea{min-height:80px;resize:vertical}.btn{border:0;border-radius:12px;padding:12px 15px;cursor:pointer;font-weight:bold;background:var(--roxo);color:#fff}.btn:hover{opacity:.92}.btn.light{background:#eee;color:#333}.btn.ok{background:var(--ok)}.btn.red{background:var(--red)}.btn.yellow{background:var(--yellow);color:#222}.app{display:flex;min-height:100vh}.side{width:270px;background:#fff;padding:22px;box-shadow:0 0 20px #0001;display:flex;flex-direction:column;gap:12px;position:fixed;left:0;top:0;bottom:0;overflow:auto}.side h2{color:var(--roxo);font-style:italic;font-size:30px}.userbox{background:#f3f0ff;border-radius:14px;padding:12px;font-size:13px}.navbtn{text-align:left;background:#fff;color:var(--txt);border:1px solid #eee}.navbtn.active{background:var(--roxo);color:#fff}.main{margin-left:270px;padding:24px;width:calc(100% - 270px)}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 8px 22px #0000000d}.kpi{font-size:26px;font-weight:bold;color:var(--roxo);margin-top:8px}.section{display:none}.section.active{display:block}.row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:14px}.table th{background:#fafafa}.pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;background:#eee}.pill.ok{background:#dcfce7;color:#166534}.pill.warn{background:#fef3c7;color:#92400e}.pill.red{background:#fee2e2;color:#991b1b}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product-card{background:#fff;border-radius:18px;padding:15px;box-shadow:0 8px 22px #0000000d}.product-card img{width:100%;height:150px;object-fit:cover;border-radius:12px;background:#eee}.calcbox{background:#f6f3ff;border:1px dashed #b6a8ff;padding:12px;border-radius:14px;margin-top:10px;font-size:13px}.toast{position:fixed;right:20px;bottom:20px;background:#222;color:#fff;padding:14px 18px;border-radius:14px;box-shadow:0 10px 30px #0004;z-index:99}.modal{position:fixed;inset:0;background:#0008;z-index:200;display:flex;align-items:center;justify-content:center;padding:18px}.modal-card{background:#fff;width:100%;max-width:980px;max-height:92vh;overflow:auto;border-radius:20px;box-shadow:0 20px 70px #0006}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid #eee}.modal-body{padding:20px}.modal-actions{display:flex;gap:10px;flex-wrap:wrap;padding:0 20px 20px}.pedido-resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.pedido-resumo div{background:#f6f3ff;border-radius:12px;padding:12px}.mobile-menu{display:none}
+.orcamento-img{width:900px;background:#fff;color:#2f2b45;padding:34px;font-family:Arial,Helvetica,sans-serif}
+.orcamento-img .orc-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #5a4fa3;padding-bottom:16px;margin-bottom:18px}
+.orcamento-img .orc-logo{font-size:36px;font-style:italic;color:#5a4fa3;font-weight:500}
+.orcamento-img .orc-sub{font-size:13px;color:#666;margin-top:4px}
+.orcamento-img .orc-title{text-align:right;font-size:22px;font-weight:bold;color:#5a4fa3}
+.orcamento-img .orc-info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.orcamento-img .orc-box{background:#f6f3ff;border:1px solid #e5ddff;border-radius:12px;padding:12px;font-size:13px;min-height:58px}
+.orcamento-img .orc-box b{display:block;color:#5a4fa3;margin-bottom:4px;font-size:12px;text-transform:uppercase}
+.orcamento-img table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.orcamento-img th{background:#5a4fa3;color:#fff;padding:10px;text-align:left}
+.orcamento-img td{border-bottom:1px solid #e9e6f3;padding:10px;vertical-align:top}
+.orcamento-img .orc-totais{margin-top:18px;margin-left:auto;width:360px;background:#f6f3ff;border-radius:14px;padding:16px;border:1px solid #dfd6ff;font-size:15px}
+.orcamento-img .orc-total-final{font-size:23px;color:#16a34a;font-weight:bold;margin-top:8px}
+.orcamento-img .orc-footer{margin-top:18px;border-top:1px solid #eee;padding-top:12px;font-size:12px;color:#666;text-align:center}
+@media(max-width:900px){.app{display:block}.side{display:none;z-index:20}.side.open{display:flex}.mobile-menu{display:block}.main{margin:0;width:100%;padding:15px}.grid,.products,.row,.row3{grid-template-columns:1fr}.top{align-items:flex-start}.table th,.table td{font-size:12px;padding:8px}}
 </style>
 </head>
 <body>
@@ -253,12 +269,94 @@ async function imprimirPedido(id){
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido ${pedido.numero||''}</title><style>body{font-family:Arial;padding:24px;color:#333}h1{color:#5a4fa3}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f3f0ff}.total{margin-top:18px;font-size:18px;font-weight:bold}@media print{button{display:none}}</style></head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${pedido.status||''}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
   const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
 }
+function nomeArquivoOrcamento(pedido){
+  const numero=(pedido.numero||pedido.id||'pedido').toString().replace(/[^a-zA-Z0-9_-]/g,'_');
+  return `orcamento_sofisticatto_${numero}.png`;
+}
+function orcamentoImagemHtml(pedido,itens){
+  const cliente=clientes.find(c=>c.id===pedido.cliente_id)||{};
+  const vendedora=vendedoras.find(v=>v.id===pedido.vendedora_id)||{};
+  const nomeCliente=pedido.clientes?.nome_fantasia||cliente.nome_fantasia||'';
+  const dataPedido=pedido.created_at?new Date(pedido.created_at).toLocaleDateString('pt-BR'):new Date().toLocaleDateString('pt-BR');
+  const linhasItens=itens.map(i=>`<tr>
+    <td><b>${i.codigo||''}</b></td>
+    <td>${i.nome||''}</td>
+    <td>${i.quantidade||0}</td>
+    <td>${i.caixas_fechadas||0} cx + ${i.unidades_avulsas||0} un</td>
+    <td>${money(i.total_catalogo)}</td>
+    <td>${money(i.total_final)}</td>
+  </tr>`).join('');
+  return `<div class="orcamento-img" id="orcamentoImagemCaptura">
+    <div class="orc-head">
+      <div>
+        <div class="orc-logo">Sofisticatto</div>
+        <div class="orc-sub">Cosméticos • Sistema de Vendas</div>
+      </div>
+      <div class="orc-title">ORÇAMENTO<br><span style="font-size:15px;color:#666">Pedido ${pedido.numero||pedido.id}</span></div>
+    </div>
+    <div class="orc-info">
+      <div class="orc-box"><b>Cliente</b>${nomeCliente}</div>
+      <div class="orc-box"><b>Vendedora</b>${vendedora.nome||''}</div>
+      <div class="orc-box"><b>Data</b>${dataPedido}</div>
+      <div class="orc-box"><b>Status</b>${pedido.status||''}</div>
+    </div>
+    <table>
+      <tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>
+      ${linhasItens}
+    </table>
+    <div class="orc-totais">
+      <div>Subtotal catálogo: <b>${money(pedido.subtotal)}</b></div>
+      <div>Desconto: <b>${pedido.desconto_percentual||0}% (${money(pedido.desconto_valor)})</b></div>
+      <div class="orc-total-final">Total final: ${money(pedido.total)}</div>
+    </div>
+    <div class="orc-footer">Orçamento gerado pelo Sistema de Vendas Sofisticatto. Valores sujeitos a conferência e aprovação.</div>
+  </div>`;
+}
+async function gerarImagemOrcamento(id,baixar=true){
+  const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido){toast('Pedido não encontrado');return null}
+  const itens=await buscarItensPedido(id);
+  const wrap=document.createElement('div');
+  wrap.style.position='fixed';wrap.style.left='-10000px';wrap.style.top='0';wrap.style.zIndex='-1';
+  wrap.innerHTML=orcamentoImagemHtml(pedido,itens);
+  document.body.appendChild(wrap);
+  try{
+    const alvo=wrap.querySelector('#orcamentoImagemCaptura');
+    const canvas=await html2canvas(alvo,{backgroundColor:'#ffffff',scale:2,useCORS:true});
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png',0.95));
+    const arquivo=nomeArquivoOrcamento(pedido);
+    if(baixar && blob){
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download=arquivo;document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }
+    return {pedido,itens,blob,arquivo,canvas};
+  }catch(e){
+    console.error(e);toast('Não foi possível gerar a imagem do orçamento');return null;
+  }finally{
+    wrap.remove();
+  }
+}
 async function enviarPedidoWhatsApp(id){
   const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido)return toast('Pedido não encontrado');
   const itens=await buscarItensPedido(id); const {texto,cliente}=dadosPedidoFormatados(pedido,itens);
-  let fone=(cliente.whatsapp||'').replace(/\D/g,'');
+  toast('Gerando imagem do orçamento...');
+  const gerado=await gerarImagemOrcamento(id,false);
+  const foneLimpo=(cliente.whatsapp||'').replace(/\D/g,'');
+  let fone=foneLimpo;
   if(fone && !fone.startsWith('55')) fone='55'+fone;
-  const url=`https://wa.me/${fone}?text=${encodeURIComponent(texto)}`;
+  const msg=`Olá! Segue o orçamento da Sofisticatto.\n\nTotal: ${money(pedido.total)}\n\nA imagem do orçamento foi gerada para envio.`;
+  if(gerado?.blob){
+    const file=new File([gerado.blob],gerado.arquivo,{type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({files:[file],text:msg,title:'Orçamento Sofisticatto'});
+        return;
+      }catch(e){console.warn('Compartilhamento cancelado/falhou:',e)}
+    }
+    await gerarImagemOrcamento(id,true);
+    toast('Imagem baixada. Agora anexe no WhatsApp.');
+  }
+  const url=`https://wa.me/${fone}?text=${encodeURIComponent(msg+'\n\n'+texto)}`;
   window.open(url,'_blank');
 }
 async function editarPedido(id){
