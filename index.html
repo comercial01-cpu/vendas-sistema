@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=E4Sxnoh9IifFIae872TeLDqU5udLEtzU6dGKzOf_hlS6DTDMxiKrgHi_VHAOcP6iC7XQzrucGw07MXIcj9wFyCXMyklq35IuGbJO_pZ1GIrrENrCrJrBFtKibzAyCd8XJpcV2Gz7e3YQkXh4IQ0q_g2CBnRt7xAc3k3mvxhUcMQoMYSBlOoq8cvNT_pqTOwVWNhzmutgystp8hmK5Wjnka8wexdktHL5IQafzYPMX2eXqw1QRg5AAVmON-M_4C4p_qev-mOpuDpPDrqbP7z-Ib2QzGYalSSnyYesvu6EUbVzGTGs04g6YssLTQrl74fp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=6amRr5kneubyq-DWhsB5JH4nOQOr5i8Ck6G7pqtNJhQjRF8J_ADNDG_6n_wmvCSgwJudhV0t_2LZDfMat4ivxk_003YdZtwlXDVuZ2AHZz2WsSXGYKamTNAh1LuT9Ul0qKZt6oLWBrNPAUI163kkSFMVwVaj0wI003ysXAwCJeQYoUruKCHHz3AKWB5LLjIPNlggkluT1BKxrXhyene5KwjZ3VBmwPKxOcv8MWAovd7fUen6MO9UlDXnHb6rheWnmdMkOCqeEt7mVrJkl06WO0hMy6Abx7acOKEyUWt_nfh4DC8-d-zwtvCqzZAHTuhB" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
@@ -24,6 +24,7 @@
 .orcamento-img .orc-totais{margin-top:18px;margin-left:auto;width:360px;background:#f6f3ff;border-radius:14px;padding:16px;border:1px solid #dfd6ff;font-size:15px}
 .orcamento-img .orc-total-final{font-size:23px;color:#16a34a;font-weight:bold;margin-top:8px}
 .orcamento-img .orc-footer{margin-top:18px;border-top:1px solid #eee;padding-top:12px;font-size:12px;color:#666;text-align:center}
+.catalog-actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.catalog-frame{width:100%;height:70vh;border:1px solid #ddd;border-radius:16px;background:#fff}.catalog-empty{background:#fff7ed;border:1px dashed #f59e0b;border-radius:14px;padding:14px;color:#92400e}
 @media(max-width:900px){.app{display:block}.side{display:none;z-index:20}.side.open{display:flex}.mobile-menu{display:block}.main{margin:0;width:100%;padding:15px}.grid,.products,.row,.row3{grid-template-columns:1fr}.top{align-items:flex-start}.table th,.table td{font-size:12px;padding:8px}}
 </style>
 </head>
@@ -45,9 +46,11 @@
     <div class="userbox"><b id="userNome"></b><br><span id="userRole"></span></div>
     <button class="btn navbtn active" onclick="showSec('dashboard',this)">Dashboard</button>
     <button class="btn navbtn" onclick="showSec('pedido',this)">Novo Pedido</button>
-    <button class="btn navbtn" onclick="showSec('pedidos',this)">Pedidos</button>
-    <button class="btn navbtn" onclick="showSec('clientes',this)">Clientes</button>
-    <button class="btn navbtn" onclick="showSec('produtos',this)">Produtos/Catálogo</button>
+    <button class="btn navbtn not-cliente" onclick="showSec('pedidos',this)">Pedidos</button>
+    <button class="btn navbtn only-cliente" onclick="showSec('pedidos',this)">Histórico de Pedidos</button>
+    <button class="btn navbtn not-cliente" onclick="showSec('clientes',this)">Clientes</button>
+    <button class="btn navbtn only-cliente" onclick="showSec('catalogo',this)">Catálogo</button>
+    <button class="btn navbtn only-gerente" onclick="showSec('produtos',this)">Produtos/Catálogo</button>
     <button class="btn navbtn only-gerente" onclick="showSec('usuarios',this)">Usuários</button>
     <button class="btn navbtn only-gerente" onclick="showSec('config',this)">Configurações</button>
     <button class="btn light" onclick="logout()">Sair</button>
@@ -113,6 +116,14 @@
       <div class="card" style="margin-top:14px"><h2>Produtos cadastrados</h2><div id="listaProdutos"></div></div>
     </section>
 
+    <section id="catalogo" class="section">
+      <div class="card">
+        <h2>Catálogo revista</h2>
+        <p class="muted">Aqui o cliente visualiza o catálogo oficial publicado pela gerente.</p>
+        <div id="catalogoClienteBox" style="margin-top:12px"></div>
+      </div>
+    </section>
+
     <section id="usuarios" class="section">
       <div class="card"><h2>Usuários</h2>
         <div class="row3"><div class="field"><label>Nome</label><input id="uNome"></div><div class="field"><label>Email</label><input id="uEmail"></div><div class="field"><label>Senha</label><input id="uSenha"></div></div>
@@ -126,6 +137,15 @@
       <div class="card"><h2>Configurações de Venda</h2>
         <div class="field"><label>Desconto máximo sem aprovação da gerente (%)</label><input id="cfgDesc" type="number" step="0.01"></div>
         <button class="btn" onclick="salvarConfig()">Salvar Configuração</button>
+      </div>
+      <div class="card" style="margin-top:14px"><h2>Catálogo revista para clientes</h2>
+        <p class="muted">Cole aqui o link público do PDF do catálogo. Pode ser um link do Supabase Storage, Google Drive público ou outro PDF publicado.</p>
+        <div class="row">
+          <div class="field"><label>Nome do catálogo</label><input id="cfgCatalogoNome" placeholder="Ex: Catálogo Sofisticatto Ciclo 01/2026"></div>
+          <div class="field"><label>Link do PDF do catálogo</label><input id="cfgCatalogoUrl" placeholder="https://..."></div>
+        </div>
+        <button class="btn" onclick="salvarCatalogo()">Salvar Catálogo</button>
+        <div id="catalogoGerentePreview" style="margin-top:12px"></div>
       </div>
     </section>
   </main>
@@ -147,16 +167,16 @@
 const SUPABASE_URL = 'https://bqyyaamhvrbdesmkerzo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bvOCd5SNwwezYNpHYDwgOQ_Ejmo8Mtc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let usuario=null, produtos=[], clientes=[], vendedoras=[], carrinho=[], prodAtual=null, config={desconto_aprovacao:70};
+let usuario=null, produtos=[], clientes=[], vendedoras=[], carrinho=[], prodAtual=null, config={desconto_aprovacao:70,catalogo_nome:'',catalogo_url:''};
 let editClienteId=null, editUsuarioId=null, editPedidoId=null;
 const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3000)}
 async function login(){const email=loginEmail.value.trim();const senha=loginSenha.value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('email',email).eq('senha',senha).eq('ativo',true).single();if(error||!data)return toast('Login inválido');usuario=data;localStorage.setItem('sof_user',JSON.stringify(usuario));iniciar()}
 function logout(){localStorage.removeItem('sof_user');location.reload()}
-async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');const formProd=document.querySelector('#produtos .card');if(formProd)formProd.style.display=usuario.role==='gerente'?'block':'none';await carregarTudo()}
+async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');document.querySelectorAll('.only-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'block':'none');document.querySelectorAll('.not-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'none':'block');const formProd=document.querySelector('#produtos .card');if(formProd)formProd.style.display=usuario.role==='gerente'?'block':'none';await carregarTudo();if(usuario.role==='cliente'){btnSalvarPedido.textContent='Enviar orçamento para vendedora';pDesc.readOnly=true;pDesc.value=70;if(clientes.length===1)pCliente.value=clientes[0].id;}if(usuario.role==='cliente'){document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));const btn=[...document.querySelectorAll('.navbtn')].find(b=>b.textContent.trim()==='Dashboard');if(btn)btn.classList.add('active');showSec('dashboard',btn)}}
 function showSec(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');titulo.textContent=btn?btn.textContent:'Dashboard';side.classList.remove('open')}
-async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho()}
-async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config=data;cfgDesc.value=data.desconto_aprovacao}}
+async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho();renderCatalogo()}
+async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config={...config,...data};if(typeof cfgDesc!=='undefined')cfgDesc.value=data.desconto_aprovacao??70;if(typeof cfgCatalogoNome!=='undefined')cfgCatalogoNome.value=data.catalogo_nome||'';if(typeof cfgCatalogoUrl!=='undefined')cfgCatalogoUrl.value=data.catalogo_url||''}}
 async function carregarUsuarios(){const {data}=await sb.from('usuarios').select('*').order('nome');vendedoras=(data||[]).filter(u=>u.role==='vendedora');window.todosUsuarios=data||[]}
 async function carregarProdutos(){const {data}=await sb.from('produtos').select('*').eq('ativo',true).order('nome');produtos=data||[]}
 async function carregarClientes(){
@@ -231,7 +251,7 @@ function statusPedidoTexto(status){
   return mapa[status]||status||'';
 }
 function statusPedidoClasse(status){return status==='aprovado'?'ok':(status==='aguardando_aprovacao'||status==='aguardando_vendedora')?'warn':'red'}
-function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${statusPedidoClasse(p.status)}">${statusPedidoTexto(p.status)}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="exibirPedidoDetalhado('${p.id}','editar')">Editar</button> <button class="btn" onclick="exibirPedidoDetalhado('${p.id}','imprimir')">Imprimir</button> <button class="btn ok" onclick="exibirPedidoDetalhado('${p.id}','whatsapp')">WhatsApp</button> <button class="btn red" onclick="excluirPedido('${p.id}')">Excluir</button> ${((usuario.role==='vendedora'||usuario.role==='gerente')&&p.status==='aguardando_vendedora')?`<button class="btn ok" onclick="liberarPedidoVendedora('${p.id}')">Liberar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''} ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
+function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';let acoes=`<button class="btn" onclick="exibirPedidoDetalhado('${p.id}','imprimir')">Ver/Imprimir</button> <button class="btn ok" onclick="exibirPedidoDetalhado('${p.id}','whatsapp')">WhatsApp</button>`;if(usuario.role!=='cliente'){acoes=`<button class="btn light" onclick="exibirPedidoDetalhado('${p.id}','editar')">Editar</button> `+acoes+` <button class="btn red" onclick="excluirPedido('${p.id}')">Excluir</button>`;}if((usuario.role==='vendedora'||usuario.role==='gerente')&&p.status==='aguardando_vendedora')acoes+=` <button class="btn ok" onclick="liberarPedidoVendedora('${p.id}')">Liberar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`;if(usuario.role==='gerente'&&p.status==='aguardando_aprovacao')acoes+=` <button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`;return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${statusPedidoClasse(p.status)}">${statusPedidoTexto(p.status)}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td>${acoes}</td></tr>`}).join('')}</table></div>`}
 async function buscarItensPedido(id){
   const {data,error}=await sb.from('pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});
   if(error){toast('Erro ao buscar itens do pedido: '+error.message);return []}
@@ -480,7 +500,30 @@ async function excluirUsuario(id){
   await carregarUsuarios();renderUsuarios();renderSelects();
 }
 
-async function salvarConfig(){const {error}=await sb.from('configuracoes_venda').update({desconto_aprovacao:Number(cfgDesc.value),updated_at:new Date().toISOString()}).eq('id',1);if(error)return toast(error.message);toast('Configuração salva');await carregarConfig();renderCarrinho()}
+
+function renderCatalogo(){
+  const nome=config.catalogo_nome||'Catálogo Sofisticatto';
+  const url=(config.catalogo_url||'').trim();
+  const html=url?`<h3>${nome}</h3><div class="catalog-actions"><a class="btn" href="${url}" target="_blank" rel="noopener">Abrir catálogo</a><a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a></div><iframe class="catalog-frame" src="${url}"></iframe>`:`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
+  const box=document.getElementById('catalogoClienteBox'); if(box) box.innerHTML=html;
+  const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
+}
+async function salvarCatalogo(){
+  const nome=(cfgCatalogoNome.value||'Catálogo Sofisticatto').trim();
+  const url=(cfgCatalogoUrl.value||'').trim();
+  if(!url) return toast('Cole o link do PDF do catálogo');
+  const {error}=await sb.from('configuracoes_venda').update({catalogo_nome:nome,catalogo_url:url,updated_at:new Date().toISOString()}).eq('id',1);
+  if(error){
+    console.error(error);
+    toast('Erro ao salvar catálogo. Verifique as colunas catalogo_nome e catalogo_url no Supabase.');
+    return;
+  }
+  config={...config,catalogo_nome:nome,catalogo_url:url};
+  toast('Catálogo salvo para os clientes');
+  renderCatalogo();
+}
+
+async function salvarConfig(){const {error}=await sb.from('configuracoes_venda').update({desconto_aprovacao:Number(cfgDesc.value),updated_at:new Date().toISOString()}).eq('id',1);if(error)return toast(error.message);toast('Configuração salva');await carregarConfig();renderCarrinho();renderCatalogo()}
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
 </script>
 </body>
