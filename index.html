@@ -187,7 +187,50 @@ async function salvarPedido(){
   toast(editPedidoId?'Pedido atualizado':'Pedido salvo');
   await carregarPedidos();showSec('pedidos')
 }
-function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${p.status==='aprovado'?'ok':p.status==='aguardando_aprovacao'?'warn':'red'}">${p.status}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="editarPedido('${p.id}')">Editar</button> ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
+function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${p.status==='aprovado'?'ok':p.status==='aguardando_aprovacao'?'warn':'red'}">${p.status}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="editarPedido('${p.id}')">Editar</button> <button class="btn" onclick="imprimirPedido('${p.id}')">Imprimir</button> <button class="btn ok" onclick="enviarPedidoWhatsApp('${p.id}')">WhatsApp</button> ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
+async function buscarItensPedido(id){
+  const {data,error}=await sb.from('pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});
+  if(error){toast('Erro ao buscar itens do pedido: '+error.message);return []}
+  return data||[];
+}
+function dadosPedidoFormatados(pedido,itens){
+  const cliente=clientes.find(c=>c.id===pedido.cliente_id)||{};
+  const vendedora=vendedoras.find(v=>v.id===pedido.vendedora_id)||{};
+  const linhas=[];
+  linhas.push(`*SOFISTICATTO COSMÉTICOS*`);
+  linhas.push(`Pedido: ${pedido.numero||pedido.id}`);
+  linhas.push(`Cliente: ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}`);
+  if(vendedora.nome) linhas.push(`Vendedora: ${vendedora.nome}`);
+  linhas.push(`Status: ${pedido.status||''}`);
+  linhas.push('');
+  linhas.push('*Itens:*');
+  itens.forEach(i=>{
+    linhas.push(`${i.codigo||''} - ${i.nome||''}`);
+    linhas.push(`Qtd: ${i.quantidade||0} | Caixa: ${i.caixas_fechadas||0} cx + ${i.unidades_avulsas||0} un`);
+    linhas.push(`Catálogo: ${money(i.total_catalogo)} | Final: ${money(i.total_final)}`);
+    linhas.push('');
+  });
+  linhas.push(`Subtotal catálogo: ${money(pedido.subtotal)}`);
+  linhas.push(`Desconto: ${pedido.desconto_percentual||0}% (${money(pedido.desconto_valor)})`);
+  linhas.push(`Total final: ${money(pedido.total)}`);
+  return {texto:linhas.join('
+'),cliente};
+}
+async function imprimirPedido(id){
+  const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido)return toast('Pedido não encontrado');
+  const itens=await buscarItensPedido(id); const {cliente}=dadosPedidoFormatados(pedido,itens);
+  const linhasItens=itens.map(i=>`<tr><td>${i.codigo||''}</td><td>${i.nome||''}</td><td>${i.quantidade||0}</td><td>${i.caixas_fechadas||0} cx + ${i.unidades_avulsas||0} un</td><td>${money(i.total_catalogo)}</td><td>${money(i.total_final)}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido ${pedido.numero||''}</title><style>body{font-family:Arial;padding:24px;color:#333}h1{color:#5a4fa3}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f3f0ff}.total{margin-top:18px;font-size:18px;font-weight:bold}@media print{button{display:none}}</style></head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${pedido.status||''}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
+  const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
+}
+async function enviarPedidoWhatsApp(id){
+  const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido)return toast('Pedido não encontrado');
+  const itens=await buscarItensPedido(id); const {texto,cliente}=dadosPedidoFormatados(pedido,itens);
+  let fone=(cliente.whatsapp||'').replace(/\D/g,'');
+  if(fone && !fone.startsWith('55')) fone='55'+fone;
+  const url=`https://wa.me/${fone}?text=${encodeURIComponent(texto)}`;
+  window.open(url,'_blank');
+}
 async function editarPedido(id){
   const p=(window.todosPedidos||[]).find(x=>x.id===id); if(!p)return toast('Pedido não encontrado');
   const {data,error}=await sb.from('pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});
