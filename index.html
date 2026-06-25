@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=E4Sxnoh9IifFIae872TeLDqU5udLEtzU6dGKzOf_hlS6DTDMxiKrgHi_VHAOcP6iC7XQzrucGw07MXIcj9wFyCXMyklq35IuGbJO_pZ1GIrrENrCrJrBFtKibzAyCd8XJpcV2Gz7e3YQkXh4IQ0q_g2CBnRt7xAc3k3mvxhUcMQoMYSBlOoq8cvNT_pqTOwVWNhzmutgystp8hmK5Wjnka8wexdktHL5IQafzYPMX2eXqw1QRg5AAVmON-M_4C4p_qev-mOpuDpPDrqbP7z-Ib2QzGYalSSnyYesvu6EUbVzGTGs04g6YssLTQrl74fp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Y84Ys5GmtHWeDJdhLgZTYol6Q9YpdgD6laQXzMh_2uyFpXfSXHE98ufOIvpOEXayaxY3y0J6k3kRGh4XZVHqQbKn6i4Zr8KBi6dDS33-O76QBc-iFgmJG8Yg5Bu2i0H3BXsnC4olrdzBmcSzgXIkc5xhSIGmIJ4SR_v09Aj-nVM9AkOo3VAVk0HsHZFwhVVV1P9WI_xgyW4Fv-5h-8XQTPFYehTv6VCtPa-bphybZnw3cVmw1mPuy5Jpd-9LIEPAbBwvfEQjIUPz_-gyqVr_gubSk63QJOYRVaUyf0IfX9e6HsFuYPmeGj00vyTiwITi" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=E4Sxnoh9IifFIae872TeLDqU5udLEtzU6dGKzOf_hlS6DTDMxiKrgHi_VHAOcP6iC7XQzrucGw07MXIcj9wFyCXMyklq35IuGbJO_pZ1GIrrENrCrJrBFtKibzAyCd8XJpcV2Gz7e3YQkXh4IQ0q_g2CBnRt7xAc3k3mvxhUcMQoMYSBlOoq8cvNT_pqTOwVWNhzmutgystp8hmK5Wjnka8wexdktHL5IQafzYPMX2eXqw1QRg5AAVmON-M_4C4p_qev-mOpuDpPDrqbP7z-Ib2QzGYalSSnyYesvu6EUbVzGTGs04g6YssLTQrl74fp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
@@ -312,29 +312,64 @@ function orcamentoImagemHtml(pedido,itens){
     <div class="orc-footer">Orçamento gerado pelo Sistema de Vendas Sofisticatto. Valores sujeitos a conferência e aprovação.</div>
   </div>`;
 }
+function quebrarTextoCanvas(ctx,texto,x,y,maxWidth,lineHeight){
+  const palavras=(texto||'').toString().split(' ');
+  let linha='';
+  for(let n=0;n<palavras.length;n++){
+    const teste=linha+palavras[n]+' ';
+    if(ctx.measureText(teste).width>maxWidth && n>0){ctx.fillText(linha,x,y);linha=palavras[n]+' ';y+=lineHeight}else{linha=teste}
+  }
+  if(linha.trim()){ctx.fillText(linha,x,y);y+=lineHeight}
+  return y;
+}
 async function gerarImagemOrcamento(id,baixar=true){
   const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido){toast('Pedido não encontrado');return null}
   const itens=await buscarItensPedido(id);
-  const wrap=document.createElement('div');
-  wrap.style.position='fixed';wrap.style.left='-10000px';wrap.style.top='0';wrap.style.zIndex='-1';
-  wrap.innerHTML=orcamentoImagemHtml(pedido,itens);
-  document.body.appendChild(wrap);
   try{
-    const alvo=wrap.querySelector('#orcamentoImagemCaptura');
-    const canvas=await html2canvas(alvo,{backgroundColor:'#ffffff',scale:2,useCORS:true});
+    const cliente=clientes.find(c=>c.id===pedido.cliente_id)||{};
+    const vendedora=vendedoras.find(v=>v.id===pedido.vendedora_id)||{};
+    const nomeCliente=pedido.clientes?.nome_fantasia||cliente.nome_fantasia||'';
+    const dataPedido=pedido.created_at?new Date(pedido.created_at).toLocaleDateString('pt-BR'):new Date().toLocaleDateString('pt-BR');
+    const largura=1200;
+    const altura=Math.max(900, 520 + (itens.length*74));
+    const canvas=document.createElement('canvas');canvas.width=largura;canvas.height=altura;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,largura,altura);
+    ctx.fillStyle='#5a4fa3';ctx.font='italic 52px Arial';ctx.fillText('Sofisticatto',60,82);
+    ctx.font='20px Arial';ctx.fillStyle='#666';ctx.fillText('Cosméticos • Sistema de Vendas',62,116);
+    ctx.textAlign='right';ctx.fillStyle='#5a4fa3';ctx.font='bold 38px Arial';ctx.fillText('ORÇAMENTO',1140,74);
+    ctx.font='20px Arial';ctx.fillStyle='#666';ctx.fillText('Pedido '+(pedido.numero||pedido.id),1140,110);ctx.textAlign='left';
+    ctx.fillStyle='#5a4fa3';ctx.fillRect(60,145,1080,4);
+    const boxes=[['Cliente',nomeCliente],['Vendedora',vendedora.nome||''],['Data',dataPedido],['Status',pedido.status||'']];
+    let bx=60;ctx.font='bold 15px Arial';
+    boxes.forEach(b=>{ctx.fillStyle='#f6f3ff';ctx.strokeStyle='#dfd6ff';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(bx,175,255,78,16);ctx.fill();ctx.stroke();ctx.fillStyle='#5a4fa3';ctx.font='bold 15px Arial';ctx.fillText(b[0].toUpperCase(),bx+16,202);ctx.fillStyle='#2f2b45';ctx.font='18px Arial';quebrarTextoCanvas(ctx,b[1],bx+16,229,220,21);bx+=275});
+    let y=300;
+    const cols=[60,165,570,665,790,960];
+    const widths=[95,385,80,115,155,150];
+    ctx.fillStyle='#5a4fa3';ctx.fillRect(60,y,1080,42);
+    ctx.fillStyle='#fff';ctx.font='bold 17px Arial';['Código','Produto','Qtd','Caixas','Catálogo','Final'].forEach((h,i)=>ctx.fillText(h,cols[i]+8,y+27));
+    y+=52;ctx.textBaseline='top';
+    itens.forEach((i,idx)=>{
+      const rowH=64;ctx.fillStyle=idx%2?'#fbfaff':'#ffffff';ctx.fillRect(60,y-8,1080,rowH);ctx.strokeStyle='#e9e6f3';ctx.beginPath();ctx.moveTo(60,y+rowH-8);ctx.lineTo(1140,y+rowH-8);ctx.stroke();
+      ctx.fillStyle='#2f2b45';ctx.font='bold 17px Arial';ctx.fillText(i.codigo||'',cols[0]+8,y);
+      ctx.font='17px Arial';quebrarTextoCanvas(ctx,i.nome||'',cols[1]+8,y,widths[1]-20,20);
+      ctx.fillText(String(i.quantidade||0),cols[2]+8,y);
+      ctx.fillText(`${i.caixas_fechadas||0} cx + ${i.unidades_avulsas||0} un`,cols[3]+8,y);
+      ctx.fillText(money(i.total_catalogo),cols[4]+8,y);
+      ctx.fillStyle='#16a34a';ctx.font='bold 17px Arial';ctx.fillText(money(i.total_final),cols[5]+8,y);
+      y+=rowH;
+    });
+    y+=20;
+    ctx.fillStyle='#f6f3ff';ctx.strokeStyle='#dfd6ff';ctx.beginPath();ctx.roundRect(760,y,380,150,18);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#2f2b45';ctx.font='20px Arial';ctx.fillText('Subtotal catálogo: '+money(pedido.subtotal),785,y+24);
+    ctx.fillText('Desconto: '+(pedido.desconto_percentual||0)+'% ('+money(pedido.desconto_valor)+')',785,y+58);
+    ctx.fillStyle='#16a34a';ctx.font='bold 31px Arial';ctx.fillText('Total final: '+money(pedido.total),785,y+102);
+    ctx.fillStyle='#666';ctx.font='16px Arial';ctx.textAlign='center';ctx.fillText('Orçamento gerado pelo Sistema de Vendas Sofisticatto. Valores sujeitos a conferência e aprovação.',largura/2,altura-45);ctx.textAlign='left';ctx.textBaseline='alphabetic';
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png',0.95));
     const arquivo=nomeArquivoOrcamento(pedido);
-    if(baixar && blob){
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=url;a.download=arquivo;document.body.appendChild(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }
+    if(baixar && blob){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=arquivo;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
     return {pedido,itens,blob,arquivo,canvas};
-  }catch(e){
-    console.error(e);toast('Não foi possível gerar a imagem do orçamento');return null;
-  }finally{
-    wrap.remove();
-  }
+  }catch(e){console.error(e);toast('Não foi possível gerar a imagem do orçamento');return null}
 }
 async function enviarPedidoWhatsApp(id){
   const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido)return toast('Pedido não encontrado');
@@ -386,16 +421,37 @@ async function excluirPedido(id){
 async function aprovarPedido(id){await sb.from('pedidos').update({status:'aprovado',aprovado_por:usuario.id,aprovado_em:new Date().toISOString()}).eq('id',id);toast('Pedido aprovado');carregarPedidos()}
 async function recusarPedido(id){await sb.from('pedidos').update({status:'recusado'}).eq('id',id);toast('Pedido recusado');carregarPedidos()}
 async function salvarCliente(){const obj={nome_fantasia:cNome.value,cnpj:cCnpj.value,whatsapp:cWhats.value,email:cEmail.value,cidade:cCidade.value,estado:cEstado.value,vendedora_id:usuario.role==='vendedora'?usuario.id:cVend.value||null,observacoes:cObs.value,alerta_data:cAlertaData.value||null,alerta_mensagem:cObs.value};const res=editClienteId?await sb.from('clientes').update(obj).eq('id',editClienteId):await sb.from('clientes').insert(obj);if(res.error)return toast(res.error.message);toast(editClienteId?'Cliente atualizado':'Cliente salvo');cancelarEdicaoCliente();await carregarClientes();renderSelects();renderClientes()}
-function renderClientes(){listaClientes.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Cliente</th><th>WhatsApp</th><th>Cidade</th><th>Vendedora</th><th>Observação</th><th>Ação</th></tr>${clientes.map(c=>`<tr><td>${c.nome_fantasia}</td><td>${c.whatsapp||''}</td><td>${c.cidade||''}/${c.estado||''}</td><td>${(vendedoras.find(v=>v.id===c.vendedora_id)||{}).nome||''}</td><td>${c.observacoes||''}</td><td><button class="btn light" onclick="editarCliente('${c.id}')">Editar</button></td></tr>`).join('')}</table></div>`}
+function renderClientes(){listaClientes.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Cliente</th><th>WhatsApp</th><th>Cidade</th><th>Vendedora</th><th>Observação</th><th>Ação</th></tr>${clientes.map(c=>`<tr><td>${c.nome_fantasia}</td><td>${c.whatsapp||''}</td><td>${c.cidade||''}/${c.estado||''}</td><td>${(vendedoras.find(v=>v.id===c.vendedora_id)||{}).nome||''}</td><td>${c.observacoes||''}</td><td><button class="btn light" onclick="editarCliente('${c.id}')">Editar</button> <button class="btn red" onclick="excluirCliente('${c.id}')">Excluir</button></td></tr>`).join('')}</table></div>`}
 function editarCliente(id){const c=clientes.find(x=>x.id===id);if(!c)return;editClienteId=id;cNome.value=c.nome_fantasia||'';cCnpj.value=c.cnpj||'';cWhats.value=c.whatsapp||'';cEmail.value=c.email||'';cCidade.value=c.cidade||'';cEstado.value=c.estado||'';cVend.value=c.vendedora_id||'';cAlertaData.value=c.alerta_data||'';cObs.value=c.observacoes||'';btnSalvarCliente.textContent='Atualizar Cliente';btnCancelarCliente.classList.remove('hidden');showSec('clientes');titulo.textContent='Editar Cliente'}
 function cancelarEdicaoCliente(){editClienteId=null;cNome.value=cCnpj.value=cWhats.value=cEmail.value=cCidade.value=cEstado.value=cObs.value=cAlertaData.value='';cVend.value='';btnSalvarCliente.textContent='Salvar Cliente';btnCancelarCliente.classList.add('hidden')}
+
+async function excluirCliente(id){
+  const c=clientes.find(x=>x.id===id);
+  if(!confirm(`Deseja realmente excluir o cliente ${c?.nome_fantasia||''}?`)) return;
+  const {error}=await sb.from('clientes').update({ativo:false}).eq('id',id);
+  if(error) return toast('Erro ao excluir cliente: '+error.message);
+  toast('Cliente excluído');
+  if(editClienteId===id) cancelarEdicaoCliente();
+  await carregarClientes();renderSelects();renderClientes();
+}
 
 async function salvarProduto(){const obj={codigo:prCodigo.value,nome:prNome.value,preco_catalogo:Number(prPreco.value)||0,categoria:prCat.value,linha:prLinha.value,unidades_caixa:Number(prCaixa.value)||1};const {error}=await sb.from('produtos').upsert(obj,{onConflict:'codigo'});if(error)return toast(error.message);toast('Produto salvo');prCodigo.value=prNome.value=prPreco.value=prCat.value=prLinha.value='';await carregarProdutos();renderProdutos()}
 function renderProdutos(){listaProdutos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Caixa</th></tr>${produtos.map(p=>`<tr><td>${p.codigo}</td><td>${p.nome}</td><td>${p.categoria||''}</td><td>${money(p.preco_catalogo)}</td><td>${p.unidades_caixa} un</td></tr>`).join('')}</table></div>`}
 async function salvarUsuario(){const obj={nome:uNome.value,email:uEmail.value,senha:uSenha.value,role:uRole.value};const res=editUsuarioId?await sb.from('usuarios').update(obj).eq('id',editUsuarioId):await sb.from('usuarios').insert(obj);if(res.error)return toast(res.error.message);toast(editUsuarioId?'Usuário atualizado':'Usuário salvo');cancelarEdicaoUsuario();await carregarUsuarios();renderUsuarios();renderSelects()}
-function renderUsuarios(){listaUsuarios.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Ação</th></tr>${(window.todosUsuarios||[]).map(u=>`<tr><td>${u.nome}</td><td>${u.email}</td><td>${u.role}</td><td><button class="btn light" onclick="editarUsuario('${u.id}')">Editar</button></td></tr>`).join('')}</table></div>`}
+function renderUsuarios(){listaUsuarios.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Ação</th></tr>${(window.todosUsuarios||[]).map(u=>`<tr><td>${u.nome}</td><td>${u.email}</td><td>${u.role}</td><td><button class="btn light" onclick="editarUsuario('${u.id}')">Editar</button> <button class="btn red" onclick="excluirUsuario('${u.id}')">Excluir</button></td></tr>`).join('')}</table></div>`}
 function editarUsuario(id){const u=(window.todosUsuarios||[]).find(x=>x.id===id);if(!u)return;editUsuarioId=id;uNome.value=u.nome||'';uEmail.value=u.email||'';uSenha.value=u.senha||'';uRole.value=u.role||'vendedora';btnSalvarUsuario.textContent='Atualizar Usuário';btnCancelarUsuario.classList.remove('hidden');showSec('usuarios');titulo.textContent='Editar Usuário'}
 function cancelarEdicaoUsuario(){editUsuarioId=null;uNome.value=uEmail.value=uSenha.value='';uRole.value='vendedora';btnSalvarUsuario.textContent='Salvar Usuário';btnCancelarUsuario.classList.add('hidden')}
+
+async function excluirUsuario(id){
+  const u=(window.todosUsuarios||[]).find(x=>x.id===id);
+  if(usuario && usuario.id===id) return toast('Você não pode excluir o usuário logado');
+  if(!confirm(`Deseja realmente excluir o usuário ${u?.nome||''}?`)) return;
+  const {error}=await sb.from('usuarios').update({ativo:false}).eq('id',id);
+  if(error) return toast('Erro ao excluir usuário: '+error.message);
+  toast('Usuário excluído');
+  if(editUsuarioId===id) cancelarEdicaoUsuario();
+  await carregarUsuarios();renderUsuarios();renderSelects();
+}
 
 async function salvarConfig(){const {error}=await sb.from('configuracoes_venda').update({desconto_aprovacao:Number(cfgDesc.value),updated_at:new Date().toISOString()}).eq('id',1);if(error)return toast(error.message);toast('Configuração salva');await carregarConfig();renderCarrinho()}
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
