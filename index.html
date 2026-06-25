@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Y84Ys5GmtHWeDJdhLgZTYol6Q9YpdgD6laQXzMh_2uyFpXfSXHE98ufOIvpOEXayaxY3y0J6k3kRGh4XZVHqQbKn6i4Zr8KBi6dDS33-O76QBc-iFgmJG8Yg5Bu2i0H3BXsnC4olrdzBmcSzgXIkc5xhSIGmIJ4SR_v09Aj-nVM9AkOo3VAVk0HsHZFwhVVV1P9WI_xgyW4Fv-5h-8XQTPFYehTv6VCtPa-bphybZnw3cVmw1mPuy5Jpd-9LIEPAbBwvfEQjIUPz_-gyqVr_gubSk63QJOYRVaUyf0IfX9e6HsFuYPmeGj00vyTiwITi" charset="UTF-8"></script><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=E4Sxnoh9IifFIae872TeLDqU5udLEtzU6dGKzOf_hlS6DTDMxiKrgHi_VHAOcP6iC7XQzrucGw07MXIcj9wFyCXMyklq35IuGbJO_pZ1GIrrENrCrJrBFtKibzAyCd8XJpcV2Gz7e3YQkXh4IQ0q_g2CBnRt7xAc3k3mvxhUcMQoMYSBlOoq8cvNT_pqTOwVWNhzmutgystp8hmK5Wjnka8wexdktHL5IQafzYPMX2eXqw1QRg5AAVmON-M_4C4p_qev-mOpuDpPDrqbP7z-Ib2QzGYalSSnyYesvu6EUbVzGTGs04g6YssLTQrl74fp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=E4Sxnoh9IifFIae872TeLDqU5udLEtzU6dGKzOf_hlS6DTDMxiKrgHi_VHAOcP6iC7XQzrucGw07MXIcj9wFyCXMyklq35IuGbJO_pZ1GIrrENrCrJrBFtKibzAyCd8XJpcV2Gz7e3YQkXh4IQ0q_g2CBnRt7xAc3k3mvxhUcMQoMYSBlOoq8cvNT_pqTOwVWNhzmutgystp8hmK5Wjnka8wexdktHL5IQafzYPMX2eXqw1QRg5AAVmON-M_4C4p_qev-mOpuDpPDrqbP7z-Ib2QzGYalSSnyYesvu6EUbVzGTGs04g6YssLTQrl74fp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
@@ -47,7 +47,7 @@
     <button class="btn navbtn" onclick="showSec('pedido',this)">Novo Pedido</button>
     <button class="btn navbtn" onclick="showSec('pedidos',this)">Pedidos</button>
     <button class="btn navbtn" onclick="showSec('clientes',this)">Clientes</button>
-    <button class="btn navbtn only-gerente" onclick="showSec('produtos',this)">Produtos/Catálogo</button>
+    <button class="btn navbtn" onclick="showSec('produtos',this)">Produtos/Catálogo</button>
     <button class="btn navbtn only-gerente" onclick="showSec('usuarios',this)">Usuários</button>
     <button class="btn navbtn only-gerente" onclick="showSec('config',this)">Configurações</button>
     <button class="btn light" onclick="logout()">Sair</button>
@@ -153,13 +153,25 @@ const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3000)}
 async function login(){const email=loginEmail.value.trim();const senha=loginSenha.value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('email',email).eq('senha',senha).eq('ativo',true).single();if(error||!data)return toast('Login inválido');usuario=data;localStorage.setItem('sof_user',JSON.stringify(usuario));iniciar()}
 function logout(){localStorage.removeItem('sof_user');location.reload()}
-async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');await carregarTudo()}
+async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');const formProd=document.querySelector('#produtos .card');if(formProd)formProd.style.display=usuario.role==='gerente'?'block':'none';await carregarTudo()}
 function showSec(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');titulo.textContent=btn?btn.textContent:'Dashboard';side.classList.remove('open')}
 async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho()}
 async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config=data;cfgDesc.value=data.desconto_aprovacao}}
 async function carregarUsuarios(){const {data}=await sb.from('usuarios').select('*').order('nome');vendedoras=(data||[]).filter(u=>u.role==='vendedora');window.todosUsuarios=data||[]}
 async function carregarProdutos(){const {data}=await sb.from('produtos').select('*').eq('ativo',true).order('nome');produtos=data||[]}
-async function carregarClientes(){let q=sb.from('clientes').select('*').eq('ativo',true).order('nome_fantasia');if(usuario.role==='vendedora')q=q.eq('vendedora_id',usuario.id);if(usuario.role==='cliente')q=q.eq('usuario_id',usuario.id);const {data}=await q;clientes=data||[];kClientes.textContent=clientes.length}
+async function carregarClientes(){
+  let q=sb.from('clientes').select('*').eq('ativo',true).order('nome_fantasia');
+  if(usuario.role==='vendedora') q=q.eq('vendedora_id',usuario.id);
+  const {data,error}=await q;
+  let lista=data||[];
+  if(usuario.role==='cliente'){
+    // O cliente precisa ficar vinculado a um cadastro de cliente para o pedido aparecer para a vendedora.
+    // Primeiro tenta pelo usuario_id; se ainda não existir vínculo, tenta pelo e-mail e pelo nome.
+    lista=lista.filter(c=>c.usuario_id===usuario.id || (c.email&&usuario.email&&c.email.toLowerCase()===usuario.email.toLowerCase()) || (c.nome_fantasia&&usuario.nome&&c.nome_fantasia.toLowerCase()===usuario.nome.toLowerCase()));
+  }
+  clientes=lista;
+  kClientes.textContent=clientes.length;
+}
 async function carregarPedidos(){
   let q=sb.from('pedidos').select('*,clientes(nome_fantasia)').order('created_at',{ascending:false});
   if(usuario.role==='vendedora') q=q.eq('vendedora_id',usuario.id);
@@ -182,7 +194,7 @@ async function carregarPedidos(){
   const pedidos=data||[]; window.todosPedidos=pedidos;
   kPedidos.textContent=pedidos.length;kTotal.textContent=money(pedidos.reduce((s,p)=>s+Number(p.total||0),0));kPend.textContent=pedidos.filter(p=>p.status==='aguardando_aprovacao').length;renderPedidos(pedidos)
 }
-function renderSelects(){pCliente.innerHTML=clientes.map(c=>`<option value="${c.id}">${c.nome_fantasia}</option>`).join('');cVend.innerHTML='<option value="">Selecione</option>'+vendedoras.map(v=>`<option value="${v.id}">${v.nome}</option>`).join('')}
+function renderSelects(){pCliente.innerHTML=clientes.length?clientes.map(c=>`<option value="${c.id}">${c.nome_fantasia}</option>`).join(''):'<option value="">Nenhum cliente vinculado</option>';if(usuario.role==='cliente'&&clientes.length===1)pCliente.value=clientes[0].id;cVend.innerHTML='<option value="">Selecione</option>'+vendedoras.map(v=>`<option value="${v.id}">${v.nome}</option>`).join('')}
 function buscarProdutoCodigo(){prodAtual=produtos.find(p=>p.codigo==buscaCodigo.value.trim());previewProduto()}
 function previewProduto(){if(!prodAtual){preview.classList.add('hidden');return}const q=Number(qtdProd.value)||1, cx=prodAtual.unidades_caixa||1, fechadas=Math.floor(q/cx), av=q%cx, desc=Number(pDesc.value)||0, pc=Number(prodAtual.preco_catalogo), pf=pc*(1-desc/100);preview.classList.remove('hidden');preview.innerHTML=`<b>${prodAtual.nome}</b><br>Código: ${prodAtual.codigo}<br>Valor catálogo: <b>${money(pc)}</b><br>Seu desconto: <b>${desc}%</b><br>Seu preço: <b>${money(pf)}</b><br>📦 Caixa fechada: <b>${cx} un</b> | Valor da caixa: <b>${money(pf*cx)}</b><br>${fechadas>0?'✅ '+fechadas+' caixa(s) fechada(s)<br>':''}${av>0?'➕ '+av+' unidade(s) avulsa(s)<br>':''}${av>0?'💡 Faltam '+(cx-av)+' unidade(s) para completar uma caixa.':''}`}
 function addCarrinho(){if(!prodAtual)return toast('Digite um código válido');const q=Number(qtdProd.value)||1;carrinho.push({...prodAtual,quantidade:q});renderCarrinho();buscaCodigo.value='';qtdProd.value=1;prodAtual=null;preview.classList.add('hidden')}
@@ -193,7 +205,8 @@ async function salvarPedido(){
   const desc=Number(pDesc.value)||0;
   const subtotal=carrinho.reduce((s,p)=>s+Number(p.preco_catalogo)*Number(p.quantidade),0);
   const total=subtotal*(1-desc/100);
-  const status=desc>Number(config.desconto_aprovacao)?'aguardando_aprovacao':'aprovado';
+  let status=desc>Number(config.desconto_aprovacao)?'aguardando_aprovacao':'aprovado';
+  if(usuario.role==='cliente') status='aguardando_vendedora';
   if(status==='aguardando_aprovacao'&&!pJust.value.trim())return toast('Informe a justificativa do desconto');
   const pedidoObj={cliente_id:pCliente.value,vendedora_id:cliente.vendedora_id,subtotal,desconto_percentual:desc,desconto_valor:subtotal-total,total,status,justificativa_desconto:pJust.value};
   let pedidoId=editPedidoId;
@@ -210,10 +223,15 @@ async function salvarPedido(){
   const itens=carrinho.map(p=>{const q=Number(p.quantidade),cx=p.unidades_caixa||1,pc=Number(p.preco_catalogo),pf=pc*(1-desc/100);return {pedido_id:pedidoId,produto_id:p.id,codigo:p.codigo,nome:p.nome,quantidade:q,unidades_caixa:cx,preco_catalogo:pc,desconto_percentual:desc,preco_unitario_final:pf,total_catalogo:pc*q,total_final:pf*q,caixas_fechadas:Math.floor(q/cx),unidades_avulsas:q%cx}});
   if(itens.length){const r=await sb.from('pedido_itens').insert(itens); if(r.error)return toast(r.error.message)}
   cancelarEdicaoPedido(false); carrinho=[]; renderCarrinho();
-  toast(editPedidoId?'Pedido atualizado':'Pedido salvo');
+  toast(editPedidoId?'Pedido atualizado':(usuario.role==='cliente'?'Orçamento enviado para a vendedora':'Pedido salvo'));
   await carregarPedidos();showSec('pedidos')
 }
-function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${p.status==='aprovado'?'ok':p.status==='aguardando_aprovacao'?'warn':'red'}">${p.status}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="exibirPedidoDetalhado('${p.id}','editar')">Editar</button> <button class="btn" onclick="exibirPedidoDetalhado('${p.id}','imprimir')">Imprimir</button> <button class="btn ok" onclick="exibirPedidoDetalhado('${p.id}','whatsapp')">WhatsApp</button> <button class="btn red" onclick="excluirPedido('${p.id}')">Excluir</button> ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
+function statusPedidoTexto(status){
+  const mapa={aprovado:'aprovado',aguardando_aprovacao:'aguardando aprovação gerente',aguardando_vendedora:'aguardando vendedora',recusado:'recusado'};
+  return mapa[status]||status||'';
+}
+function statusPedidoClasse(status){return status==='aprovado'?'ok':(status==='aguardando_aprovacao'||status==='aguardando_vendedora')?'warn':'red'}
+function renderPedidos(pedidos){listaPedidos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Nº</th><th>Cliente</th><th>Status</th><th>Desconto</th><th>Total</th><th>Ação</th></tr>${pedidos.map(p=>{const cli=p.clientes?.nome_fantasia||(clientes.find(c=>c.id===p.cliente_id)||{}).nome_fantasia||'';return `<tr><td>${p.numero||''}</td><td>${cli}</td><td><span class="pill ${statusPedidoClasse(p.status)}">${statusPedidoTexto(p.status)}</span></td><td>${p.desconto_percentual||0}%</td><td>${money(p.total)}</td><td><button class="btn light" onclick="exibirPedidoDetalhado('${p.id}','editar')">Editar</button> <button class="btn" onclick="exibirPedidoDetalhado('${p.id}','imprimir')">Imprimir</button> <button class="btn ok" onclick="exibirPedidoDetalhado('${p.id}','whatsapp')">WhatsApp</button> <button class="btn red" onclick="excluirPedido('${p.id}')">Excluir</button> ${((usuario.role==='vendedora'||usuario.role==='gerente')&&p.status==='aguardando_vendedora')?`<button class="btn ok" onclick="liberarPedidoVendedora('${p.id}')">Liberar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''} ${usuario.role==='gerente'&&p.status==='aguardando_aprovacao'?`<button class="btn ok" onclick="aprovarPedido('${p.id}')">Aprovar</button> <button class="btn red" onclick="recusarPedido('${p.id}')">Recusar</button>`:''}</td></tr>`}).join('')}</table></div>`} 
 async function buscarItensPedido(id){
   const {data,error}=await sb.from('pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});
   if(error){toast('Erro ao buscar itens do pedido: '+error.message);return []}
@@ -418,6 +436,15 @@ async function excluirPedido(id){
   await carregarPedidos();
 }
 
+async function liberarPedidoVendedora(id){
+  const p=(window.todosPedidos||[]).find(x=>x.id===id); if(!p)return toast('Pedido não encontrado');
+  const novoStatus=Number(p.desconto_percentual||0)>Number(config.desconto_aprovacao)?'aguardando_aprovacao':'aprovado';
+  const update={status:novoStatus,conferido_por:usuario.id,conferido_em:new Date().toISOString()};
+  const {error}=await sb.from('pedidos').update(update).eq('id',id);
+  if(error)return toast('Erro ao liberar pedido: '+error.message);
+  toast(novoStatus==='aguardando_aprovacao'?'Pedido enviado para aprovação da gerente':'Pedido liberado pela vendedora');
+  carregarPedidos();
+}
 async function aprovarPedido(id){await sb.from('pedidos').update({status:'aprovado',aprovado_por:usuario.id,aprovado_em:new Date().toISOString()}).eq('id',id);toast('Pedido aprovado');carregarPedidos()}
 async function recusarPedido(id){await sb.from('pedidos').update({status:'recusado'}).eq('id',id);toast('Pedido recusado');carregarPedidos()}
 async function salvarCliente(){const obj={nome_fantasia:cNome.value,cnpj:cCnpj.value,whatsapp:cWhats.value,email:cEmail.value,cidade:cCidade.value,estado:cEstado.value,vendedora_id:usuario.role==='vendedora'?usuario.id:cVend.value||null,observacoes:cObs.value,alerta_data:cAlertaData.value||null,alerta_mensagem:cObs.value};const res=editClienteId?await sb.from('clientes').update(obj).eq('id',editClienteId):await sb.from('clientes').insert(obj);if(res.error)return toast(res.error.message);toast(editClienteId?'Cliente atualizado':'Cliente salvo');cancelarEdicaoCliente();await carregarClientes();renderSelects();renderClientes()}
