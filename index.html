@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=LekYv41-CAXmGBStdUQQQsv9ZNtle1VWQ6iDGl1K2Cl2B5qq4f7cHyar607F4kBCkdoWHDcwSBxTbBb_IS-I9PN-PdvHGW84l9WwOT8xogBQepDMTfaO_Feu48kIO5roW6kq79AAcMpCrP3sf8f1CUJcAogqTo2Pis_3F4zJIfU_ik0yHoHAowkLtDJyl4p86KjowM2t6jWlD1xrE-h-PdTciX4P3FwU8myyf2q3UJOGsNdRN45cSJYlNdM-tveIQovZgY18fiV6ULgrqhHMgA6WOyWi9HWAcmzd6k78FpGgVXcbtiQ6quioYOBbzv6g" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -423,9 +423,18 @@
 
 <div id="modalPrecoProduto" class="modal hidden">
   <div class="price-modal-card">
-    <h2 class="price-modal-title">Produto sem preço no catálogo</h2>
+    <h2 class="price-modal-title">Revisar produto importado</h2>
     <div id="modalPrecoInfo" class="price-modal-prod"></div>
-    <div class="field"><label>Preço do catálogo</label><input id="modalPrecoInput" type="number" step="0.01" placeholder="Ex: 52.99" onkeydown="if(event.key==='Enter')salvarPrecoPendenteAtual()"></div>
+    <div class="field"><label>Preço do catálogo <span id="modalPrecoObrigatorio" style="color:#dc2626"></span></label><input id="modalPrecoInput" type="number" step="0.01" placeholder="Ex: 52.99" onkeydown="if(event.key==='Enter')salvarPrecoPendenteAtual()"></div>
+    <div class="row">
+      <div class="field"><label>Categoria (opcional)</label><input id="modalCategoriaInput" placeholder="Ex: Capilar"></div>
+      <div class="field"><label>Linha (opcional)</label><input id="modalLinhaInput" placeholder="Ex: Mega Hair"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Unidades por caixa (opcional)</label><input id="modalCaixaInput" type="number" step="1" placeholder="Ex: 12"></div>
+      <div class="field"><label>Foto capa URL (opcional)</label><input id="modalImagemInput" placeholder="https://..."></div>
+    </div>
+    <div class="field"><label>Galeria de fotos URLs (opcional)</label><textarea id="modalImagensInput" placeholder="Cole uma URL por linha, ou separadas por vírgula"></textarea></div>
     <div class="price-modal-actions">
       <button class="btn ok" onclick="salvarPrecoPendenteAtual()">Salvar e próximo</button>
       <button class="btn light" onclick="pularPrecoPendente()">Pular</button>
@@ -923,28 +932,82 @@ async function importarPlanilhaProdutos(file){
     const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
     const produtosImportados=[];
     const erros=[];
+    const codigosLinha={};
     rows.forEach((row,idx)=>{
       const p=mapearProdutoImportado(row);
-      if(p) produtosImportados.push(p); else erros.push(idx+2);
+      if(p){
+        produtosImportados.push({...p,__linha:idx+2});
+        codigosLinha[p.codigo]=(codigosLinha[p.codigo]||[]).concat(idx+2);
+      }else erros.push(idx+2);
     });
-    if(!produtosImportados.length){
-      resultadoImportProdutos.innerHTML='Nenhum produto válido encontrado. Confira se a planilha tem pelo menos as colunas codigo e nome.';
+    const duplicados=Object.entries(codigosLinha).filter(([c,linhas])=>linhas.length>1);
+    if(duplicados.length){
+      resultadoImportProdutos.innerHTML='<b>Códigos duplicados na planilha.</b><br>Corrija antes de importar:<br>'+duplicados.slice(0,20).map(([c,l])=>`Código ${c}: linhas ${l.join(', ')}`).join('<br>');
       return;
     }
-    let adicionados=0, atualizados=0, falhas=[];
-    const codigosAtuais=new Set(produtos.map(p=>String(p.codigo)));
-    for(let i=0;i<produtosImportados.length;i+=200){
-      const lote=produtosImportados.slice(i,i+200);
-      lote.forEach(p=>codigosAtuais.has(String(p.codigo))?atualizados++:adicionados++);
+    if(!produtosImportados.length){
+      resultadoImportProdutos.innerHTML='Nenhum produto válido encontrado. Confira se a planilha tem pelo menos as colunas codigo e nome/descricao.';
+      return;
+    }
+
+    const atuaisPorCodigo=new Map(produtos.map(p=>[String(p.codigo),p]));
+    let adicionados=0, atualizados=0, precosAlterados=0, precosMantidos=0, falhas=[];
+    const revisao=[];
+    const paraSalvar=produtosImportados.map(p=>{
+      const atual=atuaisPorCodigo.get(String(p.codigo));
+      const obj={...p};
+      delete obj.__linha;
+      if(atual){
+        atualizados++;
+        const precoNovo=Number(p.preco_catalogo||0);
+        const precoAtual=Number(atual.preco_catalogo||0);
+        if(precoNovo>0 && Math.abs(precoNovo-precoAtual)>0.001){
+          precosAlterados++;
+          obj.preco_catalogo=precoNovo;
+        }else if(precoNovo<=0){
+          obj.preco_catalogo=precoAtual; // não apaga preço que já existe no sistema
+          if(precoAtual>0) precosMantidos++;
+        }
+        if(!obj.categoria && atual.categoria) obj.categoria=atual.categoria;
+        if(!obj.linha && atual.linha) obj.linha=atual.linha;
+        if((!obj.unidades_caixa || Number(obj.unidades_caixa)<=0) && atual.unidades_caixa) obj.unidades_caixa=atual.unidades_caixa;
+        if(!obj.imagem_url && atual.imagem_url) obj.imagem_url=atual.imagem_url;
+        const imgsNovas=imagensProdutoArray(obj.imagens);
+        const imgsAtuais=imagensProdutoArray(atual.imagens);
+        obj.imagens=imgsNovas.length?imgsNovas:imgsAtuais;
+      }else{
+        adicionados++;
+      }
+      const faltaPreco=Number(obj.preco_catalogo||0)<=0;
+      const faltaOpcional=!obj.categoria || !obj.linha || !obj.unidades_caixa || Number(obj.unidades_caixa)<=1 || !obj.imagem_url || !imagensProdutoArray(obj.imagens).length;
+      if(faltaPreco || faltaOpcional){
+        revisao.push({
+          codigo:obj.codigo,
+          nome:obj.nome,
+          preco_catalogo:Number(obj.preco_catalogo||0),
+          categoria:obj.categoria||'',
+          linha:obj.linha||'',
+          unidades_caixa:obj.unidades_caixa||1,
+          imagem_url:obj.imagem_url||'',
+          imagens:imagensProdutoArray(obj.imagens),
+          faltaPreco,
+          linha_planilha:p.__linha
+        });
+      }
+      return obj;
+    });
+
+    for(let i=0;i<paraSalvar.length;i+=200){
+      const lote=paraSalvar.slice(i,i+200);
       const {error}=await sb.from('produtos').upsert(lote,{onConflict:'codigo'});
       if(error) falhas.push(error.message);
     }
     await carregarProdutos();
     renderProdutos();
-    const semPreco=produtosImportados.filter(p=>Number(p.preco_catalogo||0)<=0);
-    resultadoImportProdutos.innerHTML=`<b>Importação concluída</b><br>Produtos adicionados: <b>${adicionados}</b><br>Produtos atualizados: <b>${atualizados}</b><br>Produtos sem preço: <b>${semPreco.length}</b><br>Linhas ignoradas: <b>${erros.length}</b>${falhas.length?'<br><span style="color:#991b1b">Erros: '+falhas.join(' | ')+'</span>':''}`;
+    const semPreco=revisao.filter(p=>p.faltaPreco).length;
+    resultadoImportProdutos.innerHTML=`<b>Importação concluída</b><br>Produtos adicionados: <b>${adicionados}</b><br>Produtos atualizados: <b>${atualizados}</b><br>Preços alterados pela planilha: <b>${precosAlterados}</b><br>Preços mantidos porque vieram vazios: <b>${precosMantidos}</b><br>Produtos sem preço: <b>${semPreco}</b><br>Produtos para revisão opcional: <b>${revisao.length}</b><br>Linhas ignoradas: <b>${erros.length}</b>${falhas.length?'<br><span style="color:#991b1b">Erros: '+falhas.join(' | ')+'</span>':''}`;
     toast('Planilha importada');
-    if(semPreco.length) iniciarRevisaoPrecosPendentes(semPreco);
+    if(revisao.length) iniciarRevisaoPrecosPendentes(revisao);
   }catch(e){
     console.error(e);
     resultadoImportProdutos.innerHTML='Erro ao importar a planilha. Confira o arquivo e tente novamente.';
@@ -955,7 +1018,18 @@ async function importarPlanilhaProdutos(file){
 }
 let produtosPendentesPreco=[], indicePrecoPendente=0;
 function iniciarRevisaoPrecosPendentes(lista){
-  produtosPendentesPreco=(lista||[]).map(p=>({codigo:p.codigo,nome:p.nome,categoria:p.categoria||'',linha:p.linha||'',unidades_caixa:p.unidades_caixa||1}));
+  produtosPendentesPreco=(lista||[]).map(p=>({
+    codigo:p.codigo,
+    nome:p.nome,
+    preco_catalogo:Number(p.preco_catalogo||0),
+    categoria:p.categoria||'',
+    linha:p.linha||'',
+    unidades_caixa:p.unidades_caixa||1,
+    imagem_url:p.imagem_url||'',
+    imagens:imagensProdutoArray(p.imagens),
+    faltaPreco:Number(p.preco_catalogo||0)<=0,
+    linha_planilha:p.linha_planilha||''
+  }));
   indicePrecoPendente=0;
   mostrarPrecoPendenteAtual();
 }
@@ -963,20 +1037,41 @@ function mostrarPrecoPendenteAtual(){
   const modal=document.getElementById('modalPrecoProduto');
   if(!modal||!produtosPendentesPreco.length||indicePrecoPendente>=produtosPendentesPreco.length){fecharModalPrecoPendente();return}
   const p=produtosPendentesPreco[indicePrecoPendente];
-  modalPrecoInfo.innerHTML=`<b>${indicePrecoPendente+1} de ${produtosPendentesPreco.length}</b><br><br><b>Código:</b> ${p.codigo}<br><b>Produto:</b> ${p.nome}<br><b>Categoria:</b> ${p.categoria||'-'}<br><b>Linha:</b> ${p.linha||'-'}<br><b>Caixa:</b> ${p.unidades_caixa||1} un`;
-  modalPrecoInput.value='';
+  const faltas=[];
+  if(p.faltaPreco) faltas.push('preço');
+  if(!p.categoria) faltas.push('categoria');
+  if(!p.linha) faltas.push('linha');
+  if(!p.unidades_caixa || Number(p.unidades_caixa)<=1) faltas.push('unidades por caixa');
+  if(!p.imagem_url) faltas.push('foto de capa');
+  if(!imagensProdutoArray(p.imagens).length) faltas.push('galeria');
+  modalPrecoInfo.innerHTML=`<b>${indicePrecoPendente+1} de ${produtosPendentesPreco.length}</b><br><br><b>Código:</b> ${p.codigo}<br><b>Produto:</b> ${p.nome}<br>${p.linha_planilha?`<b>Linha da planilha:</b> ${p.linha_planilha}<br>`:''}<b>Faltando/para conferir:</b> ${faltas.length?faltas.join(', '):'nenhum campo obrigatório'}`;
+  modalPrecoObrigatorio.textContent=p.faltaPreco?'(obrigatório)':'(opcional)';
+  modalPrecoInput.value=p.preco_catalogo>0?p.preco_catalogo:'';
+  modalCategoriaInput.value=p.categoria||'';
+  modalLinhaInput.value=p.linha||'';
+  modalCaixaInput.value=p.unidades_caixa||'';
+  modalImagemInput.value=p.imagem_url||'';
+  modalImagensInput.value=imagensProdutoArray(p.imagens).join('\n');
   modal.classList.remove('hidden');
-  setTimeout(()=>modalPrecoInput.focus(),100);
+  setTimeout(()=>p.faltaPreco?modalPrecoInput.focus():modalCategoriaInput.focus(),100);
 }
 async function salvarPrecoPendenteAtual(){
   const p=produtosPendentesPreco[indicePrecoPendente];
   if(!p)return fecharModalPrecoPendente();
-  const preco=Number(modalPrecoInput.value);
-  if(!preco||preco<=0)return toast('Informe um preço válido');
-  const {error}=await sb.from('produtos').update({preco_catalogo:preco}).eq('codigo',p.codigo);
+  const preco=Number(modalPrecoInput.value||0);
+  if(p.faltaPreco && (!preco||preco<=0))return toast('Informe o preço do catálogo ou clique em Pular');
+  const update={
+    categoria:modalCategoriaInput.value.trim()||p.categoria||null,
+    linha:modalLinhaInput.value.trim()||p.linha||null,
+    unidades_caixa:Number(modalCaixaInput.value)||p.unidades_caixa||1,
+    imagem_url:modalImagemInput.value.trim()||p.imagem_url||null,
+    imagens:imagensProdutoArray(modalImagensInput.value||p.imagens)
+  };
+  if(preco>0) update.preco_catalogo=preco;
+  const {error}=await sb.from('produtos').update(update).eq('codigo',p.codigo);
   if(error)return toast(error.message);
   indicePrecoPendente++;
-  toast('Preço salvo');
+  toast('Produto atualizado');
   await carregarProdutos();renderProdutos();
   mostrarPrecoPendenteAtual();
 }
