@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=fhjtVvKbr42y-v1Y8H-ZLNYEkHlCjXGQ-ImoQirVSutWfEDasJG0etf1wpKLuCzBba1VtI8QO47MzM0qs5NMIIhclKZ1WNgr5b6o5UvrxNJMKfWonDc5CUisw64idC5wcX7lfr2-JsfFzE4GfjHwnWVSmD9UBdZBZZQJW-nV7ybkjOgZf2kBqPONtTnF9Tf-pdB28jNxiId3L7LOj1DHrdlGErxctzVaFBEM0HBXMNBgrJ8RPpV-FZ4ERbEeDgtEKk15Q2xK4_EbhhbgP-Z04bGW47pXmP2zTWmFAjxN2cYiJZCIVN2JIVBAiKsFCuUl" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=kNS2CpOLV7CJU5fpwShCoRtvkNuCx_tNE99eU-p73rd_GQ9_1MN-0t5BXcYuOcujo1XB6MZQgbmJR8hdJYLSQcWQxYCZXa-dtygK6TruEtmn08Elhd8XqsQd_KS_QTZAyBo1vZP0tKxsqMehtElaMLxVdBxbCEr394EvoJCgVWwsoXRSfEa_iMhT3OANkyNQJ2ANZFaCZDmOOXp1jmyMSRHO5shZbhLqTbvC5k5HCYqBkFbXovPKE39i3XAqhYHc0o0sal3yQR2R9MuSTwWz_cP0IPmIAcm041uAhbLObX66e9xnrj_Kl-sBinDw0gKZ" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -33,6 +33,17 @@
 /* AJUSTE: catálogo rápido no celular + efeito de folha arrastando */
 .flip-start{background:linear-gradient(135deg,#fff,#f3f0ff);border:1px solid #e5ddff;border-radius:18px;padding:18px;text-align:center;box-shadow:0 10px 28px #5a4fa31c;margin-top:12px}.flip-start h3{color:#5a4fa3;margin-bottom:8px}.flip-start .btn{margin-top:10px}.flipbook.pro{position:relative;background:radial-gradient(circle at top,#fff 0,#f6f1ff 58%,#e8ddff 100%);min-height:360px}.flipbook.pro .flip-pages{touch-action:none;cursor:grab}.flipbook.pro .flip-pages.is-dragging{cursor:grabbing}.flipbook.pro .flip-page-wrap{will-change:transform;backface-visibility:hidden;transform-style:preserve-3d;overflow:hidden}.flipbook.pro .flip-page-wrap.page-active-turn{z-index:20}.flipbook.pro .page-curl{position:absolute;top:8px;bottom:28px;width:0;opacity:0;pointer-events:none;z-index:30;border-radius:8px;transition:opacity .15s}.flipbook.pro .page-curl.right{right:8px;background:linear-gradient(90deg,#ffffff00,#ffffffcc 34%,#c7baff 76%,#00000022)}.flipbook.pro .page-curl.left{left:8px;background:linear-gradient(270deg,#ffffff00,#ffffffcc 34%,#c7baff 76%,#00000022)}.flipbook.pro .flip-shadow{position:absolute;inset:18px;border-radius:12px;background:radial-gradient(circle at center,#00000022,#0000 65%);opacity:0;pointer-events:none;transition:.18s}.flipbook.pro.loading-lite .flip-pages{min-height:180px}.flipbook.pro.loading-lite .flip-loading{padding:45px 20px}.catalog-mobile-note{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0;border-radius:12px;padding:10px;margin-top:10px;font-size:13px}@media(max-width:900px){.flipbook.pro{min-height:260px}.flipbook.pro .flip-toolbar{position:sticky;top:0;background:#ffffffee;z-index:5;padding:6px;border-radius:12px}.flipbook.pro .flip-pages{min-height:220px}.catalog-frame{height:55vh}.flip-start{padding:14px}.flip-start .catalog-actions{justify-content:center}.flip-start .catalog-actions .btn{width:100%}}
 
+
+/* Correções catálogo revista: páginas não cortam no celular e cache renderizado */
+@media(max-width:900px){
+  .card:has(#catalogoClienteBox), .card:has(#catalogoGerentePreview){padding:12px!important;overflow:hidden}
+  .flipbook{padding:8px!important;overflow:hidden!important}
+  .flip-pages{width:100%!important;overflow:visible!important;min-height:unset!important}
+  .flip-page-wrap{width:100%!important;max-width:100%!important;padding:5px!important;margin:0 auto!important}
+  .flip-page-wrap canvas{width:100%!important;height:auto!important;max-width:100%!important}
+  .flip-toolbar{gap:6px!important}
+  .flip-toolbar .btn{padding:10px 8px!important;font-size:13px!important}
+}
 </style>
 </head>
 <body>
@@ -690,7 +701,7 @@ function chaveCachePagina(num){
 }
 async function criarCanvasPagina(state,num){
   const key=chaveCachePagina(num);
-  if(state.cache.has(key)) return state.cache.get(key).cloneNode(true);
+  if(state.cache.has(key)) return copiarCanvasPronto(state.cache.get(key));
   const mobile=isMobileDevice();
   const page=await state.pdf.getPage(num);
   const viewport0=page.getViewport({scale:1});
@@ -706,7 +717,7 @@ async function criarCanvasPagina(state,num){
   canvas.style.height=Math.floor(viewport.height)+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
   await page.render({canvasContext:ctx,viewport}).promise;
-  state.cache.set(key,canvas.cloneNode(true));
+  state.cache.set(key,copiarCanvasPronto(canvas));
   // Limita o cache no celular para abrir rápido e não pesar memória
   if(state.cache.size>(mobile?8:18)){
     const first=state.cache.keys().next().value;
@@ -928,16 +939,27 @@ async function inicializarFlipbooks(){
   });
 }
 function larguraPaginaDesejada(){
-  if(isMobileDevice()) return Math.min(window.innerWidth-38,520);
+  // No celular, usar largura menor que a tela para não cortar dentro do card/sidebar.
+  if(isMobileDevice()) return Math.max(230, Math.min(window.innerWidth-110,420));
   return Math.min((document.querySelector('.main')?.clientWidth||900)*0.40,500);
 }
 function chaveCachePagina(num){
   const base=Math.round(larguraPaginaDesejada()/50)*50;
   return `${num}_${base}_${isMobileDevice()?'m':'d'}`;
 }
+function copiarCanvasPronto(origem){
+  const c=document.createElement('canvas');
+  c.width=origem.width;
+  c.height=origem.height;
+  c.style.width=origem.style.width;
+  c.style.height=origem.style.height;
+  const ctx=c.getContext('2d',{alpha:false});
+  ctx.drawImage(origem,0,0);
+  return c;
+}
 async function criarCanvasPagina(state,num){
   const key=chaveCachePagina(num);
-  if(state.cache.has(key)) return state.cache.get(key).cloneNode(true);
+  if(state.cache.has(key)) return copiarCanvasPronto(state.cache.get(key));
   const mobile=isMobileDevice();
   const page=await state.pdf.getPage(num);
   const viewport0=page.getViewport({scale:1});
@@ -954,7 +976,7 @@ async function criarCanvasPagina(state,num){
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.fillStyle='#fff';ctx.fillRect(0,0,viewport.width,viewport.height);
   await page.render({canvasContext:ctx,viewport}).promise;
-  state.cache.set(key,canvas.cloneNode(true));
+  state.cache.set(key,copiarCanvasPronto(canvas));
   if(state.cache.size>(mobile?4:12)){
     const first=state.cache.keys().next().value;
     state.cache.delete(first);
