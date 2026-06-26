@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=BZLNqpr7IJlThfipfaNxZC1R6J-mn32_C2vmwLE1fgCXQESH6XAGUmbRn1E7i96Q7v0DqGiOHFhqEFVeyjI_6QWXJMZ1dqK-viRNto1AYgbuTy5cA7KZFte5adqLNwXfeRCri81g5IxUC1-JLhyw-fVkztbZbb5A8WOOcFm4R7wuGhePrGR4j59vHCatsb6AJvAoWQxOwp1Bvcu39fXeZ6ZOVZzVAbtEIQUNG0XAikxoF7-M3JkSEZqbOKABaKXlOByy-aatBSKQ-cBCaaQ-sm9eAK1G3CkYE-2ShJNDSsuRJhQabTd97u-kBY7A29lS" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=XnCn_yu9s8pKefF3tLQ9sAVDn-s-ETvsQ9a38zbKUgM0dIuYBdCkytkXK4sIoSs2D6TocPooIL52CPJYs4nIcxg4GA5wOa8IKU2S-haMLkNsmWo0e6mGLFyG3S6L-2jecz6Ea9mQuQYfhYy4eMdQjrAaSKR7_J4G3-8TyUIVVPQwk8u8UC5TYoizKBIpdC0aQWUZhlJh2eXkYOG6Vs0pbuqku9m-Yd5ZRa0dfpfMWFJObywBcuwCXXKMGKwEImLMzpL-vDnPGXIeRtqWZxqaRf50evVzSC0nNiSXwPYParrf8tXve7nwdW5JxdIWE4Jp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -43,6 +43,23 @@
   .flip-page-wrap canvas{width:100%!important;height:auto!important;max-width:100%!important}
   .flip-toolbar{gap:6px!important}
   .flip-toolbar .btn{padding:10px 8px!important;font-size:13px!important}
+}
+
+/* Ajustes finais catálogo revista */
+.catalogo-shell{margin-top:12px}
+.catalog-actions.catalog-actions-bottom{justify-content:center;margin-top:14px}
+.flipbook.pro .flip-pages{overflow:auto;padding:12px 6px 22px}
+.flipbook.pro .flip-page-wrap{max-width:49%;}
+.flip-zoom-indicator{min-width:62px;text-align:center;font-weight:bold;color:#5a4fa3}
+@media(min-width:901px){
+  .flipbook.pro{padding:20px;min-height:620px}
+  .flipbook.pro .flip-pages{min-height:560px}
+  .flipbook.pro .flip-page-wrap canvas{width:auto!important;max-width:100%!important}
+}
+@media(max-width:900px){
+  .flipbook.pro .flip-pages{overflow:auto;min-height:300px!important}
+  .flipbook.pro .flip-page-wrap{min-width:100%;max-width:100%}
+  .catalog-actions.catalog-actions-bottom .btn{width:100%}
 }
 </style>
 </head>
@@ -348,6 +365,23 @@ async function imprimirPedido(id){
 /* AJUSTE: catálogo rápido no celular + efeito de folha arrastando */
 .flip-start{background:linear-gradient(135deg,#fff,#f3f0ff);border:1px solid #e5ddff;border-radius:18px;padding:18px;text-align:center;box-shadow:0 10px 28px #5a4fa31c;margin-top:12px}.flip-start h3{color:#5a4fa3;margin-bottom:8px}.flip-start .btn{margin-top:10px}.flipbook.pro{position:relative;background:radial-gradient(circle at top,#fff 0,#f6f1ff 58%,#e8ddff 100%);min-height:360px}.flipbook.pro .flip-pages{touch-action:none;cursor:grab}.flipbook.pro .flip-pages.is-dragging{cursor:grabbing}.flipbook.pro .flip-page-wrap{will-change:transform;backface-visibility:hidden;transform-style:preserve-3d;overflow:hidden}.flipbook.pro .flip-page-wrap.page-active-turn{z-index:20}.flipbook.pro .page-curl{position:absolute;top:8px;bottom:28px;width:0;opacity:0;pointer-events:none;z-index:30;border-radius:8px;transition:opacity .15s}.flipbook.pro .page-curl.right{right:8px;background:linear-gradient(90deg,#ffffff00,#ffffffcc 34%,#c7baff 76%,#00000022)}.flipbook.pro .page-curl.left{left:8px;background:linear-gradient(270deg,#ffffff00,#ffffffcc 34%,#c7baff 76%,#00000022)}.flipbook.pro .flip-shadow{position:absolute;inset:18px;border-radius:12px;background:radial-gradient(circle at center,#00000022,#0000 65%);opacity:0;pointer-events:none;transition:.18s}.flipbook.pro.loading-lite .flip-pages{min-height:180px}.flipbook.pro.loading-lite .flip-loading{padding:45px 20px}.catalog-mobile-note{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0;border-radius:12px;padding:10px;margin-top:10px;font-size:13px}@media(max-width:900px){.flipbook.pro{min-height:260px}.flipbook.pro .flip-toolbar{position:sticky;top:0;background:#ffffffee;z-index:5;padding:6px;border-radius:12px}.flipbook.pro .flip-pages{min-height:220px}.catalog-frame{height:55vh}.flip-start{padding:14px}.flip-start .catalog-actions{justify-content:center}.flip-start .catalog-actions .btn{width:100%}}
 
+
+/* Ajustes finais catálogo revista */
+.catalogo-shell{margin-top:12px}
+.catalog-actions.catalog-actions-bottom{justify-content:center;margin-top:14px}
+.flipbook.pro .flip-pages{overflow:auto;padding:12px 6px 22px}
+.flipbook.pro .flip-page-wrap{max-width:49%;}
+.flip-zoom-indicator{min-width:62px;text-align:center;font-weight:bold;color:#5a4fa3}
+@media(min-width:901px){
+  .flipbook.pro{padding:20px;min-height:620px}
+  .flipbook.pro .flip-pages{min-height:560px}
+  .flipbook.pro .flip-page-wrap canvas{width:auto!important;max-width:100%!important}
+}
+@media(max-width:900px){
+  .flipbook.pro .flip-pages{overflow:auto;min-height:300px!important}
+  .flipbook.pro .flip-page-wrap{min-width:100%;max-width:100%}
+  .catalog-actions.catalog-actions-bottom .btn{width:100%}
+}
 </style></head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${statusPedidoTexto(pedido.status)}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
   const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
 }
@@ -637,25 +671,30 @@ function renderCatalogo(){
   let html;
   if(url){
     html=`<h3>${nome}</h3>
-      <div class="catalog-actions">
-        <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir PDF rápido</a>
-        <a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a>
-      </div>
-      <div class="flip-start">
-        <h3>Catálogo em modo revista</h3>
-        <p class="muted">Para abrir rápido no celular, a revista só é carregada quando você clicar no botão abaixo.</p>
-        <button class="btn" onclick="abrirRevistaCatalogo(this)">Abrir revista para folhear</button>
-      </div>
-      <div class="flipbook hidden" data-pdf-url="${url}">
-        <div class="flip-toolbar">
-          <button class="btn light" onclick="catalogoPaginaAnterior(this)">◀ Página anterior</button>
-          <div><b>Modo revista</b><br><span class="muted" data-flip-status>Carregando catálogo...</span></div>
-          <button class="btn light" onclick="catalogoProximaPagina(this)">Próxima página ▶</button>
-          <input class="flip-page-input" data-flip-page-input type="number" min="1" value="1" onchange="catalogoIrPagina(this)">
-          <div class="flip-progress"><span data-flip-progress></span></div>
+      <div class="catalogo-shell">
+        <div class="flip-start">
+          <h3>Catálogo em modo revista</h3>
+          <p class="muted">Para abrir rápido no celular, a revista só é carregada quando você clicar no botão abaixo.</p>
+          <button class="btn" onclick="abrirRevistaCatalogo(this)">Abrir revista para folhear</button>
         </div>
-        <div class="flip-pages" data-flip-pages><div class="flip-loading">Carregando primeira página...</div></div>
-        <div class="flip-tip">Arraste a página para o lado para folhear.</div>
+        <div class="flipbook pro hidden" data-pdf-url="${url}">
+          <div class="flip-toolbar">
+            <button class="btn light" onclick="catalogoPaginaAnterior(this)">◀ Página anterior</button>
+            <div><b>Modo revista</b><br><span class="muted" data-flip-status>Carregando catálogo...</span></div>
+            <button class="btn light" onclick="catalogoProximaPagina(this)">Próxima página ▶</button>
+            <button class="btn light" onclick="catalogoZoomMenos(this)">− Zoom</button>
+            <span class="flip-zoom-indicator" data-flip-zoom>100%</span>
+            <button class="btn light" onclick="catalogoZoomMais(this)">+ Zoom</button>
+            <input class="flip-page-input" data-flip-page-input type="number" min="1" value="1" onchange="catalogoIrPagina(this)">
+            <div class="flip-progress"><span data-flip-progress></span></div>
+          </div>
+          <div class="flip-pages" data-flip-pages><div class="flip-loading">Carregando primeira página...</div></div>
+          <div class="flip-tip">Arraste a página para o lado para folhear.</div>
+        </div>
+        <div class="catalog-actions catalog-actions-bottom">
+          <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir PDF rápido</a>
+          <a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a>
+        </div>
       </div>`;
   }else{
     html=`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
@@ -667,7 +706,7 @@ function renderCatalogo(){
 let flipbooks=new WeakMap();
 function configurarPdfJs(){
   if(window.pdfjsLib){
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
     return true;
   }
   return false;
@@ -687,9 +726,9 @@ async function inicializarFlipbookUnico(box){
   const status=box.querySelector('[data-flip-status]');
   const pagesBox=box.querySelector('[data-flip-pages]');
   try{
-    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:false,rangeChunkSize:65536});
+    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:true,disableWorker:true,rangeChunkSize:65536});
     const pdf=await task.promise;
-    const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),drag:{active:false,startX:0,currentX:0}};
+    const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),zoom:1,drag:{active:false,startX:0,currentX:0}};
     flipbooks.set(box,state);
     instalarArrasteCatalogo(box);
     if(status) status.textContent=`Página 1 de ${pdf.numPages}`;
@@ -697,19 +736,20 @@ async function inicializarFlipbookUnico(box){
     preCarregarPaginas(box);
   }catch(e){
     console.error(e);
-    if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Use os botões Abrir PDF rápido ou Baixar catálogo.</div>';
+    if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Confira se o catálogo está público no Supabase Storage, ou use os botões Abrir PDF rápido/Baixar catálogo abaixo.</div>';
     if(status) status.textContent='Falha ao carregar modo revista';
   }
 }
 async function inicializarFlipbooks(){
   document.querySelectorAll('.flipbook:not(.hidden)').forEach(box=>inicializarFlipbookUnico(box));
 }
-function larguraPaginaDesejada(){
-  if(isMobileDevice()) return Math.min(window.innerWidth-55,680);
-  return Math.min((document.querySelector('.main')?.clientWidth||900)*0.42,540);
+function larguraPaginaDesejada(state){
+  const zoom=state?.zoom||1;
+  if(isMobileDevice()) return Math.min((window.innerWidth-42)*zoom,900);
+  return Math.min(((document.querySelector('.main')?.clientWidth||1000)*0.47)*zoom,860);
 }
 function chaveCachePagina(num){
-  const base=Math.round(larguraPaginaDesejada()/40)*40;
+  const base=Math.round(larguraPaginaDesejada(window.__flipCacheState)/40)*40;
   return `${num}_${base}_${window.devicePixelRatio>1?2:1}`;
 }
 async function criarCanvasPagina(state,num){
@@ -718,7 +758,7 @@ async function criarCanvasPagina(state,num){
   const mobile=isMobileDevice();
   const page=await state.pdf.getPage(num);
   const viewport0=page.getViewport({scale:1});
-  const desiredWidth=larguraPaginaDesejada();
+  window.__flipCacheState=state; const desiredWidth=larguraPaginaDesejada(state);
   const scale=Math.max(0.45,desiredWidth/viewport0.width);
   const viewport=page.getViewport({scale});
   const canvas=document.createElement('canvas');
@@ -750,6 +790,7 @@ async function renderFlipbook(box){
   if(status) status.textContent=`Página ${state.page}${!mobile && state.page+1<=state.total?' - '+(state.page+1):''} de ${state.total}`;
   if(input){input.max=state.total;input.value=state.page;}
   if(progress) progress.style.width=Math.max(1,Math.round((state.page/state.total)*100))+'%';
+  const zoomEl=box.querySelector('[data-flip-zoom]'); if(zoomEl) zoomEl.textContent=Math.round((state.zoom||1)*100)+'%';
   pagesBox.innerHTML='';
   for(let idx=0; idx<pageNums.length; idx++){
     const num=pageNums[idx];
@@ -823,8 +864,18 @@ function instalarArrasteCatalogo(box){
   area.addEventListener('pointercancel',fim);
   area.addEventListener('pointerleave',fim);
 }
-let resizeFlipTimer=null;
-window.addEventListener('resize',()=>{clearTimeout(resizeFlipTimer);resizeFlipTimer=setTimeout(()=>{document.querySelectorAll('.flipbook').forEach(box=>{const st=flipbooks.get(box);if(st){st.cache.clear();renderFlipbook(box)}})},350)});
+async function catalogoZoomMais(btn){
+  const box=encontrarFlipbook(btn), st=flipbooks.get(box); if(!st) return;
+  st.zoom=Math.min(1.8, Math.round(((st.zoom||1)+0.1)*10)/10);
+  st.cache.clear();
+  await renderFlipbook(box);
+}
+async function catalogoZoomMenos(btn){
+  const box=encontrarFlipbook(btn), st=flipbooks.get(box); if(!st) return;
+  st.zoom=Math.max(0.7, Math.round(((st.zoom||1)-0.1)*10)/10);
+  st.cache.clear();
+  await renderFlipbook(box);
+}
 
 function soltarPdfCatalogo(event){
   event.preventDefault();
@@ -883,44 +934,41 @@ function renderCatalogo(){
   let html;
   if(url){
     html=`<h3>${nome}</h3>
-      <div class="catalog-actions">
-        <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir PDF</a>
-        <a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a>
-      </div>
-      <div class="flip-start" data-catalog-start data-pdf-url="${url}">
-        <h3>📖 Revista interativa</h3>
-        <p class="muted">Para abrir mais rápido no celular, a revista só carrega quando você clicar no botão abaixo.</p>
-        <button class="btn" onclick="abrirRevistaCatalogo(this)">Abrir revista para folhear</button>
-        <div class="catalog-mobile-note">Depois de abrir, arraste a folha para o lado como uma revista.</div>
+      <div class="catalogo-shell">
+        <div class="flip-start">
+          <h3>Catálogo em modo revista</h3>
+          <p class="muted">Para abrir rápido no celular, a revista só carrega quando você clicar no botão abaixo.</p>
+          <button class="btn" onclick="abrirRevistaCatalogo(this)">Abrir revista para folhear</button>
+        </div>
+        <div class="flipbook pro hidden" data-pdf-url="${url}">
+          <div class="flip-toolbar">
+            <button class="btn light" onclick="catalogoPaginaAnterior(this)">◀ Página anterior</button>
+            <div><b>Modo revista</b><br><span class="muted" data-flip-status>Carregando catálogo...</span></div>
+            <button class="btn light" onclick="catalogoProximaPagina(this)">Próxima página ▶</button>
+            <button class="btn light" onclick="catalogoZoomMenos(this)">− Zoom</button>
+            <span class="flip-zoom-indicator" data-flip-zoom>100%</span>
+            <button class="btn light" onclick="catalogoZoomMais(this)">+ Zoom</button>
+            <input class="flip-page-input" data-flip-page-input type="number" min="1" value="1" onchange="catalogoIrPagina(this)">
+            <div class="flip-progress"><span data-flip-progress></span></div>
+          </div>
+          <div class="flip-pages" data-flip-pages><div class="flip-loading">Carregando primeira página...</div></div>
+          <div class="flip-tip">Arraste a página para o lado para folhear.</div>
+        </div>
+        <div class="catalog-actions catalog-actions-bottom">
+          <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir PDF rápido</a>
+          <a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a>
+        </div>
       </div>`;
   }else{
     html=`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
   }
   const box=document.getElementById('catalogoClienteBox'); if(box) box.innerHTML=html;
-  const prev=document.getElementById('catalogoGerentePreview');
-  if(prev){
-    prev.innerHTML=url?`<h3>${nome}</h3><div class="catalog-actions"><a class="btn" href="${url}" target="_blank" rel="noopener">Abrir catálogo</a><a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a></div><p class="muted">O cliente verá este catálogo em modo revista.</p>`:`<div class="catalog-empty">Nenhum catálogo publicado.</div>`;
-  }
+  const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
 }
-function abrirRevistaCatalogo(btn){
-  const start=btn.closest('[data-catalog-start]'); if(!start)return;
-  const url=start.getAttribute('data-pdf-url');
-  start.outerHTML=`<div class="flipbook pro loading-lite" data-pdf-url="${url}">
-    <div class="flip-toolbar">
-      <button class="btn light" onclick="catalogoPaginaAnterior(this)">◀</button>
-      <div><b>Modo revista</b><br><span class="muted" data-flip-status>Carregando...</span></div>
-      <button class="btn light" onclick="catalogoProximaPagina(this)">▶</button>
-      <input class="flip-page-input" data-flip-page-input type="number" min="1" value="1" onchange="catalogoIrPagina(this)">
-      <div class="flip-progress"><span data-flip-progress></span></div>
-    </div>
-    <div class="flip-pages" data-flip-pages><div class="flip-loading">Preparando revista...</div><div class="flip-shadow" data-flip-shadow></div></div>
-    <div class="flip-tip">Arraste a folha para o lado. No celular, a primeira abertura pode levar alguns segundos.</div>
-  </div>`;
-  setTimeout(inicializarFlipbooks,50);
-}
+
 function configurarPdfJs(){
   if(window.pdfjsLib){
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
     return true;
   }
   return false;
@@ -940,9 +988,10 @@ async function inicializarFlipbookUnico(box){
   const status=box.querySelector('[data-flip-status]');
   const pagesBox=box.querySelector('[data-flip-pages]');
   try{
-    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:false,rangeChunkSize:65536});
+    if(status) status.textContent='Abrindo PDF...';
+    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:true,disableWorker:true,rangeChunkSize:65536});
     const pdf=await task.promise;
-    const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),drag:{active:false,startX:0,currentX:0}};
+    const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),zoom:1,drag:{active:false,startX:0,currentX:0,side:'right'}};
     flipbooks.set(box,state);
     instalarArrasteCatalogo(box);
     if(status) status.textContent=`Página 1 de ${pdf.numPages}`;
@@ -950,79 +999,47 @@ async function inicializarFlipbookUnico(box){
     preCarregarPaginas(box);
   }catch(e){
     console.error(e);
-    if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Use os botões Abrir PDF rápido ou Baixar catálogo.</div>';
+    if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Confira se o catálogo está público no Supabase Storage, ou use os botões Abrir PDF rápido/Baixar catálogo abaixo.</div>';
     if(status) status.textContent='Falha ao carregar modo revista';
   }
 }
 async function inicializarFlipbooks(){
-  if(!configurarPdfJs()) return;
-  document.querySelectorAll('.flipbook').forEach(async box=>{
-    if(flipbooks.has(box)) return;
-    const url=box.getAttribute('data-pdf-url');
-    const status=box.querySelector('[data-flip-status]');
-    const pagesBox=box.querySelector('[data-flip-pages]');
-    try{
-      if(status) status.textContent='Abrindo PDF...';
-      const mobile=isMobileDevice();
-      const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:mobile,disableStream:false,rangeChunkSize:mobile?65536:262144});
-      const pdf=await task.promise;
-      const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),drag:{active:false,startX:0,currentX:0,side:'right'}};
-      flipbooks.set(box,state);
-      instalarArrasteCatalogo(box);
-      if(status) status.textContent=`Página 1 de ${pdf.numPages}`;
-      await renderFlipbook(box);
-      box.classList.remove('loading-lite');
-      preCarregarPaginas(box);
-    }catch(e){
-      console.error(e);
-      if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Use Abrir PDF ou Baixar catálogo. Se o PDF estiver no Google Drive, use link público direto ou envie pelo Supabase Storage.</div>';
-      if(status) status.textContent='Falha ao carregar modo revista';
-    }
-  });
+  document.querySelectorAll('.flipbook:not(.hidden)').forEach(box=>inicializarFlipbookUnico(box));
 }
-function larguraPaginaDesejada(){
-  // No celular, usar largura menor que a tela para não cortar dentro do card/sidebar.
-  if(isMobileDevice()) return Math.max(230, Math.min(window.innerWidth-110,420));
-  return Math.min((document.querySelector('.main')?.clientWidth||900)*0.40,500);
+function larguraPaginaDesejada(state){
+  const zoom=state?.zoom||1;
+  if(isMobileDevice()) return Math.max(250, Math.min((window.innerWidth-42)*zoom,900));
+  return Math.min(((document.querySelector('.main')?.clientWidth||1100)*0.47)*zoom,860);
 }
-function chaveCachePagina(num){
-  const base=Math.round(larguraPaginaDesejada()/50)*50;
-  return `${num}_${base}_${isMobileDevice()?'m':'d'}`;
+function chaveCachePagina(state,num){
+  const base=Math.round(larguraPaginaDesejada(state)/50)*50;
+  return `${num}_${base}_${isMobileDevice()?'m':'d'}_${Math.round((state?.zoom||1)*100)}`;
 }
 function copiarCanvasPronto(origem){
   const c=document.createElement('canvas');
-  c.width=origem.width;
-  c.height=origem.height;
-  c.style.width=origem.style.width;
-  c.style.height=origem.style.height;
-  const ctx=c.getContext('2d',{alpha:false});
-  ctx.drawImage(origem,0,0);
+  c.width=origem.width;c.height=origem.height;
+  c.style.width=origem.style.width;c.style.height=origem.style.height;
+  const ctx=c.getContext('2d',{alpha:false});ctx.drawImage(origem,0,0);
   return c;
 }
 async function criarCanvasPagina(state,num){
-  const key=chaveCachePagina(num);
+  const key=chaveCachePagina(state,num);
   if(state.cache.has(key)) return copiarCanvasPronto(state.cache.get(key));
   const mobile=isMobileDevice();
   const page=await state.pdf.getPage(num);
   const viewport0=page.getViewport({scale:1});
-  const desiredWidth=larguraPaginaDesejada();
+  const desiredWidth=larguraPaginaDesejada(state);
   const scale=Math.max(0.35,desiredWidth/viewport0.width);
   const viewport=page.getViewport({scale});
   const canvas=document.createElement('canvas');
   const ctx=canvas.getContext('2d',{alpha:false});
   const dpr=mobile?1:Math.min(window.devicePixelRatio||1,1.7);
-  canvas.width=Math.floor(viewport.width*dpr);
-  canvas.height=Math.floor(viewport.height*dpr);
-  canvas.style.width=Math.floor(viewport.width)+'px';
-  canvas.style.height=Math.floor(viewport.height)+'px';
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,viewport.width,viewport.height);
+  canvas.width=Math.floor(viewport.width*dpr);canvas.height=Math.floor(viewport.height*dpr);
+  canvas.style.width=Math.floor(viewport.width)+'px';canvas.style.height=Math.floor(viewport.height)+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#fff';ctx.fillRect(0,0,viewport.width,viewport.height);
   await page.render({canvasContext:ctx,viewport}).promise;
   state.cache.set(key,copiarCanvasPronto(canvas));
-  if(state.cache.size>(mobile?4:12)){
-    const first=state.cache.keys().next().value;
-    state.cache.delete(first);
-  }
+  if(state.cache.size>(mobile?4:12)){const first=state.cache.keys().next().value;state.cache.delete(first)}
   return canvas;
 }
 async function renderFlipbook(box){
@@ -1032,88 +1049,52 @@ async function renderFlipbook(box){
   const status=box.querySelector('[data-flip-status]');
   const input=box.querySelector('[data-flip-page-input]');
   const progress=box.querySelector('[data-flip-progress]');
+  const zoomEl=box.querySelector('[data-flip-zoom]');
   const mobile=isMobileDevice();
-  const pageNums=mobile?[state.page]:[state.page, state.page+1].filter(n=>n<=state.total);
+  const pageNums=mobile?[state.page]:[state.page,state.page+1].filter(n=>n<=state.total);
   if(status) status.textContent=`Página ${state.page}${!mobile && state.page+1<=state.total?' - '+(state.page+1):''} de ${state.total}`;
-  if(input){input.max=state.total;input.value=state.page;}
+  if(input){input.max=state.total;input.value=state.page}
   if(progress) progress.style.width=Math.max(1,Math.round((state.page/state.total)*100))+'%';
+  if(zoomEl) zoomEl.textContent=Math.round((state.zoom||1)*100)+'%';
   pagesBox.innerHTML='<div class="flip-shadow" data-flip-shadow></div>';
   for(let idx=0; idx<pageNums.length; idx++){
     const num=pageNums[idx];
-    const wrap=document.createElement('div');
-    wrap.className='flip-page-wrap '+(idx===1?'dupla':'');
-    wrap.setAttribute('data-page-num',num);
-    wrap.innerHTML='<div class="flip-loading">Carregando página...</div>';
-    pagesBox.appendChild(wrap);
+    const wrap=document.createElement('div');wrap.className='flip-page-wrap '+(idx===1?'dupla':'');wrap.setAttribute('data-page-num',num);
+    wrap.innerHTML='<div class="flip-loading">Carregando página...</div>';pagesBox.appendChild(wrap);
     try{
-      const canvas=await criarCanvasPagina(state,num);
-      wrap.innerHTML='';
-      wrap.appendChild(canvas);
+      const canvas=await criarCanvasPagina(state,num);wrap.innerHTML='';wrap.appendChild(canvas);
       const curlR=document.createElement('div');curlR.className='page-curl right';wrap.appendChild(curlR);
       const curlL=document.createElement('div');curlL.className='page-curl left';wrap.appendChild(curlL);
       const label=document.createElement('div');label.className='flip-page-label';label.textContent='Página '+num;wrap.appendChild(label);
-    }catch(e){
-      console.error(e);
-      wrap.innerHTML='<div class="flip-error">Falha ao carregar esta página.</div>';
-    }
+    }catch(e){console.error(e);wrap.innerHTML='<div class="flip-error">Falha ao carregar esta página.</div>'}
   }
   state.rendering=false;
 }
-function instalarArrasteCatalogo(box){
-  const area=box.querySelector('[data-flip-pages]'); if(!area||area.dataset.dragReady) return;
-  area.dataset.dragReady='1';
-  const minDist=45;
-  const getX=e=> e.touches?.[0]?.clientX ?? e.clientX;
-  function iniciar(e){
-    const st=flipbooks.get(box); if(!st||st.rendering) return;
-    st.drag.active=true;st.drag.startX=getX(e);st.drag.currentX=st.drag.startX;st.drag.side='right';
-    area.classList.add('is-dragging');
-    area.setPointerCapture?.(e.pointerId);
-    const active=[...area.querySelectorAll('.flip-page-wrap')][isMobileDevice()?0:1] || area.querySelector('.flip-page-wrap');
-    if(active) active.classList.add('dragging','page-active-turn');
-    e.preventDefault?.();
-  }
-  function mover(e){
-    const st=flipbooks.get(box); if(!st?.drag.active) return;
-    st.drag.currentX=getX(e);
-    const raw=st.drag.currentX-st.drag.startX;
-    const dx=Math.max(-210,Math.min(210,raw));
-    const goingNext=dx<0;
-    const active=[...area.querySelectorAll('.flip-page-wrap')][isMobileDevice()?0:(goingNext?1:0)] || area.querySelector('.flip-page-wrap');
-    area.querySelectorAll('.flip-page-wrap').forEach(w=>{if(w!==active){w.style.transform='scale(.985)';w.style.filter='brightness(.96)'}});
-    if(active){
-      const origin=goingNext?'right center':'left center';
-      const rot=(Math.abs(dx)/210)*72*(goingNext?-1:1);
-      active.style.transformOrigin=origin;
-      active.style.transform=`translateX(${dx*0.10}px) rotateY(${rot}deg) scale(${1-Math.abs(dx)/3500})`;
-      active.style.filter=`brightness(${1-Math.abs(dx)/900})`;
-      const curl=active.querySelector(goingNext?'.page-curl.right':'.page-curl.left');
-      if(curl){curl.style.opacity=Math.min(1,Math.abs(dx)/80);curl.style.width=Math.min(90,20+Math.abs(dx)*.55)+'px'}
-    }
-    const shadow=area.querySelector('[data-flip-shadow]'); if(shadow) shadow.style.opacity=Math.min(.35,Math.abs(dx)/350);
-    e.preventDefault?.();
-  }
-  async function fim(){
-    const st=flipbooks.get(box); if(!st?.drag.active) return;
-    const dx=st.drag.currentX-st.drag.startX;
-    st.drag.active=false;
-    area.classList.remove('is-dragging');
-    area.querySelectorAll('.flip-page-wrap').forEach(w=>{w.classList.remove('dragging','page-active-turn');w.style.transform='';w.style.filter='';w.style.transformOrigin='';w.querySelectorAll('.page-curl').forEach(c=>{c.style.opacity='';c.style.width=''})});
-    const shadow=area.querySelector('[data-flip-shadow]'); if(shadow) shadow.style.opacity='';
-    if(Math.abs(dx)>minDist){
-      if(dx<0) await catalogoProximaPagina(area); else await catalogoPaginaAnterior(area);
-    }
-  }
-  area.addEventListener('pointerdown',iniciar,{passive:false});
-  area.addEventListener('pointermove',mover,{passive:false});
-  area.addEventListener('pointerup',fim);
-  area.addEventListener('pointercancel',fim);
-  area.addEventListener('touchstart',iniciar,{passive:false});
-  area.addEventListener('touchmove',mover,{passive:false});
-  area.addEventListener('touchend',fim);
+async function preCarregarPaginas(box){
+  const state=flipbooks.get(box); if(!state) return;
+  const mobile=isMobileDevice();
+  const nums=[];for(let i=1;i<=(mobile?1:3);i++) if(state.page+i<=state.total) nums.push(state.page+i);
+  for(const n of nums){try{await criarCanvasPagina(state,n)}catch(e){}}
+}
+function encontrarFlipbook(el){return el.closest('.flipbook')}
+function animarFlip(box,direcao='next'){
+  box.querySelectorAll('.flip-page-wrap').forEach(w=>{w.classList.remove('turn-next','turn-prev');void w.offsetWidth;w.classList.add(direcao==='prev'?'turn-prev':'turn-next');setTimeout(()=>w.classList.remove('turn-next','turn-prev'),480)})
 }
 async function catalogoProximaPagina(btn){const box=encontrarFlipbook(btn),st=flipbooks.get(box);if(!st)return;const salto=isMobileDevice()?1:2;if(st.page+salto<=st.total){animarFlip(box,'next');st.page+=salto;await renderFlipbook(box);preCarregarPaginas(box)}}
 async function catalogoPaginaAnterior(btn){const box=encontrarFlipbook(btn),st=flipbooks.get(box);if(!st)return;const salto=isMobileDevice()?1:2;const antiga=st.page;st.page=Math.max(1,st.page-salto);if(st.page!==antiga){animarFlip(box,'prev');await renderFlipbook(box);preCarregarPaginas(box)}}
+async function catalogoIrPagina(input){const box=encontrarFlipbook(input),st=flipbooks.get(box);if(!st)return;let n=Math.max(1,Math.min(st.total,Number(input.value)||1));if(!isMobileDevice()&&n>1&&n%2===0)n=n-1;const dir=n>=st.page?'next':'prev';st.page=n;animarFlip(box,dir);await renderFlipbook(box);preCarregarPaginas(box)}
+async function catalogoZoomMais(btn){const box=encontrarFlipbook(btn),st=flipbooks.get(box);if(!st)return;st.zoom=Math.min(1.8,Math.round(((st.zoom||1)+0.1)*10)/10);st.cache.clear();await renderFlipbook(box)}
+async function catalogoZoomMenos(btn){const box=encontrarFlipbook(btn),st=flipbooks.get(box);if(!st)return;st.zoom=Math.max(0.7,Math.round(((st.zoom||1)-0.1)*10)/10);st.cache.clear();await renderFlipbook(box)}
+function instalarArrasteCatalogo(box){
+  const area=box.querySelector('[data-flip-pages]'); if(!area||area.dataset.dragReady) return;
+  area.dataset.dragReady='1';const minDist=45;const getX=e=> e.touches?.[0]?.clientX ?? e.clientX;
+  function iniciar(e){const st=flipbooks.get(box);if(!st||st.rendering)return;st.drag.active=true;st.drag.startX=getX(e);st.drag.currentX=st.drag.startX;area.classList.add('is-dragging');area.setPointerCapture?.(e.pointerId);const active=[...area.querySelectorAll('.flip-page-wrap')][isMobileDevice()?0:1]||area.querySelector('.flip-page-wrap');if(active)active.classList.add('dragging','page-active-turn');e.preventDefault?.()}
+  function mover(e){const st=flipbooks.get(box);if(!st?.drag.active)return;st.drag.currentX=getX(e);const raw=st.drag.currentX-st.drag.startX;const dx=Math.max(-210,Math.min(210,raw));const goingNext=dx<0;const active=[...area.querySelectorAll('.flip-page-wrap')][isMobileDevice()?0:(goingNext?1:0)]||area.querySelector('.flip-page-wrap');area.querySelectorAll('.flip-page-wrap').forEach(w=>{if(w!==active){w.style.transform='scale(.985)';w.style.filter='brightness(.96)'}});if(active){const origin=goingNext?'right center':'left center';const rot=(Math.abs(dx)/210)*72*(goingNext?-1:1);active.style.transformOrigin=origin;active.style.transform=`translateX(${dx*.10}px) rotateY(${rot}deg) scale(${1-Math.abs(dx)/3500})`;active.style.filter=`brightness(${1-Math.abs(dx)/900})`;const curl=active.querySelector(goingNext?'.page-curl.right':'.page-curl.left');if(curl){curl.style.opacity=Math.min(1,Math.abs(dx)/80);curl.style.width=Math.min(90,20+Math.abs(dx)*.55)+'px'}}const shadow=area.querySelector('[data-flip-shadow]');if(shadow)shadow.style.opacity=Math.min(.35,Math.abs(dx)/350);e.preventDefault?.()}
+  async function fim(){const st=flipbooks.get(box);if(!st?.drag.active)return;const dx=st.drag.currentX-st.drag.startX;st.drag.active=false;area.classList.remove('is-dragging');area.querySelectorAll('.flip-page-wrap').forEach(w=>{w.classList.remove('dragging','page-active-turn');w.style.transform='';w.style.filter='';w.style.transformOrigin='';w.querySelectorAll('.page-curl').forEach(c=>{c.style.opacity='';c.style.width=''})});const shadow=area.querySelector('[data-flip-shadow]');if(shadow)shadow.style.opacity='';if(Math.abs(dx)>minDist){if(dx<0)await catalogoProximaPagina(area);else await catalogoPaginaAnterior(area)}}
+  area.addEventListener('pointerdown',iniciar,{passive:false});area.addEventListener('pointermove',mover,{passive:false});area.addEventListener('pointerup',fim);area.addEventListener('pointercancel',fim);area.addEventListener('touchstart',iniciar,{passive:false});area.addEventListener('touchmove',mover,{passive:false});area.addEventListener('touchend',fim);
+}
+let resizeFlipTimer=null;
+window.addEventListener('resize',()=>{clearTimeout(resizeFlipTimer);resizeFlipTimer=setTimeout(()=>{document.querySelectorAll('.flipbook').forEach(box=>{const st=flipbooks.get(box);if(st){st.cache.clear();renderFlipbook(box)}})},350)});
 
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
 </script>
