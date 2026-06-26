@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=AH3wiojcsGERn1BoGG0a63aL9AQq6Pi68GMdBEXJA9ysZIVgeKPKizqsicISxGunTUPEwhnlHU6IHfCVGr0tRNQO2S51XY0lFaycGJL2b6gmIMrObmev945zfiAcdXU9Kg3w34MyjLMzNsXrL6UhyCHpTHjkGhYIX5MSu83pOEe6QUgZPRAe8CgPvhrOLLJc8PMjfwtD_xmvlh82X5ODUhFvQxKkSqCStDTuRFi04jbxo_jR857uzB61Nb93SWn4uim1uk5XNBVH8uRuDvijNEUmtdxXAnd-ERDScNGBVSFVOWMBhekbaTUMTwosW8dm" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=4QTbjGW-UE4MhWeOroWHnvkPCzLPDzu_FUCLtkUZZ5y6An-YpmCqf7u-hLEEluIHB0dcJ4nAgo_1_sR4PkDloR1aFPJabRKE1XyW_3vnvEwE_buTCI8ZKtxO72rUtRkhocqDdhxIxZqkgHv5zGMNS30H7SBovHkP8pbSvv5l8DT-_FcILXyMB5VCfeCmgP3-uYPdWu6hQ8in0y96BoN97mdUeRlnjsCKBvf4LqrmhzSyU1KbAHW-IbhhVPLwYiVTOUjTn2sS5FfRI_cubBl0bGzsn6FqENbDR3yFZsfgP_hvpano4jHPhknDRx2BZqV_" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -76,6 +76,20 @@
 .catalog-full-body .flip-page-wrap{max-width:100%!important}
 @media(min-width:901px){.catalog-full-body .flip-page-wrap canvas{max-height:calc(100vh - 178px)!important;width:auto!important;max-width:100%!important}.flipbook.pro .flip-page-wrap canvas{width:auto!important;max-width:100%!important}}
 @media(max-width:900px){.catalog-full-body .flip-page-wrap canvas{max-height:calc(100vh - 178px)!important;width:auto!important;max-width:100%!important}}
+</style>
+
+<style>
+/* Modo leitura ampliada do catálogo */
+.catalog-reader-overlay{position:fixed;inset:0;background:#080713;z-index:10050;display:flex;flex-direction:column;color:#fff;touch-action:none}
+.catalog-reader-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#11101de8;border-bottom:1px solid #ffffff1f;backdrop-filter:blur(10px)}
+.catalog-reader-title{font-weight:bold;font-size:14px;line-height:1.15}.catalog-reader-sub{font-size:12px;color:#d7d0ff;margin-top:2px}
+.catalog-reader-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.catalog-reader-actions .btn{padding:8px 10px;border-radius:10px;font-size:12px}
+.catalog-reader-stage{flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#211b39,#080713 70%)}
+.catalog-reader-canvas{display:block;background:#fff;box-shadow:0 20px 70px #000b;border-radius:6px;touch-action:none;will-change:transform;transform-origin:center center;max-width:none!important;max-height:none!important}
+.catalog-reader-help{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:#0008;color:#fff;border:1px solid #ffffff25;border-radius:999px;padding:8px 12px;font-size:12px;pointer-events:none;white-space:nowrap}
+.catalog-reader-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#ffffff12;border:1px solid #ffffff24;border-radius:14px;padding:14px 18px;color:#fff}
+.catalog-reader-page-click{cursor:zoom-in}
+@media(max-width:900px){.catalog-reader-bar{padding:7px;align-items:flex-start}.catalog-reader-actions .btn{padding:8px 7px;font-size:11px}.catalog-reader-title{font-size:13px}.catalog-reader-help{bottom:8px;font-size:11px;max-width:92%;white-space:normal;text-align:center}}
 </style>
 </head>
 <body>
@@ -397,7 +411,21 @@ async function imprimirPedido(id){
   .flipbook.pro .flip-page-wrap{min-width:100%;max-width:100%}
   .catalog-actions.catalog-actions-bottom .btn{width:100%}
 }
-</style></head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${statusPedidoTexto(pedido.status)}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
+</style>
+<style>
+/* Modo leitura ampliada do catálogo */
+.catalog-reader-overlay{position:fixed;inset:0;background:#080713;z-index:10050;display:flex;flex-direction:column;color:#fff;touch-action:none}
+.catalog-reader-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#11101de8;border-bottom:1px solid #ffffff1f;backdrop-filter:blur(10px)}
+.catalog-reader-title{font-weight:bold;font-size:14px;line-height:1.15}.catalog-reader-sub{font-size:12px;color:#d7d0ff;margin-top:2px}
+.catalog-reader-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.catalog-reader-actions .btn{padding:8px 10px;border-radius:10px;font-size:12px}
+.catalog-reader-stage{flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#211b39,#080713 70%)}
+.catalog-reader-canvas{display:block;background:#fff;box-shadow:0 20px 70px #000b;border-radius:6px;touch-action:none;will-change:transform;transform-origin:center center;max-width:none!important;max-height:none!important}
+.catalog-reader-help{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:#0008;color:#fff;border:1px solid #ffffff25;border-radius:999px;padding:8px 12px;font-size:12px;pointer-events:none;white-space:nowrap}
+.catalog-reader-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#ffffff12;border:1px solid #ffffff24;border-radius:14px;padding:14px 18px;color:#fff}
+.catalog-reader-page-click{cursor:zoom-in}
+@media(max-width:900px){.catalog-reader-bar{padding:7px;align-items:flex-start}.catalog-reader-actions .btn{padding:8px 7px;font-size:11px}.catalog-reader-title{font-size:13px}.catalog-reader-help{bottom:8px;font-size:11px;max-width:92%;white-space:normal;text-align:center}}
+</style>
+</head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${statusPedidoTexto(pedido.status)}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
   const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
 }
 function nomeArquivoOrcamento(pedido){
@@ -1226,6 +1254,127 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape') fecharCatalogoTelaCheia();
   if(e.key==='ArrowRight') catalogoProximaPagina(full.querySelector('.flipbook'));
   if(e.key==='ArrowLeft') catalogoPaginaAnterior(full.querySelector('.flipbook'));
+});
+
+
+// ===== MODO LEITURA AMPLIADA DO CATÁLOGO =====
+let catalogReaderState=null;
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function getCatalogReaderPdfFromPage(el){
+  const box=el?.closest?.('.flipbook');
+  const st=box?flipbooks.get(box):null;
+  return {box, st};
+}
+async function abrirPaginaCatalogoLeitura(pageWrap){
+  if(!pageWrap || pageWrap.closest('.catalog-reader-overlay')) return;
+  const num=Number(pageWrap.getAttribute('data-page-num')||1);
+  const {box,st}=getCatalogReaderPdfFromPage(pageWrap);
+  if(!st?.pdf) return toast('Catálogo ainda está carregando. Aguarde um instante.');
+  const antigo=document.getElementById('catalogReaderOverlay'); if(antigo) antigo.remove();
+  const overlay=document.createElement('div');
+  overlay.id='catalogReaderOverlay';
+  overlay.className='catalog-reader-overlay';
+  overlay.innerHTML=`
+    <div class="catalog-reader-bar">
+      <div><div class="catalog-reader-title">Leitura ampliada do catálogo</div><div class="catalog-reader-sub" id="catalogReaderInfo">Página ${num} de ${st.total}</div></div>
+      <div class="catalog-reader-actions">
+        <button class="btn light" onclick="catalogReaderPrev()">‹</button>
+        <button class="btn light" onclick="catalogReaderZoomOut()">−</button>
+        <button class="btn light" onclick="catalogReaderFit()">Ajustar</button>
+        <button class="btn light" onclick="catalogReaderReadBetter()">Ler melhor</button>
+        <button class="btn light" onclick="catalogReaderZoomIn()">+</button>
+        <button class="btn light" onclick="catalogReaderNext()">›</button>
+        <button class="btn red" onclick="fecharCatalogReader()">Fechar</button>
+      </div>
+    </div>
+    <div class="catalog-reader-stage" id="catalogReaderStage">
+      <div class="catalog-reader-loading" id="catalogReaderLoading">Carregando página...</div>
+      <canvas class="catalog-reader-canvas" id="catalogReaderCanvas"></canvas>
+      <div class="catalog-reader-help">Arraste para ler. Use dois dedos para zoom. Toque duas vezes para ampliar.</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.documentElement.classList.add('fullscreen-open');document.body.classList.add('fullscreen-open');
+  catalogReaderState={pdf:st.pdf,total:st.total,page:num,zoom:1.9,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false};
+  catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
+  catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
+  instalarGestosCatalogReader();
+  await renderCatalogReaderPage(true);
+}
+function fecharCatalogReader(){
+  const o=document.getElementById('catalogReaderOverlay'); if(o)o.remove();
+  catalogReaderState=null;
+  if(!document.getElementById('catalogoFullscreen')){document.documentElement.classList.remove('fullscreen-open');document.body.classList.remove('fullscreen-open')}
+}
+async function renderCatalogReaderPage(resetPos=false){
+  const st=catalogReaderState; if(!st||st.rendering) return;
+  st.rendering=true;
+  const loading=document.getElementById('catalogReaderLoading'); if(loading) loading.style.display='block';
+  try{
+    const page=await st.pdf.getPage(st.page);
+    const base=page.getViewport({scale:1});
+    const stage=st.stage;
+    const sw=stage.clientWidth||window.innerWidth, sh=stage.clientHeight||window.innerHeight;
+    const fit=Math.min((sw-22)/base.width,(sh-22)/base.height);
+    const renderScale=Math.min(4, Math.max(1.5, fit*st.zoom*(window.devicePixelRatio||1)));
+    const viewport=page.getViewport({scale:renderScale});
+    const canvas=st.canvas, ctx=canvas.getContext('2d',{alpha:false});
+    canvas.width=Math.floor(viewport.width);canvas.height=Math.floor(viewport.height);
+    canvas.style.width=Math.floor(viewport.width/(window.devicePixelRatio||1))+'px';
+    canvas.style.height=Math.floor(viewport.height/(window.devicePixelRatio||1))+'px';
+    await page.render({canvasContext:ctx,viewport}).promise;
+    if(resetPos){st.x=0;st.y=0;}
+    aplicarTransformCatalogReader();
+    const info=document.getElementById('catalogReaderInfo'); if(info) info.textContent=`Página ${st.page} de ${st.total} • Zoom ${Math.round(st.zoom*100)}%`;
+  }catch(e){console.error(e);toast('Não consegui abrir essa página do catálogo.');}
+  finally{st.rendering=false;if(loading)loading.style.display='none'}
+}
+function aplicarTransformCatalogReader(){
+  const st=catalogReaderState;if(!st?.canvas)return;
+  st.canvas.style.transform=`translate(${st.x}px,${st.y}px)`;
+}
+async function catalogReaderNext(){const st=catalogReaderState;if(!st)return;if(st.page<st.total){st.page++;await renderCatalogReaderPage(true)}}
+async function catalogReaderPrev(){const st=catalogReaderState;if(!st)return;if(st.page>1){st.page--;await renderCatalogReaderPage(true)}}
+async function catalogReaderZoomIn(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom+.35,0.8,4);await renderCatalogReaderPage(false)}
+async function catalogReaderZoomOut(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom-.35,0.8,4);await renderCatalogReaderPage(false)}
+async function catalogReaderFit(){const st=catalogReaderState;if(!st)return;st.zoom=1;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.zoom=2.6;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+function instalarGestosCatalogReader(){
+  const st=catalogReaderState, stage=st.stage; if(!stage||stage.dataset.readerGestos)return; stage.dataset.readerGestos='1';
+  let lastTap=0;
+  stage.addEventListener('pointerdown',e=>{
+    st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); stage.setPointerCapture?.(e.pointerId);
+    if(st.pointers.size===1){st.drag=true;st.startX=e.clientX;st.startY=e.clientY;st.startTX=st.x;st.startTY=st.y;}
+    if(st.pointers.size===2){const pts=[...st.pointers.values()];st.pinchStart=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);st.pinchZoom=st.zoom;}
+    e.preventDefault();
+  });
+  stage.addEventListener('pointermove',e=>{
+    if(!st.pointers.has(e.pointerId))return; st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(st.pointers.size===2){const pts=[...st.pointers.values()];const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);st.zoom=clamp(st.pinchZoom*(dist/(st.pinchStart||dist)),0.8,4);const info=document.getElementById('catalogReaderInfo');if(info)info.textContent=`Página ${st.page} de ${st.total} • Zoom ${Math.round(st.zoom*100)}%`;}
+    else if(st.drag){st.x=st.startTX+(e.clientX-st.startX);st.y=st.startTY+(e.clientY-st.startY);aplicarTransformCatalogReader();}
+    e.preventDefault();
+  });
+  function end(e){
+    st.pointers.delete(e.pointerId);st.drag=false;
+    if(st.pinchStart){st.pinchStart=0;renderCatalogReaderPage(false)}
+  }
+  stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
+  stage.addEventListener('dblclick',async e=>{st.zoom=st.zoom<2?2.8:1;st.x=0;st.y=0;await renderCatalogReaderPage(true);e.preventDefault();});
+  stage.addEventListener('click',async e=>{const now=Date.now();if(now-lastTap<300){st.zoom=st.zoom<2?2.8:1;st.x=0;st.y=0;await renderCatalogReaderPage(true);}lastTap=now;});
+  stage.addEventListener('wheel',async e=>{e.preventDefault();st.zoom=clamp(st.zoom+(e.deltaY<0?.25:-.25),0.8,4);await renderCatalogReaderPage(false);},{passive:false});
+}
+document.addEventListener('click',function(e){
+  const wrap=e.target.closest?.('.flip-page-wrap');
+  if(!wrap) return;
+  if(e.target.closest('.catalog-reader-overlay')) return;
+  const area=wrap.closest('[data-flip-pages]');
+  if(area && area.classList.contains('is-dragging')) return;
+  abrirPaginaCatalogoLeitura(wrap);
+},true);
+document.addEventListener('keydown',e=>{
+  if(!catalogReaderState)return;
+  if(e.key==='Escape')fecharCatalogReader();
+  if(e.key==='ArrowRight')catalogReaderNext();
+  if(e.key==='ArrowLeft')catalogReaderPrev();
 });
 
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
