@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=sfJDBv7owSn7LpQw0Ld2ZCWv5nL56-u2rBDIj47DV-htmpI-uD_ca14mn6VDooBqrpRIEhfO6C3yW92GNyXD-ItTS7RcwcAkL_Tmgsbocmwy3HX6RG5EJdfLdoyQNe4drQvG4oge8P2_p8j6ocBOXCZ4tl958LHPkrzONJBKak8v7gZN70RT2zALz6kpIRC7DddBhBvaygu2oqzrz-9dWWzIDgg0_fYk2xv58tZUdd99KbV_Ok-hDPTZZDSUaVyiHwh1OeP5Iz8P7tMLbX2Aw87zuAA33ERZQNVfGUUQIC-bZ1Zl_8BUb2MX_GvOf8gl" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -2135,7 +2135,7 @@ async function atualizarEstoqueRevendedor(id,input){
   setTimeout(()=>{if(msg)msg.textContent=novo<=minimo?'⚠️ baixo':''},1600);
 }
 
-function renderPedidosRevendedor(){const el=document.getElementById('listaPedidosRevendedor');if(!el)return;if(!rvPedidos.length){el.innerHTML='<div class="catalog-empty">Nenhum pedido recebido ainda.</div>';return}el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Data</th><th>Cliente</th><th>WhatsApp</th><th>Status</th><th>Total</th><th>Ação</th></tr>${rvPedidos.map(p=>`<tr><td>${p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):''}</td><td>${p.nome_cliente||''}</td><td>${p.whatsapp||''}</td><td><span class="pill ${p.status==='finalizado'?'ok':'warn'}">${p.status||'novo'}</span></td><td>${money(p.total)}</td><td><button class="btn" onclick="verPedidoRevendedor('${p.id}')">Ver</button> <button class="btn ok" onclick="marcarPedidoRevendedor('${p.id}','finalizado')">Finalizar</button></td></tr>`).join('')}</table></div>`}
+function renderPedidosRevendedor(){const el=document.getElementById('listaPedidosRevendedor');if(!el)return;if(!rvPedidos.length){el.innerHTML='<div class="catalog-empty">Nenhum pedido recebido ainda.</div>';return}el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Data</th><th>Cliente</th><th>WhatsApp</th><th>Status</th><th>Total</th><th>Ação</th></tr>${rvPedidos.map(p=>`<tr><td>${p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):''}</td><td>${p.nome_cliente||''}</td><td>${p.whatsapp||''}</td><td><span class="pill ${p.status==='finalizado'?'ok':'warn'}">${p.status||'novo'}</span></td><td>${money(p.total)}</td><td><button class="btn" onclick="verPedidoRevendedor('${p.id}')">Ver</button> <button class="btn ok" onclick="enviarPedidoRevendedorWhatsApp('${p.id}')">WhatsApp</button> <button class="btn light" onclick="imprimirPedidoRevendedor('${p.id}')">Imprimir</button> <button class="btn ok" onclick="marcarPedidoRevendedor('${p.id}','finalizado')">Finalizar</button></td></tr>`).join('')}</table></div>`}
 function limparFormProdutoRevendedor(){rvCodigo.value=rvNome.value=rvCategoria.value=rvCusto.value=rvVenda.value='';rvEstoque.value=0;rvEstoqueMin.value=5;rvOrigem.value='proprio'}
 async function salvarProdutoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!rvCodigo.value.trim()||!rvNome.value.trim())return toast('Informe código e nome do produto');const obj={cliente_id:c.id,codigo:rvCodigo.value.trim(),nome:rvNome.value.trim(),categoria:rvCategoria.value.trim(),preco_custo:Number(rvCusto.value)||0,preco_venda:Number(rvVenda.value)||0,estoque:Number(rvEstoque.value)||0,estoque_minimo:Number(rvEstoqueMin.value)||0,origem:rvOrigem.value,ativo:true};let res;if(rvEditProdutoId)res=await sb.from('distribuidor_produtos').update(obj).eq('id',rvEditProdutoId);else res=await sb.from('distribuidor_produtos').upsert(obj,{onConflict:'cliente_id,codigo'});if(res.error)return toast(res.error.message);toast(rvEditProdutoId?'Produto atualizado':'Produto salvo');cancelarProdutoRevendedor();await carregarModuloRevendedor()}
 function editarProdutoRevendedor(id){const p=rvProdutos.find(x=>x.id===id);if(!p)return;rvEditProdutoId=id;rvCodigo.value=p.codigo||'';rvNome.value=p.nome||'';rvCategoria.value=p.categoria||'';rvCusto.value=p.preco_custo||0;rvVenda.value=p.preco_venda||0;rvEstoque.value=p.estoque||0;rvEstoqueMin.value=p.estoque_minimo||0;rvOrigem.value=p.origem||'proprio';btnSalvarProdutoRev.textContent='Atualizar produto';btnCancelarProdutoRev.classList.remove('hidden')}
@@ -2145,6 +2145,98 @@ async function importarCatalogoSofisticattoRevendedor(){const c=clienteRevendedo
 function copiarLinkLojaRevendedor(){const link=linkLojaRevendedor();if(!link)return toast('Link indisponível');navigator.clipboard?.writeText(link);toast('Link copiado')}
 function abrirLinkLojaRevendedor(){const link=linkLojaRevendedor();if(link)window.open(link,'_blank')}
 async function verPedidoRevendedor(id){const p=rvPedidos.find(x=>x.id===id);if(!p)return;const {data}=await sb.from('distribuidor_pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});const itens=data||[];const html=`<div><h3>Pedido da loja</h3><div class="pedido-resumo"><div><b>Cliente</b><br>${p.nome_cliente||''}</div><div><b>WhatsApp</b><br>${p.whatsapp||''}</div><div><b>Status</b><br>${p.status||''}</div><div><b>Total</b><br>${money(p.total)}</div></div><div class="table-wrap"><table class="table"><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>${itens.map(i=>`<tr><td>${i.codigo||''}</td><td>${i.nome||''}</td><td>${i.quantidade||0}</td><td>${money(i.preco_unitario)}</td><td>${money(i.total)}</td></tr>`).join('')}</table></div><p style="margin-top:12px"><b>Observação:</b> ${p.observacao||'-'}</p></div>`;modalPedidoTitulo.textContent='Pedido da Loja';modalPedidoContent.innerHTML=html;modalPedidoActions.innerHTML=`<button class="btn light" onclick="fecharModalPedido()">Fechar</button>`;modalPedido.classList.remove('hidden')}
+
+function dadosPedidoRevendedorFormatados(pedido,itens){
+  const loja=rvCliente||clienteRevendedorAtual()||{};
+  const linhas=[];
+  linhas.push(`*${loja.nome_fantasia||'Loja Sofisticatto'}*`);
+  linhas.push(`Orçamento/Pedido da loja`);
+  linhas.push(`Cliente: ${pedido.nome_cliente||''}`);
+  if(pedido.whatsapp)linhas.push(`WhatsApp: ${pedido.whatsapp}`);
+  linhas.push(`Status: ${pedido.status||'novo'}`);
+  linhas.push('');
+  linhas.push('*Itens:*');
+  itens.forEach(i=>{
+    linhas.push(`${i.codigo||''} - ${i.nome||''}`);
+    linhas.push(`Qtd: ${i.quantidade||0} | Unitário: ${money(i.preco_unitario)} | Total: ${money(i.total)}`);
+    linhas.push('');
+  });
+  if(pedido.observacao)linhas.push(`Observação: ${pedido.observacao}`);
+  linhas.push(`Total geral: ${money(pedido.total)}`);
+  return linhas.join('\n');
+}
+function nomeArquivoOrcamentoRevendedor(pedido){const nome=(pedido.nome_cliente||'cliente').toString().replace(/[^a-zA-Z0-9_-]/g,'_');const id=(pedido.id||'pedido').toString().slice(0,8);return `orcamento_loja_${nome}_${id}.png`}
+async function buscarItensPedidoRevendedor(id){const {data,error}=await sb.from('distribuidor_pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});if(error){toast('Erro ao buscar itens: '+error.message);return []}return data||[]}
+async function gerarImagemOrcamentoRevendedor(id,baixar=true){
+  const pedido=rvPedidos.find(p=>p.id===id);if(!pedido){toast('Pedido não encontrado');return null}
+  const itens=await buscarItensPedidoRevendedor(id);
+  try{
+    const loja=rvCliente||clienteRevendedorAtual()||{};
+    const dataPedido=pedido.created_at?new Date(pedido.created_at).toLocaleDateString('pt-BR'):new Date().toLocaleDateString('pt-BR');
+    const largura=1200;
+    const altura=Math.max(780, 470 + (itens.length*70));
+    const canvas=document.createElement('canvas');canvas.width=largura;canvas.height=altura;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,largura,altura);
+    ctx.fillStyle='#5a4fa3';ctx.font='italic 50px Arial';ctx.fillText(loja.nome_fantasia||'Sofisticatto',60,80);
+    ctx.font='20px Arial';ctx.fillStyle='#666';ctx.fillText('Orçamento da loja',62,114);
+    ctx.textAlign='right';ctx.fillStyle='#5a4fa3';ctx.font='bold 38px Arial';ctx.fillText('ORÇAMENTO',1140,74);
+    ctx.font='20px Arial';ctx.fillStyle='#666';ctx.fillText('Data '+dataPedido,1140,110);ctx.textAlign='left';
+    ctx.fillStyle='#5a4fa3';ctx.fillRect(60,145,1080,4);
+    const boxes=[['Cliente',pedido.nome_cliente||''],['WhatsApp',pedido.whatsapp||''],['Status',pedido.status||'novo'],['Total',money(pedido.total)]];
+    let bx=60;
+    boxes.forEach(b=>{ctx.fillStyle='#f6f3ff';ctx.strokeStyle='#dfd6ff';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(bx,175,255,78,16);ctx.fill();ctx.stroke();ctx.fillStyle='#5a4fa3';ctx.font='bold 15px Arial';ctx.fillText(b[0].toUpperCase(),bx+16,202);ctx.fillStyle=b[0]==='Total'?'#16a34a':'#2f2b45';ctx.font=b[0]==='Total'?'bold 22px Arial':'18px Arial';quebrarTextoCanvas(ctx,b[1],bx+16,229,220,22);bx+=275});
+    let y=300;
+    const cols=[60,165,650,760,930];
+    ctx.fillStyle='#5a4fa3';ctx.fillRect(60,y,1080,42);
+    ctx.fillStyle='#fff';ctx.font='bold 17px Arial';['Código','Produto','Qtd','Unitário','Total'].forEach((h,i)=>ctx.fillText(h,cols[i]+8,y+27));
+    y+=52;ctx.textBaseline='top';
+    itens.forEach((i,idx)=>{
+      const rowH=62;ctx.fillStyle=idx%2?'#fbfaff':'#ffffff';ctx.fillRect(60,y-8,1080,rowH);ctx.strokeStyle='#e9e6f3';ctx.beginPath();ctx.moveTo(60,y+rowH-8);ctx.lineTo(1140,y+rowH-8);ctx.stroke();
+      ctx.fillStyle='#2f2b45';ctx.font='bold 17px Arial';ctx.fillText(i.codigo||'',cols[0]+8,y);
+      ctx.font='17px Arial';quebrarTextoCanvas(ctx,i.nome||'',cols[1]+8,y,455,20);
+      ctx.fillText(String(i.quantidade||0),cols[2]+8,y);
+      ctx.fillText(money(i.preco_unitario),cols[3]+8,y);
+      ctx.fillStyle='#16a34a';ctx.font='bold 17px Arial';ctx.fillText(money(i.total),cols[4]+8,y);
+      y+=rowH;
+    });
+    y+=20;
+    if(pedido.observacao){ctx.fillStyle='#2f2b45';ctx.font='18px Arial';ctx.fillText('Observação:',60,y);ctx.font='17px Arial';quebrarTextoCanvas(ctx,pedido.observacao,170,y,600,22)}
+    ctx.fillStyle='#f6f3ff';ctx.strokeStyle='#dfd6ff';ctx.beginPath();ctx.roundRect(760,y,380,110,18);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#2f2b45';ctx.font='20px Arial';ctx.fillText('Total do pedido',785,y+28);
+    ctx.fillStyle='#16a34a';ctx.font='bold 34px Arial';ctx.fillText(money(pedido.total),785,y+70);
+    ctx.fillStyle='#666';ctx.font='16px Arial';ctx.textAlign='center';ctx.fillText('Orçamento gerado pela loja do Distribuidor/Revendedor no Sistema Sofisticatto.',largura/2,altura-45);ctx.textAlign='left';ctx.textBaseline='alphabetic';
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png',0.95));
+    const arquivo=nomeArquivoOrcamentoRevendedor(pedido);
+    if(baixar&&blob){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=arquivo;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+    return {pedido,itens,blob,arquivo,canvas};
+  }catch(e){console.error(e);toast('Não foi possível gerar a imagem do orçamento da loja');return null}
+}
+async function enviarPedidoRevendedorWhatsApp(id){
+  const pedido=rvPedidos.find(p=>p.id===id);if(!pedido)return toast('Pedido não encontrado');
+  const itens=await buscarItensPedidoRevendedor(id);
+  toast('Gerando imagem do orçamento da loja...');
+  const gerado=await gerarImagemOrcamentoRevendedor(id,false);
+  let fone=(pedido.whatsapp||'').replace(/\D/g,'');if(fone&&!fone.startsWith('55'))fone='55'+fone;
+  const msg=`Olá, ${pedido.nome_cliente||''}! Segue o orçamento da sua compra.\n\nTotal: ${money(pedido.total)}\n\nA imagem do orçamento foi gerada para envio.`;
+  if(gerado?.blob){
+    const file=new File([gerado.blob],gerado.arquivo,{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{await navigator.share({files:[file],text:msg,title:'Orçamento da loja'});return}catch(e){console.warn('Compartilhamento cancelado/falhou:',e)}
+    }
+    await gerarImagemOrcamentoRevendedor(id,true);
+    toast('Imagem baixada. Agora anexe no WhatsApp do cliente.');
+  }
+  const texto=dadosPedidoRevendedorFormatados(pedido,itens);
+  window.open(`https://wa.me/${fone}?text=${encodeURIComponent(msg+'\n\n'+texto)}`,'_blank');
+}
+async function imprimirPedidoRevendedor(id){
+  const pedido=rvPedidos.find(p=>p.id===id);if(!pedido)return toast('Pedido não encontrado');
+  const itens=await buscarItensPedidoRevendedor(id);const loja=rvCliente||clienteRevendedorAtual()||{};
+  const linhas=itens.map(i=>`<tr><td>${i.codigo||''}</td><td>${i.nome||''}</td><td>${i.quantidade||0}</td><td>${money(i.preco_unitario)}</td><td>${money(i.total)}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido da Loja</title><style>body{font-family:Arial;padding:24px;color:#333}h1{color:#5a4fa3}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f3f0ff}.total{margin-top:18px;font-size:22px;font-weight:bold;color:#16a34a}@media print{button{display:none}}</style></head><body><button onclick="window.print()">Imprimir</button><h1>${loja.nome_fantasia||'Sofisticatto'}</h1><h2>Orçamento / Pedido da loja</h2><p><b>Cliente:</b> ${pedido.nome_cliente||''}<br><b>WhatsApp:</b> ${pedido.whatsapp||''}<br><b>Status:</b> ${pedido.status||'novo'}</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>${linhas}</table><p><b>Observação:</b> ${pedido.observacao||'-'}</p><div class="total">Total: ${money(pedido.total)}</div></body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();w.focus();
+}
 async function marcarPedidoRevendedor(id,status){const {error}=await sb.from('distribuidor_pedidos').update({status}).eq('id',id);if(error)return toast(error.message);toast('Pedido atualizado');await carregarModuloRevendedor()}
 function abrirLojaPublica(token){document.body.innerHTML='<div class="rv-public-body"><div class="rv-public-header"><h1>Sofisticatto</h1><p>Carregando loja...</p></div></div>';carregarLojaPublica(token)}
 async function carregarLojaPublica(token){const {data:cli,error}=await sb.from('clientes').select('*').or(`loja_token.eq.${token},id.eq.${token}`).eq('ativo',true).single();if(error||!cli){document.body.innerHTML='<div class="rv-public-body"><div class="rv-public-header"><h1>Loja não encontrada</h1><p>Confira o link enviado.</p></div></div>';return}rvLojaPublicaCliente=cli;const {data:prods}=await sb.from('distribuidor_produtos').select('*').eq('cliente_id',cli.id).eq('ativo',true).gt('estoque',0).order('nome');rvLojaPublicaProdutos=prods||[];renderLojaPublica()}
