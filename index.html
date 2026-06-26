@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=gwfsfEEmXr9vYNh5JrdXxwTSslR0aqQX1wRdt8EugMB8pW1dpMe8jFeP1r6wZVW7kvAtiNZUYDJ_9LzremNHc_72-3dhmzk1xKoX7__2AWVqAkx_Hg3aaeMK7zQ9V9wlZgWQ2KVX82nFvh0ed9YBEprc7miD_Yq0qPSmKsG1KUGPRTVWsil4ghC4v0YfTf4yHsYHet3UEVt1cv5UBFnrD8W0Es67Ym-BWvOZVBKjTjA_yj89_yb-TwvYVICtpB8V91_MzhjnjNOVqa4iG4FpDVDLvWEniTmJ5-swXUY2kUAwkC1ZZyu5xIs3bfIi63By" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=mb_uxa_c3o9vPA8JdMcpMD7de8QRMxy0BlbANBTnIePp7SVAjwWdnLqA1UBWKqZ4Up1eScjL3ejSkKFAJFKHNOH_f6gdhzWynyB45uwFxCZgUoe9qcXlzJrrW4vFvG9W2LeHSOljLwnDGv0FdYUDNw_5OkXPjU6CGFvlmnsWsuaYtK9pmA_8sVhaI8WldRw5h9O3tDIaDFk_ut_bfJH2tpfwn8owWmeFFLF6UzLa3aGC_kYJL9IQ7RmBM6k6lF1aA3BGUR5X0Ddd_wWsBXTTV8Mvq-GhZEfKRBiayZ6fNkkfZwTB0NzdIFUwsoJcvHJZ" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -137,6 +137,34 @@
   .catalog-reader-actions{gap:4px!important}.catalog-reader-actions .btn{font-size:11px!important;padding:7px 6px!important;border-radius:9px!important}
   .catalog-reader-title{font-size:12px!important}.catalog-reader-sub{font-size:11px!important}
   .catalog-reader-help{font-size:11px!important;bottom:8px!important;max-width:96%!important}
+}
+</style>
+
+<style id="catalogoCentralizadoEsticadoFinal">
+/* Ajuste final: leitor do catálogo mais centralizado e preenchendo melhor a horizontal */
+.catalog-reader-stage{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+.catalog-reader-canvas{
+  margin:auto!important;
+  border-radius:4px!important;
+  box-shadow:0 16px 54px rgba(0,0,0,.72)!important;
+}
+.catalog-full-body .flip-pages{
+  justify-content:center!important;
+  align-items:center!important;
+}
+.catalog-full-body .flip-page-wrap canvas{
+  max-width:98vw!important;
+  max-height:98dvh!important;
+}
+@media(max-width:900px){
+  .catalog-reader-stage{align-items:center!important;justify-content:center!important}
+  .catalog-reader-canvas{border-radius:2px!important}
 }
 </style>
 </head>
@@ -472,6 +500,34 @@ async function imprimirPedido(id){
 .catalog-reader-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#ffffff12;border:1px solid #ffffff24;border-radius:14px;padding:14px 18px;color:#fff}
 .catalog-reader-page-click{cursor:zoom-in}
 @media(max-width:900px){.catalog-reader-bar{padding:7px;align-items:flex-start}.catalog-reader-actions .btn{padding:8px 7px;font-size:11px}.catalog-reader-title{font-size:13px}.catalog-reader-help{bottom:8px;font-size:11px;max-width:92%;white-space:normal;text-align:center}}
+</style>
+
+<style id="catalogoCentralizadoEsticadoFinal">
+/* Ajuste final: leitor do catálogo mais centralizado e preenchendo melhor a horizontal */
+.catalog-reader-stage{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+.catalog-reader-canvas{
+  margin:auto!important;
+  border-radius:4px!important;
+  box-shadow:0 16px 54px rgba(0,0,0,.72)!important;
+}
+.catalog-full-body .flip-pages{
+  justify-content:center!important;
+  align-items:center!important;
+}
+.catalog-full-body .flip-page-wrap canvas{
+  max-width:98vw!important;
+  max-height:98dvh!important;
+}
+@media(max-width:900px){
+  .catalog-reader-stage{align-items:center!important;justify-content:center!important}
+  .catalog-reader-canvas{border-radius:2px!important}
+}
 </style>
 </head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${statusPedidoTexto(pedido.status)}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
   const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
@@ -1342,7 +1398,7 @@ async function abrirPaginaCatalogoLeitura(pageWrap){
     </div>`;
   document.body.appendChild(overlay);
   document.documentElement.classList.add('fullscreen-open');document.body.classList.add('fullscreen-open');
-  catalogReaderState={pdf:st.pdf,total:st.total,page:num,zoom:1.9,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false};
+  catalogReaderState={pdf:st.pdf,total:st.total,page:num,zoom:1,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
   catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
   catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
   instalarGestosCatalogReader();
@@ -1362,8 +1418,11 @@ async function renderCatalogReaderPage(resetPos=false){
     const base=page.getViewport({scale:1});
     const stage=st.stage;
     const sw=stage.clientWidth||window.innerWidth, sh=stage.clientHeight||window.innerHeight;
-    const fit=Math.min(sw/base.width,sh/base.height);
-    const renderScale=Math.min(4, Math.max(1.5, fit*st.zoom*(window.devicePixelRatio||1)));
+    const margem=window.innerWidth<=900?0.995:0.965;
+    const fitWidth=(sw*margem)/base.width;
+    const fitPage=Math.min((sw*margem)/base.width,(sh*.965)/base.height);
+    const fit=st.fitMode==='page'?fitPage:fitWidth;
+    const renderScale=Math.min(5, Math.max(1.35, fit*st.zoom*(window.devicePixelRatio||1)));
     const viewport=page.getViewport({scale:renderScale});
     const canvas=st.canvas, ctx=canvas.getContext('2d',{alpha:false});
     canvas.width=Math.floor(viewport.width);canvas.height=Math.floor(viewport.height);
@@ -1384,8 +1443,8 @@ async function catalogReaderNext(){const st=catalogReaderState;if(!st)return;if(
 async function catalogReaderPrev(){const st=catalogReaderState;if(!st)return;if(st.page>1){st.page--;await renderCatalogReaderPage(true)}}
 async function catalogReaderZoomIn(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom+.35,0.8,4);await renderCatalogReaderPage(false)}
 async function catalogReaderZoomOut(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom-.35,0.8,4);await renderCatalogReaderPage(false)}
-async function catalogReaderFit(){const st=catalogReaderState;if(!st)return;st.zoom=1;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
-async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.zoom=2.6;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+async function catalogReaderFit(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=1;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=1.75;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
 function instalarGestosCatalogReader(){
   const st=catalogReaderState, stage=st.stage; if(!stage||stage.dataset.readerGestos)return; stage.dataset.readerGestos='1';
   let lastTap=0;
