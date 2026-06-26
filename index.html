@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=eXE2aa8NUWXtIEhqEs69DIV3E_ZhEv3gpu2lO9qT5hGba60fYlxqvAdtzN1KUSslY2vUvxcv--iV3e8QmWIh9fj3TSrjXUY2twyIegVWw-Qe0fOfWw2UOf6p56-oJujWG0oCzLZarE5kpyHKTGgx3wBZxMxT7SClXNDW4hBfJxjxAvXKY9IQSmGmu0utoOz38-X6sxeY-AuAxKOAGssHv360FLpgwBmYIyjC6tdLNLsai1-X56qWbhGPdDVJ8vMNi-oSb36bbAMuXS7e5KWxJ5eH5iMUgm0Wi1V_o8J4NhfJincS0SqbIyDXqsH3G1Uo" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -165,6 +165,15 @@
 @media(max-width:900px){
   .catalog-reader-stage{align-items:center!important;justify-content:center!important}
   .catalog-reader-canvas{border-radius:2px!important}
+}
+</style>
+
+<style id="catalogoPcNitidezFinal">
+@media (min-width:901px){
+  .catalog-reader-overlay{background:#05050a!important;}
+  .catalog-reader-stage{padding:0!important;align-items:center!important;justify-content:center!important;}
+  .catalog-reader-canvas{border-radius:4px!important;box-shadow:0 22px 85px rgba(0,0,0,.78)!important;}
+  .catalog-reader-bar{max-width:1180px!important;margin:0 auto!important;}
 }
 </style>
 </head>
@@ -1441,8 +1450,8 @@ function aplicarTransformCatalogReader(){
 }
 async function catalogReaderNext(){const st=catalogReaderState;if(!st)return;if(st.page<st.total){st.page++;await renderCatalogReaderPage(true)}}
 async function catalogReaderPrev(){const st=catalogReaderState;if(!st)return;if(st.page>1){st.page--;await renderCatalogReaderPage(true)}}
-async function catalogReaderZoomIn(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom+.35,0.8,4);await renderCatalogReaderPage(false)}
-async function catalogReaderZoomOut(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom-.35,0.8,4);await renderCatalogReaderPage(false)}
+async function catalogReaderZoomIn(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom+.35,0.8,5.5);await renderCatalogReaderPage(false)}
+async function catalogReaderZoomOut(){const st=catalogReaderState;if(!st)return;st.zoom=clamp(st.zoom-.35,0.8,5.5);await renderCatalogReaderPage(false)}
 async function catalogReaderFit(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=1;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
 async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=1.75;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
 function instalarGestosCatalogReader(){
@@ -1456,7 +1465,7 @@ function instalarGestosCatalogReader(){
   });
   stage.addEventListener('pointermove',e=>{
     if(!st.pointers.has(e.pointerId))return; st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-    if(st.pointers.size===2){const pts=[...st.pointers.values()];const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);st.zoom=clamp(st.pinchZoom*(dist/(st.pinchStart||dist)),0.8,4);const info=document.getElementById('catalogReaderInfo');if(info)info.textContent=`Página ${st.page} de ${st.total} • Zoom ${Math.round(st.zoom*100)}%`;}
+    if(st.pointers.size===2){const pts=[...st.pointers.values()];const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);st.zoom=clamp(st.pinchZoom*(dist/(st.pinchStart||dist)),0.8,5.5);const info=document.getElementById('catalogReaderInfo');if(info)info.textContent=`Página ${st.page} de ${st.total} • Zoom ${Math.round(st.zoom*100)}%`;}
     else if(st.drag){st.x=st.startTX+(e.clientX-st.startX);st.y=st.startTY+(e.clientY-st.startY);aplicarTransformCatalogReader();}
     e.preventDefault();
   });
@@ -1467,7 +1476,7 @@ function instalarGestosCatalogReader(){
   stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
   stage.addEventListener('dblclick',async e=>{st.zoom=st.zoom<2?2.8:1;st.x=0;st.y=0;await renderCatalogReaderPage(true);e.preventDefault();});
   stage.addEventListener('click',async e=>{const now=Date.now();if(now-lastTap<300){st.zoom=st.zoom<2?2.8:1;st.x=0;st.y=0;await renderCatalogReaderPage(true);}lastTap=now;});
-  stage.addEventListener('wheel',async e=>{e.preventDefault();st.zoom=clamp(st.zoom+(e.deltaY<0?.25:-.25),0.8,4);await renderCatalogReaderPage(false);},{passive:false});
+  stage.addEventListener('wheel',async e=>{e.preventDefault();st.zoom=clamp(st.zoom+(e.deltaY<0?.35:-.35),0.8,5.5);await renderCatalogReaderPage(false);},{passive:false});
 }
 document.addEventListener('click',function(e){
   const wrap=e.target.closest?.('.flip-page-wrap');
@@ -1554,7 +1563,7 @@ async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
     const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:false,disableStream:false,disableWorker:true,rangeChunkSize:262144});
     const pdf=await task.promise;
     const mobile=isMobileDevice();
-    catalogReaderState={pdf,total:pdf.numPages,page:Math.max(1,Math.min(pdf.numPages,Number(paginaInicial)||1)),zoom:mobile?2.35:1.45,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
+    catalogReaderState={pdf,total:pdf.numPages,page:Math.max(1,Math.min(pdf.numPages,Number(paginaInicial)||1)),zoom:mobile?2.35:2.10,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
     catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
     catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
     instalarGestosCatalogReader();
@@ -1569,11 +1578,8 @@ async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
 window.abrirCatalogoTelaCheia = async function(el){
   const url=el.getAttribute('data-pdf-url') || (config.catalogo_url||'').trim();
   const nome=el.getAttribute('data-catalog-name') || config.catalogo_nome || 'Catálogo Sofisticatto';
-  if(isMobileDevice()){
-    await abrirCatalogoLeituraDireta(url,nome,1);
-  }else if(abrirCatalogoTelaCheiaOriginal){
-    abrirCatalogoTelaCheiaOriginal(el);
-  }
+  // Abre o mesmo leitor ampliado no celular e no PC para mais nitidez e leitura livre.
+  await abrirCatalogoLeituraDireta(url,nome,1);
 };
 
 const renderCatalogReaderPageOriginal = typeof renderCatalogReaderPage === 'function' ? renderCatalogReaderPage : null;
@@ -1590,8 +1596,9 @@ async function renderCatalogReaderPage(resetPos=false){
     const fitWidth=(sw*(mobile?1.00:.98))/base.width;
     const fitPage=Math.min((sw*(mobile?1.00:.98))/base.width,(sh*(mobile?1.00:.97))/base.height);
     const fit=st.fitMode==='page'?fitPage:fitWidth;
-    const dpr=mobile?Math.min(window.devicePixelRatio||1,2):Math.min(window.devicePixelRatio||1,2.4);
-    const renderScale=Math.min(6, Math.max(1.6, fit*st.zoom*dpr));
+    const dpr=mobile?Math.min(window.devicePixelRatio||1,2):Math.min(window.devicePixelRatio||1,3.5);
+    // No PC renderiza em resolução mais alta para melhorar textos pequenos e valores.
+    const renderScale=Math.min(mobile?6:9, Math.max(mobile?1.6:2.2, fit*st.zoom*dpr));
     const viewport=page.getViewport({scale:renderScale});
     const canvas=st.canvas, ctx=canvas.getContext('2d',{alpha:false});
     canvas.width=Math.floor(viewport.width);canvas.height=Math.floor(viewport.height);
@@ -1612,7 +1619,7 @@ async function renderCatalogReaderPage(resetPos=false){
   finally{st.rendering=false;if(loading)loading.style.display='none'}
 }
 async function catalogReaderFit(){const st=catalogReaderState;if(!st)return;st.fitMode='page';st.zoom=1;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
-async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=isMobileDevice()?2.6:1.9;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=isMobileDevice()?2.6:2.45;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
 
 // Se clicar numa página da revista no PC/celular, abre o modo leitura já ampliado.
 async function abrirPaginaCatalogoLeitura(pageWrap){
