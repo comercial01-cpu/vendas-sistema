@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=LYFIB2OZr_ZkhTHMU2cu_d135VIhH5edN-u_7Fm5bdVBlYOA0pEmGQFdIAYHNfzW15lSNY4WrkMvk_39KkkNWBK1x5rkIaPhwTEtQrA7qI-_lI04pZSpcQWGtL2G59jFOVdnL9YwabsA4PaPVU-Zaja3zxTwTV1W_Si3TJISUYJiPstLFrEtIqE1Q9iXSBhe0PA41H1gTkunK65YRHnuqwO4BtrdKWOkbhKx9Us_RjY1eNFKc5q8GaUAEdm2dbenrC0pC0oOKKGAbgtV7G32XxCXBcFE9UuKMFw6fPIkcmOaGWI-8iZHufAsxfq3gmHG" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=dAp9BGp-MhWq-8IwzskRJaZ7TdxlbZEv-cBNYOvkm5nBkR8CpUdlpWeEY7evwgpI8qazL7xohYbK-EU3OH2K5JLPoR13xyiLdhBO0GN-IkivJuaT7RE1l03JQtFryoEaPZ_0ctci4FIr9d88ur0lMx2SdNEbfpuYbfZJ_XEUax2UVQDubOQICTqksTgjauh17BBIpTpKBw5nBrCIpEr8YQcq4r9_wetxwksM5ky4qm_myEHkQiASgw-A7H7t5XIW3xaTT8Uc9KgvAN4u7aAFGl6MA9wcHp8wSp8rofWrFbBlOxh9f4JbC0mG9jiYw3Sp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -198,7 +198,7 @@
     <button class="btn navbtn not-cliente" onclick="showSec('pedidos',this)">Pedidos</button>
     <button class="btn navbtn only-cliente" onclick="showSec('pedidos',this)">Histórico de Pedidos</button>
     <button class="btn navbtn not-cliente" onclick="showSec('clientes',this)">Clientes</button>
-    <button class="btn navbtn only-cliente" onclick="showSec('catalogo',this)">Catálogo</button>
+    <button class="btn navbtn cliente-vendedora" onclick="showSec('catalogo',this)">Catálogo</button>
     <button class="btn navbtn only-gerente" onclick="showSec('produtos',this)">Produtos/Catálogo</button>
     <button class="btn navbtn only-gerente" onclick="showSec('usuarios',this)">Usuários</button>
     <button class="btn navbtn only-gerente" onclick="showSec('config',this)">Configurações</button>
@@ -344,7 +344,7 @@ const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3000)}
 async function login(){const email=loginEmail.value.trim();const senha=loginSenha.value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('email',email).eq('senha',senha).eq('ativo',true).single();if(error||!data)return toast('Login inválido');usuario=data;localStorage.setItem('sof_user',JSON.stringify(usuario));iniciar()}
 function logout(){localStorage.removeItem('sof_user');location.reload()}
-async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');document.querySelectorAll('.only-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'block':'none');document.querySelectorAll('.not-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'none':'block');const formProd=document.querySelector('#produtos .card');if(formProd)formProd.style.display=usuario.role==='gerente'?'block':'none';await carregarTudo();if(usuario.role==='cliente'){btnSalvarPedido.textContent='Enviar orçamento para vendedora';pDesc.value=70;pDesc.readOnly=true;pCliente.disabled=true;if(pDesc.parentElement)pDesc.parentElement.style.display='none';if(pJust.parentElement)pJust.parentElement.style.display='none';if(clientes.length===1)pCliente.value=clientes[0].id;}else{pCliente.disabled=false;if(pDesc.parentElement)pDesc.parentElement.style.display='flex';if(pJust.parentElement)pJust.parentElement.style.display='flex';}if(usuario.role==='cliente'){document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));const btn=[...document.querySelectorAll('.navbtn')].find(b=>b.textContent.trim()==='Dashboard');if(btn)btn.classList.add('active');showSec('dashboard',btn)}}
+async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');document.querySelectorAll('.only-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'block':'none');document.querySelectorAll('.cliente-vendedora').forEach(e=>e.style.display=(usuario.role==='cliente'||usuario.role==='vendedora')?'block':'none');document.querySelectorAll('.not-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'none':'block');const formProd=document.querySelector('#produtos .card');if(formProd)formProd.style.display=usuario.role==='gerente'?'block':'none';await carregarTudo();if(usuario.role==='cliente'){btnSalvarPedido.textContent='Enviar orçamento para vendedora';pDesc.value=70;pDesc.readOnly=true;pCliente.disabled=true;if(pDesc.parentElement)pDesc.parentElement.style.display='none';if(pJust.parentElement)pJust.parentElement.style.display='none';if(clientes.length===1)pCliente.value=clientes[0].id;}else{pCliente.disabled=false;if(pDesc.parentElement)pDesc.parentElement.style.display='flex';if(pJust.parentElement)pJust.parentElement.style.display='flex';}if(usuario.role==='cliente'){document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));const btn=[...document.querySelectorAll('.navbtn')].find(b=>b.textContent.trim()==='Dashboard');if(btn)btn.classList.add('active');showSec('dashboard',btn)}}
 function showSec(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');titulo.textContent=btn?btn.textContent:'Dashboard';side.classList.remove('open')}
 async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho();renderCatalogo()}
 async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config={...config,...data};if(typeof cfgDesc!=='undefined')cfgDesc.value=data.desconto_aprovacao??70;if(typeof cfgCatalogoNome!=='undefined')cfgCatalogoNome.value=data.catalogo_nome||'';if(typeof cfgCatalogoUrl!=='undefined')cfgCatalogoUrl.value=data.catalogo_url||''}}
@@ -1560,7 +1560,7 @@ async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
   document.body.appendChild(overlay);
   document.documentElement.classList.add('fullscreen-open');document.body.classList.add('fullscreen-open');
   try{
-    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:false,disableStream:false,disableWorker:true,rangeChunkSize:262144});
+    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:false,disableWorker:false,rangeChunkSize:65536});
     const pdf=await task.promise;
     const mobile=isMobileDevice();
     catalogReaderState={pdf,total:pdf.numPages,page:Math.max(1,Math.min(pdf.numPages,Number(paginaInicial)||1)),zoom:1,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
@@ -1699,8 +1699,10 @@ async function renderCatalogReaderPage(resetPos=false){
 
     // Renderização interna muito maior que o tamanho exibido.
     // Isso mantém letras pequenas nítidas quando aumentar o zoom.
-    const quality=mobile ? 3.8 : 5.0;
-    const maxPixels=mobile ? 9000000 : 18000000;
+    // No celular, abre primeiro em modo rápido para não travar.
+    // Mantém nitidez boa, mas evita renderizar uma imagem enorme logo na abertura.
+    const quality=mobile ? 2.1 : 5.0;
+    const maxPixels=mobile ? 3200000 : 18000000;
     let renderW=Math.floor(cssW*quality);
     let renderH=Math.floor(cssH*quality);
     const pixels=renderW*renderH;
