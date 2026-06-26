@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=kNS2CpOLV7CJU5fpwShCoRtvkNuCx_tNE99eU-p73rd_GQ9_1MN-0t5BXcYuOcujo1XB6MZQgbmJR8hdJYLSQcWQxYCZXa-dtygK6TruEtmn08Elhd8XqsQd_KS_QTZAyBo1vZP0tKxsqMehtElaMLxVdBxbCEr394EvoJCgVWwsoXRSfEa_iMhT3OANkyNQJ2ANZFaCZDmOOXp1jmyMSRHO5shZbhLqTbvC5k5HCYqBkFbXovPKE39i3XAqhYHc0o0sal3yQR2R9MuSTwWz_cP0IPmIAcm041uAhbLObX66e9xnrj_Kl-sBinDw0gKZ" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=BZLNqpr7IJlThfipfaNxZC1R6J-mn32_C2vmwLE1fgCXQESH6XAGUmbRn1E7i96Q7v0DqGiOHFhqEFVeyjI_6QWXJMZ1dqK-viRNto1AYgbuTy5cA7KZFte5adqLNwXfeRCri81g5IxUC1-JLhyw-fVkztbZbb5A8WOOcFm4R7wuGhePrGR4j59vHCatsb6AJvAoWQxOwp1Bvcu39fXeZ6ZOVZzVAbtEIQUNG0XAikxoF7-M3JkSEZqbOKABaKXlOByy-aatBSKQ-cBCaaQ-sm9eAK1G3CkYE-2ShJNDSsuRJhQabTd97u-kBY7A29lS" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -638,10 +638,15 @@ function renderCatalogo(){
   if(url){
     html=`<h3>${nome}</h3>
       <div class="catalog-actions">
-        <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir catálogo</a>
+        <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir PDF rápido</a>
         <a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a>
       </div>
-      <div class="flipbook" data-pdf-url="${url}">
+      <div class="flip-start">
+        <h3>Catálogo em modo revista</h3>
+        <p class="muted">Para abrir rápido no celular, a revista só é carregada quando você clicar no botão abaixo.</p>
+        <button class="btn" onclick="abrirRevistaCatalogo(this)">Abrir revista para folhear</button>
+      </div>
+      <div class="flipbook hidden" data-pdf-url="${url}">
         <div class="flip-toolbar">
           <button class="btn light" onclick="catalogoPaginaAnterior(this)">◀ Página anterior</button>
           <div><b>Modo revista</b><br><span class="muted" data-flip-status>Carregando catálogo...</span></div>
@@ -649,15 +654,14 @@ function renderCatalogo(){
           <input class="flip-page-input" data-flip-page-input type="number" min="1" value="1" onchange="catalogoIrPagina(this)">
           <div class="flip-progress"><span data-flip-progress></span></div>
         </div>
-        <div class="flip-pages" data-flip-pages><div class="flip-loading">Carregando páginas da revista...</div></div>
-        <div class="flip-tip">No celular ou no PC, arraste a página para o lado para folhear.</div>
+        <div class="flip-pages" data-flip-pages><div class="flip-loading">Carregando primeira página...</div></div>
+        <div class="flip-tip">Arraste a página para o lado para folhear.</div>
       </div>`;
   }else{
     html=`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
   }
   const box=document.getElementById('catalogoClienteBox'); if(box) box.innerHTML=html;
   const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
-  setTimeout(inicializarFlipbooks,100);
 }
 
 let flipbooks=new WeakMap();
@@ -668,28 +672,37 @@ function configurarPdfJs(){
   }
   return false;
 }
+async function abrirRevistaCatalogo(btn){
+  const card=btn.closest('.flip-start');
+  const flip=card?.nextElementSibling;
+  if(!flip) return;
+  card.classList.add('hidden');
+  flip.classList.remove('hidden');
+  await inicializarFlipbookUnico(flip);
+}
+async function inicializarFlipbookUnico(box){
+  if(!configurarPdfJs()) { toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
+  if(flipbooks.has(box)) return;
+  const url=box.getAttribute('data-pdf-url');
+  const status=box.querySelector('[data-flip-status]');
+  const pagesBox=box.querySelector('[data-flip-pages]');
+  try{
+    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:false,rangeChunkSize:65536});
+    const pdf=await task.promise;
+    const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),drag:{active:false,startX:0,currentX:0}};
+    flipbooks.set(box,state);
+    instalarArrasteCatalogo(box);
+    if(status) status.textContent=`Página 1 de ${pdf.numPages}`;
+    await renderFlipbook(box);
+    preCarregarPaginas(box);
+  }catch(e){
+    console.error(e);
+    if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Use os botões Abrir PDF rápido ou Baixar catálogo.</div>';
+    if(status) status.textContent='Falha ao carregar modo revista';
+  }
+}
 async function inicializarFlipbooks(){
-  if(!configurarPdfJs()) return;
-  document.querySelectorAll('.flipbook').forEach(async box=>{
-    if(flipbooks.has(box)) return;
-    const url=box.getAttribute('data-pdf-url');
-    const status=box.querySelector('[data-flip-status]');
-    const pagesBox=box.querySelector('[data-flip-pages]');
-    try{
-      const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:isMobileDevice(),disableStream:false});
-      const pdf=await task.promise;
-      const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),drag:{active:false,startX:0,currentX:0}};
-      flipbooks.set(box,state);
-      instalarArrasteCatalogo(box);
-      if(status) status.textContent=`Página 1 de ${pdf.numPages}`;
-      await renderFlipbook(box);
-      preCarregarPaginas(box);
-    }catch(e){
-      console.error(e);
-      if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Use os botões Abrir catálogo ou Baixar catálogo. Se o PDF estiver no Google Drive, use um link direto/público ou envie pelo Supabase Storage.</div>';
-      if(status) status.textContent='Falha ao carregar modo revista';
-    }
-  });
+  document.querySelectorAll('.flipbook:not(.hidden)').forEach(box=>inicializarFlipbookUnico(box));
 }
 function larguraPaginaDesejada(){
   if(isMobileDevice()) return Math.min(window.innerWidth-55,680);
@@ -911,6 +924,35 @@ function configurarPdfJs(){
     return true;
   }
   return false;
+}
+async function abrirRevistaCatalogo(btn){
+  const card=btn.closest('.flip-start');
+  const flip=card?.nextElementSibling;
+  if(!flip) return;
+  card.classList.add('hidden');
+  flip.classList.remove('hidden');
+  await inicializarFlipbookUnico(flip);
+}
+async function inicializarFlipbookUnico(box){
+  if(!configurarPdfJs()) { toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
+  if(flipbooks.has(box)) return;
+  const url=box.getAttribute('data-pdf-url');
+  const status=box.querySelector('[data-flip-status]');
+  const pagesBox=box.querySelector('[data-flip-pages]');
+  try{
+    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:true,disableStream:false,rangeChunkSize:65536});
+    const pdf=await task.promise;
+    const state={pdf,page:1,total:pdf.numPages,rendering:false,cache:new Map(),drag:{active:false,startX:0,currentX:0}};
+    flipbooks.set(box,state);
+    instalarArrasteCatalogo(box);
+    if(status) status.textContent=`Página 1 de ${pdf.numPages}`;
+    await renderFlipbook(box);
+    preCarregarPaginas(box);
+  }catch(e){
+    console.error(e);
+    if(pagesBox) pagesBox.innerHTML='<div class="flip-error">Não consegui abrir o PDF em modo revista. Use os botões Abrir PDF rápido ou Baixar catálogo.</div>';
+    if(status) status.textContent='Falha ao carregar modo revista';
+  }
 }
 async function inicializarFlipbooks(){
   if(!configurarPdfJs()) return;
