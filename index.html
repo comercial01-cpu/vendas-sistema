@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=mb_uxa_c3o9vPA8JdMcpMD7de8QRMxy0BlbANBTnIePp7SVAjwWdnLqA1UBWKqZ4Up1eScjL3ejSkKFAJFKHNOH_f6gdhzWynyB45uwFxCZgUoe9qcXlzJrrW4vFvG9W2LeHSOljLwnDGv0FdYUDNw_5OkXPjU6CGFvlmnsWsuaYtK9pmA_8sVhaI8WldRw5h9O3tDIaDFk_ut_bfJH2tpfwn8owWmeFFLF6UzLa3aGC_kYJL9IQ7RmBM6k6lF1aA3BGUR5X0Ddd_wWsBXTTV8Mvq-GhZEfKRBiayZ6fNkkfZwTB0NzdIFUwsoJcvHJZ" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=eXE2aa8NUWXtIEhqEs69DIV3E_ZhEv3gpu2lO9qT5hGba60fYlxqvAdtzN1KUSslY2vUvxcv--iV3e8QmWIh9fj3TSrjXUY2twyIegVWw-Qe0fOfWw2UOf6p56-oJujWG0oCzLZarE5kpyHKTGgx3wBZxMxT7SClXNDW4hBfJxjxAvXKY9IQSmGmu0utoOz38-X6sxeY-AuAxKOAGssHv360FLpgwBmYIyjC6tdLNLsai1-X56qWbhGPdDVJ8vMNi-oSb36bbAMuXS7e5KWxJ5eH5iMUgm0Wi1V_o8J4NhfJincS0SqbIyDXqsH3G1Uo" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1512,6 +1512,144 @@ document.addEventListener('keydown',e=>{
 })();
 
 
+
+
+
+/* ===== CORREÇÃO FINAL: CATÁLOGO LEGÍVEL NO CELULAR =====
+   No celular, abre direto no modo imagem ampliada, com zoom inicial para leitura.
+   No PC, mantém a revista em tela cheia. */
+const abrirCatalogoTelaCheiaOriginal = window.abrirCatalogoTelaCheia;
+async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
+  if(!url) return toast('Nenhum catálogo publicado ainda');
+  if(!configurarPdfJs()){ toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
+  fecharCatalogoTelaCheia(true);
+  const antigo=document.getElementById('catalogReaderOverlay'); if(antigo) antigo.remove();
+  const overlay=document.createElement('div');
+  overlay.id='catalogReaderOverlay';
+  overlay.className='catalog-reader-overlay leitura-direta';
+  overlay.innerHTML=`
+    <div class="catalog-reader-bar">
+      <div>
+        <div class="catalog-reader-title">📖 ${escaparHtml(nome||'Catálogo Sofisticatto')}</div>
+        <div class="catalog-reader-sub" id="catalogReaderInfo">Carregando catálogo...</div>
+      </div>
+      <div class="catalog-reader-actions">
+        <button class="btn light" onclick="catalogReaderPrev()">‹</button>
+        <button class="btn light" onclick="catalogReaderZoomOut()">−</button>
+        <button class="btn light" onclick="catalogReaderFit()">Página inteira</button>
+        <button class="btn light" onclick="catalogReaderReadBetter()">Ler melhor</button>
+        <button class="btn light" onclick="catalogReaderZoomIn()">+</button>
+        <button class="btn light" onclick="catalogReaderNext()">›</button>
+        <button class="btn red" onclick="fecharCatalogReader()">Fechar</button>
+      </div>
+    </div>
+    <div class="catalog-reader-stage" id="catalogReaderStage">
+      <div class="catalog-reader-loading" id="catalogReaderLoading">Carregando página...</div>
+      <canvas class="catalog-reader-canvas" id="catalogReaderCanvas"></canvas>
+      <div class="catalog-reader-help">Modo leitura: arraste para ler os detalhes. Use dois dedos para zoom. Deslize nas laterais para trocar de página.</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.documentElement.classList.add('fullscreen-open');document.body.classList.add('fullscreen-open');
+  try{
+    const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:false,disableStream:false,disableWorker:true,rangeChunkSize:262144});
+    const pdf=await task.promise;
+    const mobile=isMobileDevice();
+    catalogReaderState={pdf,total:pdf.numPages,page:Math.max(1,Math.min(pdf.numPages,Number(paginaInicial)||1)),zoom:mobile?2.35:1.45,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
+    catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
+    catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
+    instalarGestosCatalogReader();
+    await renderCatalogReaderPage(true);
+  }catch(e){
+    console.error(e);
+    toast('Falha ao abrir o catálogo. Confira se o PDF está público no Supabase Storage.');
+    fecharCatalogReader();
+  }
+}
+
+window.abrirCatalogoTelaCheia = async function(el){
+  const url=el.getAttribute('data-pdf-url') || (config.catalogo_url||'').trim();
+  const nome=el.getAttribute('data-catalog-name') || config.catalogo_nome || 'Catálogo Sofisticatto';
+  if(isMobileDevice()){
+    await abrirCatalogoLeituraDireta(url,nome,1);
+  }else if(abrirCatalogoTelaCheiaOriginal){
+    abrirCatalogoTelaCheiaOriginal(el);
+  }
+};
+
+const renderCatalogReaderPageOriginal = typeof renderCatalogReaderPage === 'function' ? renderCatalogReaderPage : null;
+async function renderCatalogReaderPage(resetPos=false){
+  const st=catalogReaderState; if(!st||st.rendering) return;
+  st.rendering=true;
+  const loading=document.getElementById('catalogReaderLoading'); if(loading) loading.style.display='block';
+  try{
+    const page=await st.pdf.getPage(st.page);
+    const base=page.getViewport({scale:1});
+    const stage=st.stage;
+    const sw=stage.clientWidth||window.innerWidth, sh=stage.clientHeight||window.innerHeight;
+    const mobile=isMobileDevice();
+    const fitWidth=(sw*(mobile?1.00:.98))/base.width;
+    const fitPage=Math.min((sw*(mobile?1.00:.98))/base.width,(sh*(mobile?1.00:.97))/base.height);
+    const fit=st.fitMode==='page'?fitPage:fitWidth;
+    const dpr=mobile?Math.min(window.devicePixelRatio||1,2):Math.min(window.devicePixelRatio||1,2.4);
+    const renderScale=Math.min(6, Math.max(1.6, fit*st.zoom*dpr));
+    const viewport=page.getViewport({scale:renderScale});
+    const canvas=st.canvas, ctx=canvas.getContext('2d',{alpha:false});
+    canvas.width=Math.floor(viewport.width);canvas.height=Math.floor(viewport.height);
+    const cssW=Math.floor(viewport.width/dpr), cssH=Math.floor(viewport.height/dpr);
+    canvas.style.width=cssW+'px';
+    canvas.style.height=cssH+'px';
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    await page.render({canvasContext:ctx,viewport}).promise;
+    if(resetPos){
+      // Começa mostrando a parte superior da página quando estiver ampliado,
+      // porque é onde geralmente ficam os textos e preços do catálogo.
+      st.x=0;
+      st.y=(cssH>sh) ? Math.min(0, -(cssH-sh)/2 + 18) : 0;
+    }
+    aplicarTransformCatalogReader();
+    const info=document.getElementById('catalogReaderInfo'); if(info) info.textContent=`Página ${st.page} de ${st.total} • Zoom ${Math.round(st.zoom*100)}%`;
+  }catch(e){console.error(e);toast('Não consegui abrir essa página do catálogo.');}
+  finally{st.rendering=false;if(loading)loading.style.display='none'}
+}
+async function catalogReaderFit(){const st=catalogReaderState;if(!st)return;st.fitMode='page';st.zoom=1;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+async function catalogReaderReadBetter(){const st=catalogReaderState;if(!st)return;st.fitMode='width';st.zoom=isMobileDevice()?2.6:1.9;st.x=0;st.y=0;await renderCatalogReaderPage(true)}
+
+// Se clicar numa página da revista no PC/celular, abre o modo leitura já ampliado.
+async function abrirPaginaCatalogoLeitura(pageWrap){
+  if(!pageWrap || pageWrap.closest('.catalog-reader-overlay')) return;
+  const num=Number(pageWrap.getAttribute('data-page-num')||1);
+  const {box,st}=getCatalogReaderPdfFromPage(pageWrap);
+  if(!st?.pdf) return toast('Catálogo ainda está carregando. Aguarde um instante.');
+  const antigo=document.getElementById('catalogReaderOverlay'); if(antigo) antigo.remove();
+  const overlay=document.createElement('div');
+  overlay.id='catalogReaderOverlay';
+  overlay.className='catalog-reader-overlay leitura-direta';
+  overlay.innerHTML=`
+    <div class="catalog-reader-bar">
+      <div><div class="catalog-reader-title">Leitura ampliada do catálogo</div><div class="catalog-reader-sub" id="catalogReaderInfo">Página ${num} de ${st.total}</div></div>
+      <div class="catalog-reader-actions">
+        <button class="btn light" onclick="catalogReaderPrev()">‹</button>
+        <button class="btn light" onclick="catalogReaderZoomOut()">−</button>
+        <button class="btn light" onclick="catalogReaderFit()">Página inteira</button>
+        <button class="btn light" onclick="catalogReaderReadBetter()">Ler melhor</button>
+        <button class="btn light" onclick="catalogReaderZoomIn()">+</button>
+        <button class="btn light" onclick="catalogReaderNext()">›</button>
+        <button class="btn red" onclick="fecharCatalogReader()">Fechar</button>
+      </div>
+    </div>
+    <div class="catalog-reader-stage" id="catalogReaderStage">
+      <div class="catalog-reader-loading" id="catalogReaderLoading">Carregando página...</div>
+      <canvas class="catalog-reader-canvas" id="catalogReaderCanvas"></canvas>
+      <div class="catalog-reader-help">Arraste para ler os detalhes. Use dois dedos para zoom. Toque duas vezes para ampliar.</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.documentElement.classList.add('fullscreen-open');document.body.classList.add('fullscreen-open');
+  catalogReaderState={pdf:st.pdf,total:st.total,page:num,zoom:isMobileDevice()?2.6:1.9,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
+  catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
+  catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
+  instalarGestosCatalogReader();
+  await renderCatalogReaderPage(true);
+}
 
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
 </script>
