@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=8M9-PygfVsj_dpQi1dxYEwLPzrzTMC4pkmEQ6PEpO3Ec2EY-_IH6NhbAD8hOVakpW8vAsiBjHeNn-PQBijp5dDXALJBDV0BtDSmK2uFMLxO8E93xeTSRuSdo09WQLr_OBgf7ZBvO4q3OovWr1vEm2KijATc5P3CUZGMlNg3uO5_owjVw4T55J5s8oMUsEGEgJjWtLHCed5UXnywcBgPjb2V578VG5Tl6tNfwso-4ibVDePFGrEm0_tziWTrHfXyuZAWtvvTbL0Q4zB1SY78boTvMKQBAuzlI5tN-_uSCSS3g-DjtwPZFntA1EuY4id9M" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=gwfsfEEmXr9vYNh5JrdXxwTSslR0aqQX1wRdt8EugMB8pW1dpMe8jFeP1r6wZVW7kvAtiNZUYDJ_9LzremNHc_72-3dhmzk1xKoX7__2AWVqAkx_Hg3aaeMK7zQ9V9wlZgWQ2KVX82nFvh0ed9YBEprc7miD_Yq0qPSmKsG1KUGPRTVWsil4ghC4v0YfTf4yHsYHet3UEVt1cv5UBFnrD8W0Es67Ym-BWvOZVBKjTjA_yj89_yb-TwvYVICtpB8V91_MzhjnjNOVqa4iG4FpDVDLvWEniTmJ5-swXUY2kUAwkC1ZZyu5xIs3bfIi63By" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -90,6 +90,54 @@
 .catalog-reader-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#ffffff12;border:1px solid #ffffff24;border-radius:14px;padding:14px 18px;color:#fff}
 .catalog-reader-page-click{cursor:zoom-in}
 @media(max-width:900px){.catalog-reader-bar{padding:7px;align-items:flex-start}.catalog-reader-actions .btn{padding:8px 7px;font-size:11px}.catalog-reader-title{font-size:13px}.catalog-reader-help{bottom:8px;font-size:11px;max-width:92%;white-space:normal;text-align:center}}
+</style>
+
+<style id="catalogoGhostModeFinal">
+/* Modo imersivo/fantasma do catálogo */
+.catalog-reader-overlay{
+  position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+  background:#050508!important;z-index:10050!important;display:block!important;overflow:hidden!important;
+}
+.catalog-reader-stage{
+  position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;
+  background:#050508!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;
+}
+.catalog-reader-canvas{
+  border-radius:0!important;box-shadow:none!important;background:#fff!important;
+}
+.catalog-reader-bar{
+  position:absolute!important;left:8px!important;right:8px!important;top:8px!important;z-index:30!important;
+  border:1px solid rgba(255,255,255,.18)!important;border-radius:18px!important;
+  background:rgba(8,8,16,.18)!important;backdrop-filter:blur(12px)!important;
+  opacity:.16!important;transition:opacity .25s ease, transform .25s ease, background .25s ease!important;
+  padding:8px 10px!important;
+}
+.catalog-reader-overlay.controls-visible .catalog-reader-bar,
+.catalog-reader-overlay:hover .catalog-reader-bar{
+  opacity:.96!important;background:rgba(8,8,16,.68)!important;
+}
+.catalog-reader-title,.catalog-reader-sub{ text-shadow:0 1px 8px #000!important; }
+.catalog-reader-actions .btn{
+  background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.22)!important;
+  box-shadow:none!important;backdrop-filter:blur(8px)!important;
+}
+.catalog-reader-actions .btn.red{background:rgba(220,38,38,.42)!important;color:#fff!important}
+.catalog-reader-actions .btn:hover{background:rgba(255,255,255,.28)!important;opacity:1!important}
+.catalog-reader-help{
+  bottom:14px!important;z-index:20!important;background:rgba(0,0,0,.18)!important;border:1px solid rgba(255,255,255,.14)!important;
+  opacity:.18!important;transition:opacity .25s!important;backdrop-filter:blur(8px)!important;
+}
+.catalog-reader-overlay.controls-visible .catalog-reader-help,
+.catalog-reader-overlay:hover .catalog-reader-help{opacity:.88!important}
+.catalog-reader-loading{z-index:25!important;background:rgba(0,0,0,.44)!important;backdrop-filter:blur(8px)!important}
+.catalog-fullscreen{background:#050508!important}.catalog-fullbar{position:absolute!important;top:8px!important;left:8px!important;right:8px!important;z-index:40!important;border-radius:18px!important;background:rgba(8,8,16,.18)!important;opacity:.18!important;transition:.25s!important}.catalog-fullscreen:hover .catalog-fullbar{opacity:.96!important;background:rgba(8,8,16,.68)!important}.catalog-full-body{position:absolute!important;inset:0!important;padding:0!important}.catalog-full-body .flip-toolbar{position:absolute!important;left:10px!important;right:10px!important;top:72px!important;z-index:30!important;background:rgba(255,255,255,.10)!important;opacity:.18!important;transition:.25s!important}.catalog-fullscreen:hover .flip-toolbar{opacity:.95!important}.catalog-full-body .flip-pages{padding:0!important;height:100%!important;min-height:100%!important}.catalog-full-body .flip-page-wrap{box-shadow:none!important}.catalog-full-body .flip-page-wrap canvas{max-height:100dvh!important;max-width:100vw!important}
+@media(max-width:900px){
+  .catalog-reader-overlay{height:100dvh!important;min-height:100dvh!important}
+  .catalog-reader-bar{left:6px!important;right:6px!important;top:6px!important;padding:6px!important;border-radius:14px!important;transform:translateY(-2px)}
+  .catalog-reader-actions{gap:4px!important}.catalog-reader-actions .btn{font-size:11px!important;padding:7px 6px!important;border-radius:9px!important}
+  .catalog-reader-title{font-size:12px!important}.catalog-reader-sub{font-size:11px!important}
+  .catalog-reader-help{font-size:11px!important;bottom:8px!important;max-width:96%!important}
+}
 </style>
 </head>
 <body>
@@ -1378,54 +1426,8 @@ document.addEventListener('keydown',e=>{
 });
 
 
-<style id="catalogoGhostModeFinal">
-/* Modo imersivo/fantasma do catálogo */
-.catalog-reader-overlay{
-  position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
-  background:#050508!important;z-index:10050!important;display:block!important;overflow:hidden!important;
-}
-.catalog-reader-stage{
-  position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;
-  background:#050508!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;
-}
-.catalog-reader-canvas{
-  border-radius:0!important;box-shadow:none!important;background:#fff!important;
-}
-.catalog-reader-bar{
-  position:absolute!important;left:8px!important;right:8px!important;top:8px!important;z-index:30!important;
-  border:1px solid rgba(255,255,255,.18)!important;border-radius:18px!important;
-  background:rgba(8,8,16,.18)!important;backdrop-filter:blur(12px)!important;
-  opacity:.16!important;transition:opacity .25s ease, transform .25s ease, background .25s ease!important;
-  padding:8px 10px!important;
-}
-.catalog-reader-overlay.controls-visible .catalog-reader-bar,
-.catalog-reader-overlay:hover .catalog-reader-bar{
-  opacity:.96!important;background:rgba(8,8,16,.68)!important;
-}
-.catalog-reader-title,.catalog-reader-sub{ text-shadow:0 1px 8px #000!important; }
-.catalog-reader-actions .btn{
-  background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.22)!important;
-  box-shadow:none!important;backdrop-filter:blur(8px)!important;
-}
-.catalog-reader-actions .btn.red{background:rgba(220,38,38,.42)!important;color:#fff!important}
-.catalog-reader-actions .btn:hover{background:rgba(255,255,255,.28)!important;opacity:1!important}
-.catalog-reader-help{
-  bottom:14px!important;z-index:20!important;background:rgba(0,0,0,.18)!important;border:1px solid rgba(255,255,255,.14)!important;
-  opacity:.18!important;transition:opacity .25s!important;backdrop-filter:blur(8px)!important;
-}
-.catalog-reader-overlay.controls-visible .catalog-reader-help,
-.catalog-reader-overlay:hover .catalog-reader-help{opacity:.88!important}
-.catalog-reader-loading{z-index:25!important;background:rgba(0,0,0,.44)!important;backdrop-filter:blur(8px)!important}
-.catalog-fullscreen{background:#050508!important}.catalog-fullbar{position:absolute!important;top:8px!important;left:8px!important;right:8px!important;z-index:40!important;border-radius:18px!important;background:rgba(8,8,16,.18)!important;opacity:.18!important;transition:.25s!important}.catalog-fullscreen:hover .catalog-fullbar{opacity:.96!important;background:rgba(8,8,16,.68)!important}.catalog-full-body{position:absolute!important;inset:0!important;padding:0!important}.catalog-full-body .flip-toolbar{position:absolute!important;left:10px!important;right:10px!important;top:72px!important;z-index:30!important;background:rgba(255,255,255,.10)!important;opacity:.18!important;transition:.25s!important}.catalog-fullscreen:hover .flip-toolbar{opacity:.95!important}.catalog-full-body .flip-pages{padding:0!important;height:100%!important;min-height:100%!important}.catalog-full-body .flip-page-wrap{box-shadow:none!important}.catalog-full-body .flip-page-wrap canvas{max-height:100dvh!important;max-width:100vw!important}
-@media(max-width:900px){
-  .catalog-reader-overlay{height:100dvh!important;min-height:100dvh!important}
-  .catalog-reader-bar{left:6px!important;right:6px!important;top:6px!important;padding:6px!important;border-radius:14px!important;transform:translateY(-2px)}
-  .catalog-reader-actions{gap:4px!important}.catalog-reader-actions .btn{font-size:11px!important;padding:7px 6px!important;border-radius:9px!important}
-  .catalog-reader-title{font-size:12px!important}.catalog-reader-sub{font-size:11px!important}
-  .catalog-reader-help{font-size:11px!important;bottom:8px!important;max-width:96%!important}
-}
-</style>
-<script>
+
+
 (function(){
   let ghostTimer=null;
   function showGhostControls(){
@@ -1449,7 +1451,8 @@ document.addEventListener('keydown',e=>{
   });
   mo.observe(document.documentElement,{childList:true,subtree:true});
 })();
-</script>
+
+
 
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
 </script>
