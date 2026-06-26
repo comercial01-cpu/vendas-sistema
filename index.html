@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=LYFIB2OZr_ZkhTHMU2cu_d135VIhH5edN-u_7Fm5bdVBlYOA0pEmGQFdIAYHNfzW15lSNY4WrkMvk_39KkkNWBK1x5rkIaPhwTEtQrA7qI-_lI04pZSpcQWGtL2G59jFOVdnL9YwabsA4PaPVU-Zaja3zxTwTV1W_Si3TJISUYJiPstLFrEtIqE1Q9iXSBhe0PA41H1gTkunK65YRHnuqwO4BtrdKWOkbhKx9Us_RjY1eNFKc5q8GaUAEdm2dbenrC0pC0oOKKGAbgtV7G32XxCXBcFE9UuKMFw6fPIkcmOaGWI-8iZHufAsxfq3gmHG" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1545,7 +1545,7 @@ async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
       <div class="catalog-reader-actions">
         <button class="btn light" onclick="catalogReaderPrev()">‹</button>
         <button class="btn light" onclick="catalogReaderZoomOut()">−</button>
-        <button class="btn light" onclick="catalogReaderFit()">Página inteira</button>
+        <button class="btn light" onclick="catalogReaderFit()">Ajustar</button>
         <button class="btn light" onclick="catalogReaderReadBetter()">Ler melhor</button>
         <button class="btn light" onclick="catalogReaderZoomIn()">+</button>
         <button class="btn light" onclick="catalogReaderNext()">›</button>
@@ -1563,7 +1563,7 @@ async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
     const task=pdfjsLib.getDocument({url,withCredentials:false,disableAutoFetch:false,disableStream:false,disableWorker:true,rangeChunkSize:262144});
     const pdf=await task.promise;
     const mobile=isMobileDevice();
-    catalogReaderState={pdf,total:pdf.numPages,page:Math.max(1,Math.min(pdf.numPages,Number(paginaInicial)||1)),zoom:mobile?2.35:2.10,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
+    catalogReaderState={pdf,total:pdf.numPages,page:Math.max(1,Math.min(pdf.numPages,Number(paginaInicial)||1)),zoom:1,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
     catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
     catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
     instalarGestosCatalogReader();
@@ -1637,7 +1637,7 @@ async function abrirPaginaCatalogoLeitura(pageWrap){
       <div class="catalog-reader-actions">
         <button class="btn light" onclick="catalogReaderPrev()">‹</button>
         <button class="btn light" onclick="catalogReaderZoomOut()">−</button>
-        <button class="btn light" onclick="catalogReaderFit()">Página inteira</button>
+        <button class="btn light" onclick="catalogReaderFit()">Ajustar</button>
         <button class="btn light" onclick="catalogReaderReadBetter()">Ler melhor</button>
         <button class="btn light" onclick="catalogReaderZoomIn()">+</button>
         <button class="btn light" onclick="catalogReaderNext()">›</button>
@@ -1651,11 +1651,189 @@ async function abrirPaginaCatalogoLeitura(pageWrap){
     </div>`;
   document.body.appendChild(overlay);
   document.documentElement.classList.add('fullscreen-open');document.body.classList.add('fullscreen-open');
-  catalogReaderState={pdf:st.pdf,total:st.total,page:num,zoom:isMobileDevice()?2.6:1.9,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
+  catalogReaderState={pdf:st.pdf,total:st.total,page:num,zoom:1,x:0,y:0,drag:false,startX:0,startY:0,startTX:0,startTY:0,pointers:new Map(),pinchStart:0,pinchZoom:1,canvas:null,stage:null,rendering:false,fitMode:'width'};
   catalogReaderState.canvas=overlay.querySelector('#catalogReaderCanvas');
   catalogReaderState.stage=overlay.querySelector('#catalogReaderStage');
   instalarGestosCatalogReader();
   await renderCatalogReaderPage(true);
+}
+
+
+
+/* ===== LEITOR PROFISSIONAL: alta nitidez + tamanho confortável + zoom livre =====
+   A página é renderizada em alta resolução, mas exibida em tamanho confortável.
+   O zoom agora usa transform: scale(), sem perder tanta nitidez. */
+function aplicarTransformCatalogReader(){
+  const st=catalogReaderState;
+  if(!st?.canvas) return;
+  const z=Number(st.zoom)||1;
+  st.canvas.style.transformOrigin='center center';
+  st.canvas.style.transform=`translate(${st.x||0}px,${st.y||0}px) scale(${z})`;
+  const info=document.getElementById('catalogReaderInfo');
+  if(info) info.textContent=`Página ${st.page} de ${st.total} • Zoom ${Math.round(z*100)}%`;
+}
+
+async function renderCatalogReaderPage(resetPos=false){
+  const st=catalogReaderState;
+  if(!st || st.rendering) return;
+  st.rendering=true;
+  const loading=document.getElementById('catalogReaderLoading');
+  if(loading) loading.style.display='block';
+  try{
+    const page=await st.pdf.getPage(st.page);
+    const base=page.getViewport({scale:1});
+    const stage=st.stage;
+    const sw=stage.clientWidth||window.innerWidth;
+    const sh=stage.clientHeight||window.innerHeight;
+    const mobile=isMobileDevice();
+
+    // Tamanho visual inicial: confortável, menor no PC, otimizado no celular.
+    const fitPage=Math.min(
+      (sw*(mobile?0.98:0.72))/base.width,
+      (sh*(mobile?0.92:0.82))/base.height
+    );
+    const fitWidth=(sw*(mobile?0.98:0.72))/base.width;
+    const baseFit=(st.fitMode==='width') ? fitWidth : fitPage;
+    const cssW=Math.max(120, Math.floor(base.width*baseFit));
+    const cssH=Math.max(120, Math.floor(base.height*baseFit));
+
+    // Renderização interna muito maior que o tamanho exibido.
+    // Isso mantém letras pequenas nítidas quando aumentar o zoom.
+    const quality=mobile ? 3.8 : 5.0;
+    const maxPixels=mobile ? 9000000 : 18000000;
+    let renderW=Math.floor(cssW*quality);
+    let renderH=Math.floor(cssH*quality);
+    const pixels=renderW*renderH;
+    if(pixels>maxPixels){
+      const reduce=Math.sqrt(maxPixels/pixels);
+      renderW=Math.floor(renderW*reduce);
+      renderH=Math.floor(renderH*reduce);
+    }
+    const renderScale=renderW/base.width;
+    const viewport=page.getViewport({scale:renderScale});
+
+    const canvas=st.canvas;
+    const ctx=canvas.getContext('2d',{alpha:false});
+    canvas.width=Math.floor(viewport.width);
+    canvas.height=Math.floor(viewport.height);
+    canvas.style.width=cssW+'px';
+    canvas.style.height=cssH+'px';
+    ctx.fillStyle='#fff';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    await page.render({canvasContext:ctx,viewport}).promise;
+
+    if(resetPos){
+      st.x=0;
+      st.y=0;
+    }
+    aplicarTransformCatalogReader();
+  }catch(e){
+    console.error(e);
+    toast('Não consegui abrir essa página do catálogo.');
+  }finally{
+    st.rendering=false;
+    if(loading) loading.style.display='none';
+  }
+}
+
+async function catalogReaderZoomIn(){
+  const st=catalogReaderState; if(!st) return;
+  st.zoom=clamp((Number(st.zoom)||1)+0.25,0.45,5.5);
+  aplicarTransformCatalogReader();
+}
+async function catalogReaderZoomOut(){
+  const st=catalogReaderState; if(!st) return;
+  st.zoom=clamp((Number(st.zoom)||1)-0.25,0.45,5.5);
+  aplicarTransformCatalogReader();
+}
+async function catalogReaderFit(){
+  const st=catalogReaderState; if(!st) return;
+  st.fitMode='page';
+  st.zoom=1;
+  st.x=0; st.y=0;
+  await renderCatalogReaderPage(true);
+}
+async function catalogReaderReadBetter(){
+  const st=catalogReaderState; if(!st) return;
+  st.fitMode='page';
+  st.zoom=isMobileDevice()?2.35:1.85;
+  st.x=0; st.y=0;
+  aplicarTransformCatalogReader();
+}
+
+function instalarGestosCatalogReader(){
+  const st=catalogReaderState, stage=st.stage;
+  if(!stage || stage.dataset.readerGestos) return;
+  stage.dataset.readerGestos='1';
+  let lastTap=0;
+
+  stage.addEventListener('pointerdown',e=>{
+    st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    stage.setPointerCapture?.(e.pointerId);
+    if(st.pointers.size===1){
+      st.drag=true;
+      st.startX=e.clientX; st.startY=e.clientY;
+      st.startTX=st.x||0; st.startTY=st.y||0;
+    }
+    if(st.pointers.size===2){
+      const pts=[...st.pointers.values()];
+      st.pinchStart=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+      st.pinchZoom=Number(st.zoom)||1;
+    }
+    e.preventDefault();
+  });
+
+  stage.addEventListener('pointermove',e=>{
+    if(!st.pointers.has(e.pointerId)) return;
+    st.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(st.pointers.size===2){
+      const pts=[...st.pointers.values()];
+      const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+      st.zoom=clamp(st.pinchZoom*(dist/(st.pinchStart||dist)),0.45,5.5);
+      aplicarTransformCatalogReader();
+    }else if(st.drag){
+      st.x=st.startTX+(e.clientX-st.startX);
+      st.y=st.startTY+(e.clientY-st.startY);
+      aplicarTransformCatalogReader();
+    }
+    e.preventDefault();
+  });
+
+  function end(e){
+    st.pointers.delete(e.pointerId);
+    st.drag=false;
+    if(st.pointers.size<2) st.pinchStart=0;
+  }
+  stage.addEventListener('pointerup',end);
+  stage.addEventListener('pointercancel',end);
+
+  stage.addEventListener('dblclick',e=>{
+    st.zoom=(Number(st.zoom)||1)<1.8 ? (isMobileDevice()?2.6:2.2) : 1;
+    st.x=0; st.y=0;
+    aplicarTransformCatalogReader();
+    e.preventDefault();
+  });
+  stage.addEventListener('click',e=>{
+    const now=Date.now();
+    if(now-lastTap<300){
+      st.zoom=(Number(st.zoom)||1)<1.8 ? (isMobileDevice()?2.6:2.2) : 1;
+      st.x=0; st.y=0;
+      aplicarTransformCatalogReader();
+    }
+    lastTap=now;
+  });
+  stage.addEventListener('wheel',e=>{
+    if(!e.ctrlKey && Math.abs(e.deltaY)>Math.abs(e.deltaX)){
+      // Scroll normal movimenta a página quando estiver ampliada.
+      st.y=(st.y||0)-e.deltaY;
+      aplicarTransformCatalogReader();
+      e.preventDefault();
+      return;
+    }
+    st.zoom=clamp((Number(st.zoom)||1)+(e.deltaY<0?0.18:-0.18),0.45,5.5);
+    aplicarTransformCatalogReader();
+    e.preventDefault();
+  },{passive:false});
 }
 
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
