@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=XnCn_yu9s8pKefF3tLQ9sAVDn-s-ETvsQ9a38zbKUgM0dIuYBdCkytkXK4sIoSs2D6TocPooIL52CPJYs4nIcxg4GA5wOa8IKU2S-haMLkNsmWo0e6mGLFyG3S6L-2jecz6Ea9mQuQYfhYy4eMdQjrAaSKR7_J4G3-8TyUIVVPQwk8u8UC5TYoizKBIpdC0aQWUZhlJh2eXkYOG6Vs0pbuqku9m-Yd5ZRa0dfpfMWFJObywBcuwCXXKMGKwEImLMzpL-vDnPGXIeRtqWZxqaRf50evVzSC0nNiSXwPYParrf8tXve7nwdW5JxdIWE4Jp" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=U9Fy6kJ7-4k9iVlBDWzltBJ1nsV9fOvRnB507WFPKEP2pbdl9a01bxuUnQM8EM2s_fpuQMBH6e2WcpcgW9cBaGRJGUtfWOvDRkXGj_PVK3qDDrEB8pL5OptGe41y1QF4Od6y9mXMsvikWn-Ps_CDDPzjCXMDWP-F9IHU2RLYelz6JQlKuaw1pShyezygqPEqj-Icv1YejyeCxzPqRqpkB1T4cYTD7063GCbhI_Ojrm734w5wUHMqPfvO2u6snS0gNqHZ0k20FOuTecb9rc0xLWZK7FtjQ-DvN2pxIS7N8IZG2HTMZHAJfUOgttO-nGj5" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -61,6 +61,12 @@
   .flipbook.pro .flip-page-wrap{min-width:100%;max-width:100%}
   .catalog-actions.catalog-actions-bottom .btn{width:100%}
 }
+
+
+/* ===== CATÁLOGO EM TELA CHEIA (CELULAR/PC) ===== */
+.catalog-cover{margin-top:12px;border-radius:22px;min-height:280px;background:linear-gradient(135deg,#5a4fa3,#a988f5);display:flex;align-items:center;justify-content:center;box-shadow:0 18px 48px #5a4fa333;cursor:pointer;position:relative;overflow:hidden;color:#fff;text-align:center;padding:28px;transition:.25s}
+.catalog-cover:hover{transform:translateY(-2px);box-shadow:0 24px 58px #5a4fa34a}.catalog-cover:before{content:'';position:absolute;inset:22px;border:2px solid #ffffff55;border-radius:18px}.catalog-cover:after{content:'';position:absolute;right:-60px;top:-80px;width:220px;height:420px;background:#ffffff22;transform:rotate(28deg);filter:blur(1px)}.catalog-cover-inner{position:relative;z-index:2}.catalog-cover-title{font-size:34px;font-style:italic;font-weight:600}.catalog-cover-sub{margin-top:8px;font-size:16px;opacity:.92}.catalog-cover-badge{display:inline-block;margin-top:18px;background:#ffffff;color:#5a4fa3;border-radius:999px;padding:10px 16px;font-weight:bold}.catalog-fullscreen{position:fixed;inset:0;background:radial-gradient(circle at top,#2b2549,#090814 70%);z-index:9999;display:flex;flex-direction:column;color:#fff}.catalog-fullbar{height:58px;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;background:#11101de8;border-bottom:1px solid #ffffff18;backdrop-filter:blur(10px)}.catalog-full-title{font-weight:bold;line-height:1.1}.catalog-full-sub{font-size:12px;color:#d9d3ff}.catalog-full-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.catalog-full-actions .btn{padding:9px 12px;border-radius:10px}.catalog-full-body{flex:1;min-height:0;padding:10px;display:flex}.catalog-full-body .flipbook.pro{width:100%;height:100%;min-height:0!important;background:transparent;border:0;box-shadow:none;padding:0!important;display:flex;flex-direction:column}.catalog-full-body .flip-toolbar{background:#ffffff12!important;color:#fff;border:1px solid #ffffff18;border-radius:14px;padding:8px;margin-bottom:10px}.catalog-full-body .flip-toolbar .muted,.catalog-full-body .flip-zoom-indicator{color:#fff}.catalog-full-body .flip-pages{flex:1;min-height:0!important;overflow:auto!important;padding:8px!important;align-items:center}.catalog-full-body .flip-page-wrap{box-shadow:0 24px 70px #0008}.catalog-full-body .flip-page-label{color:#eee}.catalog-full-body .flip-tip{color:#e9e4ff;padding-bottom:6px}.fullscreen-open{overflow:hidden!important}@media(max-width:900px){.catalog-cover{min-height:360px;border-radius:18px}.catalog-cover-title{font-size:38px}.catalog-cover-sub{font-size:15px}.catalog-fullbar{height:auto;min-height:56px;padding:8px}.catalog-full-title{font-size:14px}.catalog-full-actions .btn{font-size:12px;padding:8px}.catalog-full-body{padding:6px}.catalog-full-body .flip-toolbar{gap:5px;position:relative!important;top:auto!important}.catalog-full-body .flip-toolbar .btn{font-size:12px;padding:8px 6px}.catalog-full-body .flip-page-wrap{min-width:auto!important;width:auto!important;max-width:100%!important}.catalog-full-body .flip-page-wrap canvas{max-height:calc(100vh - 185px)!important;width:auto!important;max-width:100%!important}.catalog-actions.catalog-actions-bottom{margin-top:12px}}
+
 </style>
 </head>
 <body>
@@ -1095,6 +1101,123 @@ function instalarArrasteCatalogo(box){
 }
 let resizeFlipTimer=null;
 window.addEventListener('resize',()=>{clearTimeout(resizeFlipTimer);resizeFlipTimer=setTimeout(()=>{document.querySelectorAll('.flipbook').forEach(box=>{const st=flipbooks.get(box);if(st){st.cache.clear();renderFlipbook(box)}})},350)});
+
+
+
+/* ===== MODO REVISTA EM TELA CHEIA ===== */
+function escaparHtml(txt){return String(txt||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function renderCatalogo(){
+  const nome=config.catalogo_nome||'Catálogo Sofisticatto';
+  const url=(config.catalogo_url||'').trim();
+  let html;
+  if(url){
+    const nomeSafe=escaparHtml(nome), urlSafe=escaparHtml(url);
+    html=`<h3>${nomeSafe}</h3>
+      <div class="catalogo-shell">
+        <div class="catalog-cover" data-pdf-url="${urlSafe}" data-catalog-name="${nomeSafe}" onclick="abrirCatalogoTelaCheia(this)">
+          <div class="catalog-cover-inner">
+            <div style="font-size:44px;margin-bottom:8px">📖</div>
+            <div class="catalog-cover-title">Sofisticatto</div>
+            <div class="catalog-cover-sub">${nomeSafe}</div>
+            <div class="catalog-cover-badge">Tocar para abrir em tela cheia</div>
+          </div>
+        </div>
+        <div class="flip-start">
+          <h3>Catálogo em modo revista</h3>
+          <p class="muted">No celular, toque na capa acima para ler em tela cheia e folhear deslizando para o lado.</p>
+          <button class="btn" data-pdf-url="${urlSafe}" data-catalog-name="${nomeSafe}" onclick="abrirCatalogoTelaCheia(this)">Ler catálogo em tela cheia</button>
+        </div>
+        <div class="catalog-actions catalog-actions-bottom">
+          <a class="btn" href="${urlSafe}" target="_blank" rel="noopener">Abrir PDF rápido</a>
+          <a class="btn ok" href="${urlSafe}" target="_blank" download>Baixar catálogo</a>
+        </div>
+      </div>`;
+  }else{
+    html=`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
+  }
+  const box=document.getElementById('catalogoClienteBox'); if(box) box.innerHTML=html;
+  const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
+}
+function abrirCatalogoTelaCheia(el){
+  const url=el.getAttribute('data-pdf-url') || (config.catalogo_url||'').trim();
+  const nome=el.getAttribute('data-catalog-name') || config.catalogo_nome || 'Catálogo Sofisticatto';
+  if(!url) return toast('Nenhum catálogo publicado ainda');
+  fecharCatalogoTelaCheia(true);
+  const overlay=document.createElement('div');
+  overlay.id='catalogoFullscreen';
+  overlay.className='catalog-fullscreen';
+  overlay.innerHTML=`
+    <div class="catalog-fullbar">
+      <div><div class="catalog-full-title">📖 ${escaparHtml(nome)}</div><div class="catalog-full-sub">Arraste para o lado para folhear • toque duplo para zoom</div></div>
+      <div class="catalog-full-actions">
+        <a class="btn light" href="${escaparHtml(url)}" target="_blank" rel="noopener">PDF</a>
+        <a class="btn ok" href="${escaparHtml(url)}" target="_blank" download>Baixar</a>
+        <button class="btn red" onclick="fecharCatalogoTelaCheia()">Fechar</button>
+      </div>
+    </div>
+    <div class="catalog-full-body">
+      <div class="flipbook pro" data-pdf-url="${escaparHtml(url)}" data-fullscreen="1">
+        <div class="flip-toolbar">
+          <button class="btn light" onclick="catalogoPaginaAnterior(this)">◀</button>
+          <div><b>Revista</b><br><span class="muted" data-flip-status>Carregando catálogo...</span></div>
+          <button class="btn light" onclick="catalogoProximaPagina(this)">▶</button>
+          <button class="btn light" onclick="catalogoZoomMenos(this)">−</button>
+          <span class="flip-zoom-indicator" data-flip-zoom>100%</span>
+          <button class="btn light" onclick="catalogoZoomMais(this)">+</button>
+          <input class="flip-page-input" data-flip-page-input type="number" min="1" value="1" onchange="catalogoIrPagina(this)">
+          <div class="flip-progress"><span data-flip-progress></span></div>
+        </div>
+        <div class="flip-pages" data-flip-pages><div class="flip-loading">Carregando primeira página...</div></div>
+        <div class="flip-tip">Arraste a folha para o lado para virar. Toque duas vezes para aumentar/diminuir.</div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.documentElement.classList.add('fullscreen-open');
+  document.body.classList.add('fullscreen-open');
+  const flip=overlay.querySelector('.flipbook');
+  inicializarFlipbookUnico(flip);
+  instalarToqueDuploZoom(flip);
+}
+function fecharCatalogoTelaCheia(silencioso=false){
+  const antigo=document.getElementById('catalogoFullscreen');
+  if(antigo) antigo.remove();
+  document.documentElement.classList.remove('fullscreen-open');
+  document.body.classList.remove('fullscreen-open');
+}
+function instalarToqueDuploZoom(box){
+  const area=box?.querySelector('[data-flip-pages]'); if(!area || area.dataset.dblZoomReady) return;
+  area.dataset.dblZoomReady='1';
+  let last=0;
+  area.addEventListener('click',async()=>{
+    const now=Date.now();
+    if(now-last<320){
+      const st=flipbooks.get(box); if(!st) return;
+      st.zoom=(st.zoom||1) < 1.35 ? 1.55 : 1;
+      st.cache.clear();
+      await renderFlipbook(box);
+    }
+    last=now;
+  });
+}
+function larguraPaginaDesejada(state){
+  const zoom=state?.zoom||1;
+  const full=document.getElementById('catalogoFullscreen');
+  if(full){
+    const body=full.querySelector('.catalog-full-body');
+    const w=(body?.clientWidth||window.innerWidth)-26;
+    const h=(body?.clientHeight||window.innerHeight)-105;
+    if(isMobileDevice()) return Math.max(260, Math.min(w*zoom, h*0.72*zoom, 980));
+    return Math.max(360, Math.min(w*0.47*zoom, h*0.72*zoom, 900));
+  }
+  if(isMobileDevice()) return Math.max(250, Math.min((window.innerWidth-42)*zoom,900));
+  return Math.min(((document.querySelector('.main')?.clientWidth||1100)*0.47)*zoom,860);
+}
+document.addEventListener('keydown',e=>{
+  const full=document.getElementById('catalogoFullscreen'); if(!full) return;
+  if(e.key==='Escape') fecharCatalogoTelaCheia();
+  if(e.key==='ArrowRight') catalogoProximaPagina(full.querySelector('.flipbook'));
+  if(e.key==='ArrowLeft') catalogoPaginaAnterior(full.querySelector('.flipbook'));
+});
 
 const salvo=localStorage.getItem('sof_user');if(salvo){usuario=JSON.parse(salvo);iniciar()}
 </script>
