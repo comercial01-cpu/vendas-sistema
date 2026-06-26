@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=wf24g27om2dKMzLOpwOn4Q-CRIJZktCpXUBMznM60f1EWwmmd0AHQY12C7hsE15sU4jtbaLHQrW82oXYQRd3zM7h2VNIvuG58ZHFTMyFv5XFRLulF8M-re4RSvkJ6t8AEXzk01aaRM0SV0ClyIWIAvsajfOwsUuotQ5BgivPwDWvFlGP0Z7iLLcdtdHnMS2l9OtNY9KPaCAMfs3ElDCkHix4OH_g_BSt3h2bfVr5dCF0eqI70_KZ6q0meyO8Cbunkh_CBalkRKASq85iuV9J4egZ42boSJjzr9ATyAXdRuRW_hd2VyMjK9fdMPpLVOML" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
@@ -607,13 +607,30 @@ async function excluirUsuario(id){
 }
 
 
+function isMobileDevice(){
+  return window.innerWidth <= 900 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
 function renderCatalogo(){
   const nome=config.catalogo_nome||'Catálogo Sofisticatto';
   const url=(config.catalogo_url||'').trim();
-  const html=url?`<h3>${nome}</h3><div class="catalog-actions"><a class="btn" href="${url}" target="_blank" rel="noopener">Abrir catálogo</a><a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a></div><iframe class="catalog-frame" src="${url}"></iframe>`:`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
+  let html;
+  if(url){
+    const viewer=isMobileDevice()
+      ? `<div class="catalog-empty">No celular, alguns navegadores não mostram PDF dentro da página. Use os botões abaixo para abrir ou baixar o catálogo.</div>`
+      : `<iframe class="catalog-frame" src="${url}#toolbar=1&navpanes=0"></iframe>`;
+    html=`<h3>${nome}</h3>
+      <div class="catalog-actions">
+        <a class="btn" href="${url}" target="_blank" rel="noopener">Abrir catálogo</a>
+        <a class="btn ok" href="${url}" target="_blank" download>Baixar catálogo</a>
+      </div>
+      ${viewer}`;
+  }else{
+    html=`<div class="catalog-empty">Nenhum catálogo revista foi publicado pela gerente ainda.</div>`;
+  }
   const box=document.getElementById('catalogoClienteBox'); if(box) box.innerHTML=html;
   const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
 }
+window.addEventListener('resize',()=>{try{renderCatalogo()}catch(e){}});
 
 function soltarPdfCatalogo(event){
   event.preventDefault();
