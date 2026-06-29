@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=zP0WwmcpIpOhS733erwkmouw1GyH4tK7W5r-qgwQzIJJOxUYzrGJv6oNHVrM9UZZCog-UXIBXbOirkyI2ByiC30Pe9_3Ee4kxsn1937ro2bXKkv7o6G3gjaqoirqAAQecOu70heZKOmS5ikcqhoKidNgDUgRhnJxTpjAM7mDh3WVhejBiKSNhd7cVsQcb6A_QQtqIqlp3YOYV9A3EsTgAjAlinlUkL0v7MfKdvqhrwZ2oDqdxNrZwDi1aAm9wlRaBTJGj_MHMVWslWXbzhNORmn90P1WQ7W4O3LBa50meF3-rjN0sKAyJzY-QeMc0sc8" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
@@ -183,7 +183,9 @@
 </style>
 
 <style id="revendedorLojaCss">
-.rv-status{font-weight:bold}.rv-low{background:#fff7ed!important;color:#92400e}.rv-public-body{min-height:100vh;background:#f6f3fb;color:#393653;padding:18px}.rv-public-header{background:linear-gradient(135deg,#5a4fa3,#a988f5);color:#fff;border-radius:22px;padding:24px;box-shadow:0 18px 48px #5a4fa333;margin-bottom:16px}.rv-public-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rv-public-card{background:#fff;border-radius:18px;padding:15px;box-shadow:0 8px 22px #0000000d}.rv-public-price{font-size:22px;color:#5a4fa3;font-weight:bold;margin:8px 0}.rv-public-cart{position:sticky;bottom:12px;background:#fff;border-radius:18px;box-shadow:0 10px 35px #0002;padding:14px;margin-top:18px}.rv-public-cart-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;padding:8px 0}.rv-public-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.rv-linkbox{word-break:break-all;background:#fff;border:1px solid #e5ddff;border-radius:12px;padding:10px;margin-top:8px}.rv-table-small{font-size:13px}@media(max-width:900px){.rv-public-grid{grid-template-columns:1fr}.rv-public-body{padding:12px}.rv-public-header{border-radius:18px;padding:18px}.rv-public-cart{bottom:8px}.rv-public-actions .btn{width:100%}}
+.rv-status{font-weight:bold}.rv-low{background:#fff7ed!important;color:#92400e}.rv-public-body{min-height:100vh;background:#f6f3fb;color:#393653;padding:18px}.rv-public-header{background:linear-gradient(135deg,#5a4fa3,#a988f5);color:#fff;border-radius:22px;padding:24px;box-shadow:0 18px 48px #5a4fa333;margin-bottom:16px}.rv-public-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rv-public-card{background:#fff;border-radius:18px;padding:15px;box-shadow:0 8px 22px #0000000d}.rv-public-price{font-size:22px;color:#5a4fa3;font-weight:bold;margin:8px 0}.rv-public-cart{position:sticky;bottom:12px;background:#fff;border-radius:18px;box-shadow:0 10px 35px #0002;padding:14px;margin-top:18px}.rv-public-cart-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;padding:8px 0}
+.rv-logo-preview{width:86px;height:86px;object-fit:cover;border-radius:18px;border:2px solid #e5ddff;background:#fff;box-shadow:0 8px 20px #0001}.rv-logo-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:12px}.rv-prod-thumb{width:58px;height:58px;object-fit:cover;border-radius:12px;border:1px solid #eee;background:#f7f7f7}.rv-photo-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.rv-photo-row img{width:74px;height:74px;object-fit:cover;border-radius:12px;border:1px solid #eee;background:#fff}.rv-camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.rv-camera-actions input{max-width:100%}.rv-public-img{width:100%;height:180px;object-fit:cover;border-radius:14px;background:#f3f0ff;margin-bottom:10px}.rv-public-logo{width:70px;height:70px;object-fit:cover;border-radius:16px;background:#fff;margin-bottom:8px;border:2px solid #ffffff66}.rv-store-header-flex{display:flex;align-items:center;gap:14px;flex-wrap:wrap}@media(max-width:900px){.rv-public-img{height:220px}.rv-prod-thumb{width:52px;height:52px}.rv-camera-actions .btn{width:100%}}
+.rv-public-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.rv-linkbox{word-break:break-all;background:#fff;border:1px solid #e5ddff;border-radius:12px;padding:10px;margin-top:8px}.rv-table-small{font-size:13px}@media(max-width:900px){.rv-public-grid{grid-template-columns:1fr}.rv-public-body{padding:12px}.rv-public-header{border-radius:18px;padding:18px}.rv-public-cart{bottom:8px}.rv-public-actions .btn{width:100%}}
 </style>
 
 </head>
@@ -310,6 +312,19 @@
         <h2>Minha Loja</h2>
         <p class="muted">Configure sua loja online e compartilhe o link com seus clientes.</p>
         <div id="lojaRevendedorInfo" class="calcbox"></div>
+        <div class="rv-logo-row">
+          <img id="rvLogoPreview" class="rv-logo-preview" src="" onerror="this.style.display='none'" style="display:none">
+          <div style="flex:1;min-width:240px">
+            <b>Logo da loja</b>
+            <p class="muted">Use a câmera do celular ou escolha uma imagem da galeria.</p>
+            <div class="rv-camera-actions">
+              <input id="rvLogoCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadLogoLojaRevendedor(this.files[0])">
+              <input id="rvLogoGaleria" type="file" accept="image/*" class="hidden" onchange="uploadLogoLojaRevendedor(this.files[0])">
+              <button class="btn light" onclick="rvLogoCamera.click()">📷 Tirar foto</button>
+              <button class="btn light" onclick="rvLogoGaleria.click()">🖼 Escolher logo</button>
+            </div>
+          </div>
+        </div>
         <div class="import-actions" style="justify-content:flex-start;margin-top:12px">
           <button class="btn" onclick="copiarLinkLojaRevendedor()">Copiar link da loja</button>
           <button class="btn ok" onclick="abrirLinkLojaRevendedor()">Abrir minha loja</button>
@@ -342,6 +357,29 @@
           <div class="field"><label>Estoque mínimo</label><input id="rvEstoqueMin" type="number" value="5"></div>
           <div class="field"><label>&nbsp;</label><button id="btnSalvarProdutoRev" class="btn" onclick="salvarProdutoRevendedor()">Salvar produto</button></div>
         </div>
+        <div class="row">
+          <div class="field">
+            <label>Foto de capa da loja</label>
+            <input id="rvImagemUrl" placeholder="URL da foto de capa">
+            <div class="rv-camera-actions">
+              <input id="rvFotoCapaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoRevendedorForm('capa',this.files[0])">
+              <input id="rvFotoCapaGaleria" type="file" accept="image/*" class="hidden" onchange="uploadFotoProdutoRevendedorForm('capa',this.files[0])">
+              <button class="btn light" type="button" onclick="rvFotoCapaCamera.click()">📷 Tirar foto</button>
+              <button class="btn light" type="button" onclick="rvFotoCapaGaleria.click()">🖼 Escolher capa</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Mais fotos do produto</label>
+            <textarea id="rvImagens" placeholder="URLs das fotos extras, uma por linha"></textarea>
+            <div class="rv-camera-actions">
+              <input id="rvFotosGaleriaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoRevendedorForm('galeria',this.files[0])">
+              <input id="rvFotosGaleriaArquivos" type="file" accept="image/*" multiple class="hidden" onchange="uploadFotoProdutoRevendedorForm('galeria',this.files)">
+              <button class="btn light" type="button" onclick="rvFotosGaleriaCamera.click()">📷 Tirar foto</button>
+              <button class="btn light" type="button" onclick="rvFotosGaleriaArquivos.click()">🖼 Adicionar fotos</button>
+            </div>
+          </div>
+        </div>
+        <div id="rvFotoPreview" class="rv-photo-row"></div>
         <div class="import-actions" style="justify-content:flex-start;margin-top:8px">
           <button id="btnCancelarProdutoRev" class="btn light hidden" onclick="cancelarProdutoRevendedor()">Cancelar edição</button>
           <button class="btn ok" onclick="importarCatalogoSofisticattoRevendedor()">Importar produtos Sofisticatto</button>
@@ -2327,15 +2365,57 @@ document.addEventListener('keydown',e=>{if(!catalogImgState)return;if(e.key==='E
 
 /* ===== MÓDULO DISTRIBUIDOR/REVENDEDOR - LOJA E VENDAS PRÓPRIAS ===== */
 let rvProdutos=[], rvPedidos=[], rvEditProdutoId=null, rvCliente=null, rvCarrinhoPublico=[], rvLojaPublicaCliente=null, rvLojaPublicaProdutos=[];
+
+function rvImagensArray(valor){return imagensProdutoArray(valor)}
+function rvImagensTexto(valor){return rvImagensArray(valor).join('\n')}
+function rvFotoCapaProduto(p){const imgs=rvImagensArray(p?.imagens);return p?.imagem_url||p?.foto_url||imgs[0]||''}
+async function uploadArquivosLoja(files,pasta='loja'){
+  const lista=files instanceof FileList || Array.isArray(files)?Array.from(files):(files?[files]:[]);
+  if(!lista.length)return [];
+  const c=clienteRevendedorAtual()||rvCliente;
+  const clienteId=c?.id||'sem-cliente';
+  const urls=[];toast('Enviando imagem...');
+  for(const file of lista){
+    if(!file || !String(file.type||'').startsWith('image/')){toast('Escolha apenas imagens');continue}
+    const nomeSeguro=(file.name||'foto.jpg').replace(/[^a-zA-Z0-9_.-]/g,'_');
+    const path=`lojas/${clienteId}/${pasta}/${Date.now()}_${Math.random().toString(16).slice(2)}_${nomeSeguro}`;
+    const {error}=await sb.storage.from('produtos').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg',cacheControl:'3600'});
+    if(error){console.error(error);toast('Erro ao enviar imagem. Verifique se o bucket produtos existe.');continue}
+    const {data}=sb.storage.from('produtos').getPublicUrl(path);
+    if(data?.publicUrl)urls.push(data.publicUrl);
+  }
+  if(urls.length)toast('Imagem enviada');
+  return urls;
+}
+function renderPreviewFotosProdutoRevendedor(){
+  const el=document.getElementById('rvFotoPreview');if(!el)return;
+  const imgs=[document.getElementById('rvImagemUrl')?.value,...rvImagensArray(document.getElementById('rvImagens')?.value)].filter(Boolean);
+  el.innerHTML=imgs.length?imgs.map(u=>`<a href="${u}" target="_blank"><img src="${u}" onerror="this.style.display='none'"></a>`).join(''):'<span class="muted">Nenhuma foto adicionada ainda.</span>';
+}
+async function uploadFotoProdutoRevendedorForm(tipo,files){
+  const codigo=(document.getElementById('rvCodigo')?.value||rvEditProdutoId||'produto').trim()||'produto';
+  const urls=await uploadArquivosLoja(files,`produtos/${codigo}`);
+  if(!urls.length)return;
+  if(tipo==='capa')rvImagemUrl.value=urls[0];
+  else rvImagens.value=[...rvImagensArray(rvImagens.value),...urls].join('\n');
+  renderPreviewFotosProdutoRevendedor();
+}
+async function uploadLogoLojaRevendedor(file){
+  const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');
+  const urls=await uploadArquivosLoja(file,'logo');if(!urls.length)return;
+  const {error}=await sb.from('clientes').update({logo_url:urls[0]}).eq('id',c.id);
+  if(error)return toast('Erro ao salvar logo: '+error.message);
+  c.logo_url=urls[0];rvCliente=c;toast('Logo da loja atualizada');renderLojaRevendedorInfo();
+}
 function nomeClienteSistema(){return 'Distribuidor/Revendedor'}
 function clienteRevendedorAtual(){return clientes && clientes.length ? clientes[0] : null}
 function linkLojaRevendedor(){const c=clienteRevendedorAtual();if(!c)return '';const token=c.loja_token||c.id;return location.origin+location.pathname+'?loja='+encodeURIComponent(token)}
 async function carregarModuloRevendedor(){if(usuario?.role!=='cliente')return;rvCliente=clienteRevendedorAtual();await Promise.all([carregarProdutosRevendedor(),carregarPedidosRevendedor()]);renderLojaRevendedorInfo();renderProdutosRevendedor();renderPedidosRevendedor();atualizarKpisRevendedor()}
-function renderLojaRevendedorInfo(){const box=document.getElementById('lojaRevendedorInfo');if(!box)return;if(!rvCliente){box.innerHTML='<b>Atenção:</b> seu usuário ainda não está vinculado a um cadastro de Distribuidor/Revendedor. Peça para a gerente conferir o cadastro do seu e-mail.';return}const link=linkLojaRevendedor();box.innerHTML=`<b>Sua loja online está pronta.</b><br>Compartilhe este link com seus clientes:<div class="rv-linkbox">${link}</div><br><span class="muted">Os pedidos feitos por este link aparecem na aba <b>Pedidos da Loja</b>.</span>`}
+function renderLojaRevendedorInfo(){const box=document.getElementById('lojaRevendedorInfo');if(!box)return;if(!rvCliente){box.innerHTML='<b>Atenção:</b> seu usuário ainda não está vinculado a um cadastro de Distribuidor/Revendedor. Peça para a gerente conferir o cadastro do seu e-mail.';return}const logo=document.getElementById('rvLogoPreview');if(logo){if(rvCliente.logo_url){logo.src=rvCliente.logo_url;logo.style.display='block'}else{logo.style.display='none'}}const link=linkLojaRevendedor();box.innerHTML=`<b>Sua loja online está pronta.</b><br>Compartilhe este link com seus clientes:<div class="rv-linkbox">${link}</div><br><span class="muted">Os pedidos feitos por este link aparecem na aba <b>Pedidos da Loja</b>.</span>`}
 async function carregarProdutosRevendedor(){if(usuario?.role!=='cliente')return;const c=clienteRevendedorAtual();if(!c){rvProdutos=[];return}const {data,error}=await sb.from('distribuidor_produtos').select('*').eq('cliente_id',c.id).eq('ativo',true).order('nome');if(error){console.warn(error);rvProdutos=[];return}rvProdutos=data||[]}
 async function carregarPedidosRevendedor(){if(usuario?.role!=='cliente')return;const c=clienteRevendedorAtual();if(!c){rvPedidos=[];return}const {data,error}=await sb.from('distribuidor_pedidos').select('*').eq('cliente_id',c.id).order('created_at',{ascending:false});if(error){console.warn(error);rvPedidos=[];return}rvPedidos=data||[]}
 function atualizarKpisRevendedor(){const low=rvProdutos.filter(p=>Number(p.estoque||0)<=Number(p.estoque_minimo||0)).length;if(document.getElementById('rvKPedidos'))rvKPedidos.textContent=rvPedidos.length;if(document.getElementById('rvKTotal'))rvKTotal.textContent=money(rvPedidos.reduce((s,p)=>s+Number(p.total||0),0));if(document.getElementById('rvKProdutos'))rvKProdutos.textContent=rvProdutos.length;if(document.getElementById('rvKEstoqueBaixo'))rvKEstoqueBaixo.textContent=low}
-function renderProdutosRevendedor(){const el=document.getElementById('listaProdutosRevendedor');if(!el)return;if(!rvCliente){el.innerHTML='<div class="catalog-empty">Usuário ainda não vinculado a um Distribuidor/Revendedor.</div>';return}el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Código</th><th>Produto</th><th>Origem</th><th>Custo</th><th>Venda</th><th>Estoque editável</th><th>Mínimo</th><th>Ação</th></tr>${rvProdutos.map(p=>{const baixo=Number(p.estoque||0)<=Number(p.estoque_minimo||0);return `<tr class="${baixo?'rv-low':''}"><td>${p.codigo||''}</td><td>${p.nome||''}</td><td>${p.origem||''}</td><td>${money(p.preco_custo)}</td><td><b>${money(p.preco_venda)}</b></td><td><div class="rv-stock-cell"><input class="rv-stock-input ${baixo?'baixo':''}" type="number" min="0" value="${Number(p.estoque||0)}" data-old="${Number(p.estoque||0)}" onchange="atualizarEstoqueRevendedor('${p.id}',this)" onkeydown="if(event.key==='Enter'){this.blur()}"><span class="rv-stock-save" id="rvStockMsg_${p.id}">${baixo?'⚠️ baixo':''}</span></div></td><td>${p.estoque_minimo||0}</td><td><button class="btn light" onclick="editarProdutoRevendedor('${p.id}')">Editar</button> <button class="btn red" onclick="excluirProdutoRevendedor('${p.id}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
+function renderProdutosRevendedor(){const el=document.getElementById('listaProdutosRevendedor');if(!el)return;if(!rvCliente){el.innerHTML='<div class="catalog-empty">Usuário ainda não vinculado a um Distribuidor/Revendedor.</div>';return}el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Origem</th><th>Custo</th><th>Venda</th><th>Estoque editável</th><th>Mínimo</th><th>Ação</th></tr>${rvProdutos.map(p=>{const baixo=Number(p.estoque||0)<=Number(p.estoque_minimo||0);const capa=rvFotoCapaProduto(p);const totalFotos=(capa?1:0)+rvImagensArray(p.imagens).length;return `<tr class="${baixo?'rv-low':''}"><td>${capa?`<img class="rv-prod-thumb" src="${capa}" loading="lazy" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo||''}</td><td>${p.nome||''}<br><span class="muted">${totalFotos} foto(s)</span></td><td>${p.origem||''}</td><td>${money(p.preco_custo)}</td><td><b>${money(p.preco_venda)}</b></td><td><div class="rv-stock-cell"><input class="rv-stock-input ${baixo?'baixo':''}" type="number" min="0" value="${Number(p.estoque||0)}" data-old="${Number(p.estoque||0)}" onchange="atualizarEstoqueRevendedor('${p.id}',this)" onkeydown="if(event.key==='Enter'){this.blur()}"><span class="rv-stock-save" id="rvStockMsg_${p.id}">${baixo?'⚠️ baixo':''}</span></div></td><td>${p.estoque_minimo||0}</td><td><button class="btn light" onclick="editarProdutoRevendedor('${p.id}')">Editar</button> <button class="btn" onclick="gerenciarFotosProdutoRevendedor('${p.id}')">Fotos</button> <button class="btn red" onclick="excluirProdutoRevendedor('${p.id}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
 async function atualizarEstoqueRevendedor(id,input){
   const novo=Math.max(0,Number(input.value)||0);
   input.value=novo;
@@ -2358,12 +2438,44 @@ async function atualizarEstoqueRevendedor(id,input){
 }
 
 function renderPedidosRevendedor(){const el=document.getElementById('listaPedidosRevendedor');if(!el)return;if(!rvPedidos.length){el.innerHTML='<div class="catalog-empty">Nenhum pedido recebido ainda.</div>';return}el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Data</th><th>Cliente</th><th>WhatsApp</th><th>Status</th><th>Total</th><th>Ação</th></tr>${rvPedidos.map(p=>`<tr><td>${p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):''}</td><td>${p.nome_cliente||''}</td><td>${p.whatsapp||''}</td><td><span class="pill ${p.status==='finalizado'?'ok':'warn'}">${p.status||'novo'}</span></td><td>${money(p.total)}</td><td><button class="btn" onclick="verPedidoRevendedor('${p.id}')">Ver</button> <button class="btn ok" onclick="enviarPedidoRevendedorWhatsApp('${p.id}')">WhatsApp</button> <button class="btn light" onclick="imprimirPedidoRevendedor('${p.id}')">Imprimir</button> <button class="btn ok" onclick="marcarPedidoRevendedor('${p.id}','finalizado')">Finalizar</button></td></tr>`).join('')}</table></div>`}
-function limparFormProdutoRevendedor(){rvCodigo.value=rvNome.value=rvCategoria.value=rvCusto.value=rvVenda.value='';rvEstoque.value=0;rvEstoqueMin.value=5;rvOrigem.value='proprio'}
-async function salvarProdutoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!rvCodigo.value.trim()||!rvNome.value.trim())return toast('Informe código e nome do produto');const obj={cliente_id:c.id,codigo:rvCodigo.value.trim(),nome:rvNome.value.trim(),categoria:rvCategoria.value.trim(),preco_custo:Number(rvCusto.value)||0,preco_venda:Number(rvVenda.value)||0,estoque:Number(rvEstoque.value)||0,estoque_minimo:Number(rvEstoqueMin.value)||0,origem:rvOrigem.value,ativo:true};let res;if(rvEditProdutoId)res=await sb.from('distribuidor_produtos').update(obj).eq('id',rvEditProdutoId);else res=await sb.from('distribuidor_produtos').upsert(obj,{onConflict:'cliente_id,codigo'});if(res.error)return toast(res.error.message);toast(rvEditProdutoId?'Produto atualizado':'Produto salvo');cancelarProdutoRevendedor();await carregarModuloRevendedor()}
-function editarProdutoRevendedor(id){const p=rvProdutos.find(x=>x.id===id);if(!p)return;rvEditProdutoId=id;rvCodigo.value=p.codigo||'';rvNome.value=p.nome||'';rvCategoria.value=p.categoria||'';rvCusto.value=p.preco_custo||0;rvVenda.value=p.preco_venda||0;rvEstoque.value=p.estoque||0;rvEstoqueMin.value=p.estoque_minimo||0;rvOrigem.value=p.origem||'proprio';btnSalvarProdutoRev.textContent='Atualizar produto';btnCancelarProdutoRev.classList.remove('hidden')}
+function limparFormProdutoRevendedor(){rvCodigo.value=rvNome.value=rvCategoria.value=rvCusto.value=rvVenda.value='';rvEstoque.value=0;rvEstoqueMin.value=5;rvOrigem.value='proprio';if(document.getElementById('rvImagemUrl'))rvImagemUrl.value='';if(document.getElementById('rvImagens'))rvImagens.value='';['rvFotoCapaCamera','rvFotoCapaGaleria','rvFotosGaleriaCamera','rvFotosGaleriaArquivos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});renderPreviewFotosProdutoRevendedor()}
+async function salvarProdutoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!rvCodigo.value.trim()||!rvNome.value.trim())return toast('Informe código e nome do produto');const obj={cliente_id:c.id,codigo:rvCodigo.value.trim(),nome:rvNome.value.trim(),categoria:rvCategoria.value.trim(),preco_custo:Number(rvCusto.value)||0,preco_venda:Number(rvVenda.value)||0,estoque:Number(rvEstoque.value)||0,estoque_minimo:Number(rvEstoqueMin.value)||0,origem:rvOrigem.value,imagem_url:(document.getElementById('rvImagemUrl')?.value||'').trim()||null,imagens:rvImagensArray(document.getElementById('rvImagens')?.value),ativo:true};let res;if(rvEditProdutoId)res=await sb.from('distribuidor_produtos').update(obj).eq('id',rvEditProdutoId);else res=await sb.from('distribuidor_produtos').upsert(obj,{onConflict:'cliente_id,codigo'});if(res.error)return toast(res.error.message);toast(rvEditProdutoId?'Produto atualizado':'Produto salvo');cancelarProdutoRevendedor();await carregarModuloRevendedor()}
+function editarProdutoRevendedor(id){const p=rvProdutos.find(x=>x.id===id);if(!p)return;rvEditProdutoId=id;rvCodigo.value=p.codigo||'';rvNome.value=p.nome||'';rvCategoria.value=p.categoria||'';rvCusto.value=p.preco_custo||0;rvVenda.value=p.preco_venda||0;rvEstoque.value=p.estoque||0;rvEstoqueMin.value=p.estoque_minimo||0;rvOrigem.value=p.origem||'proprio';if(document.getElementById('rvImagemUrl'))rvImagemUrl.value=p.imagem_url||'';if(document.getElementById('rvImagens'))rvImagens.value=rvImagensTexto(p.imagens);renderPreviewFotosProdutoRevendedor();btnSalvarProdutoRev.textContent='Atualizar produto';btnCancelarProdutoRev.classList.remove('hidden')}
 function cancelarProdutoRevendedor(){rvEditProdutoId=null;limparFormProdutoRevendedor();if(document.getElementById('btnSalvarProdutoRev'))btnSalvarProdutoRev.textContent='Salvar produto';if(document.getElementById('btnCancelarProdutoRev'))btnCancelarProdutoRev.classList.add('hidden')}
 async function excluirProdutoRevendedor(id){if(!confirm('Excluir este produto da sua loja?'))return;const {error}=await sb.from('distribuidor_produtos').update({ativo:false}).eq('id',id);if(error)return toast(error.message);toast('Produto excluído');await carregarModuloRevendedor()}
-async function importarCatalogoSofisticattoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!produtos.length)return toast('Nenhum produto Sofisticatto carregado');const registros=produtos.map(p=>({cliente_id:c.id,produto_id:p.id,codigo:p.codigo,nome:p.nome,categoria:p.categoria||'',preco_custo:Number(p.preco_catalogo)||0,preco_venda:Number(p.preco_catalogo)||0,estoque:0,estoque_minimo:5,origem:'sofisticatto',ativo:true}));const {error}=await sb.from('distribuidor_produtos').upsert(registros,{onConflict:'cliente_id,codigo'});if(error)return toast(error.message);toast('Produtos Sofisticatto adicionados/atualizados na sua loja');await carregarModuloRevendedor()}
+async function importarCatalogoSofisticattoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!produtos.length)return toast('Nenhum produto Sofisticatto carregado');const registros=produtos.map(p=>({cliente_id:c.id,produto_id:p.id,codigo:p.codigo,nome:p.nome,categoria:p.categoria||'',preco_custo:Number(p.preco_catalogo)||0,preco_venda:Number(p.preco_catalogo)||0,estoque:0,estoque_minimo:5,origem:'sofisticatto',imagem_url:p.imagem_url||null,imagens:rvImagensArray(p.imagens),ativo:true}));const {error}=await sb.from('distribuidor_produtos').upsert(registros,{onConflict:'cliente_id,codigo'});if(error)return toast(error.message);toast('Produtos Sofisticatto adicionados/atualizados na sua loja com fotos do cadastro');await carregarModuloRevendedor()}
+
+function gerenciarFotosProdutoRevendedor(id){
+  const p=rvProdutos.find(x=>x.id===id);if(!p)return;
+  const imgs=[p.imagem_url,...rvImagensArray(p.imagens)].filter(Boolean);
+  modalPedidoTitulo.textContent='Fotos do produto da loja';
+  modalPedidoContent.innerHTML=`<h3>${p.codigo||''} - ${p.nome||''}</h3>
+    <div class="rv-photo-row" id="rvModalFotosProduto">${imgs.length?imgs.map(u=>`<a href="${u}" target="_blank"><img src="${u}" onerror="this.style.display='none'"></a>`).join(''):'<span class="muted">Nenhuma foto cadastrada.</span>'}</div>
+    <div class="calcbox" style="margin-top:14px"><b>Adicionar fotos</b><br><span class="muted">No celular, use a câmera para fotografar o produto na hora.</span>
+      <div class="rv-camera-actions">
+        <input id="rvModalCapaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoRevendedorExistente('${id}','capa',this.files[0])">
+        <input id="rvModalCapaGaleria" type="file" accept="image/*" class="hidden" onchange="uploadFotoProdutoRevendedorExistente('${id}','capa',this.files[0])">
+        <input id="rvModalGaleriaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoRevendedorExistente('${id}','galeria',this.files[0])">
+        <input id="rvModalGaleriaArquivos" type="file" accept="image/*" multiple class="hidden" onchange="uploadFotoProdutoRevendedorExistente('${id}','galeria',this.files)">
+        <button class="btn light" onclick="rvModalCapaCamera.click()">📷 Foto de capa</button>
+        <button class="btn light" onclick="rvModalCapaGaleria.click()">🖼 Capa da galeria</button>
+        <button class="btn light" onclick="rvModalGaleriaCamera.click()">📷 Foto extra</button>
+        <button class="btn light" onclick="rvModalGaleriaArquivos.click()">🖼 Várias fotos</button>
+      </div>
+    </div>`;
+  modalPedidoActions.innerHTML='<button class="btn light" onclick="fecharModalPedido()">Fechar</button>';
+  modalPedido.classList.remove('hidden');
+}
+async function uploadFotoProdutoRevendedorExistente(id,tipo,files){
+  const prod=rvProdutos.find(x=>x.id===id);if(!prod)return toast('Produto não encontrado');
+  const urls=await uploadArquivosLoja(files,`produtos/${prod.codigo||id}`);if(!urls.length)return;
+  const update={};
+  if(tipo==='capa')update.imagem_url=urls[0];
+  else update.imagens=[...rvImagensArray(prod.imagens),...urls];
+  const {error}=await sb.from('distribuidor_produtos').update(update).eq('id',id);
+  if(error)return toast('Erro ao salvar foto: '+error.message);
+  Object.assign(prod,update);toast('Foto adicionada');renderProdutosRevendedor();gerenciarFotosProdutoRevendedor(id);
+}
 function copiarLinkLojaRevendedor(){const link=linkLojaRevendedor();if(!link)return toast('Link indisponível');navigator.clipboard?.writeText(link);toast('Link copiado')}
 function abrirLinkLojaRevendedor(){const link=linkLojaRevendedor();if(link)window.open(link,'_blank')}
 async function verPedidoRevendedor(id){const p=rvPedidos.find(x=>x.id===id);if(!p)return;const {data}=await sb.from('distribuidor_pedido_itens').select('*').eq('pedido_id',id).order('created_at',{ascending:true});const itens=data||[];const html=`<div><h3>Pedido da loja</h3><div class="pedido-resumo"><div><b>Cliente</b><br>${p.nome_cliente||''}</div><div><b>WhatsApp</b><br>${p.whatsapp||''}</div><div><b>Status</b><br>${p.status||''}</div><div><b>Total</b><br>${money(p.total)}</div></div><div class="table-wrap"><table class="table"><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>${itens.map(i=>`<tr><td>${i.codigo||''}</td><td>${i.nome||''}</td><td>${i.quantidade||0}</td><td>${money(i.preco_unitario)}</td><td>${money(i.total)}</td></tr>`).join('')}</table></div><p style="margin-top:12px"><b>Observação:</b> ${p.observacao||'-'}</p></div>`;modalPedidoTitulo.textContent='Pedido da Loja';modalPedidoContent.innerHTML=html;modalPedidoActions.innerHTML=`<button class="btn light" onclick="fecharModalPedido()">Fechar</button>`;modalPedido.classList.remove('hidden')}
@@ -2463,8 +2575,8 @@ async function imprimirPedidoRevendedor(id){
 async function marcarPedidoRevendedor(id,status){const {error}=await sb.from('distribuidor_pedidos').update({status}).eq('id',id);if(error)return toast(error.message);toast('Pedido atualizado');await carregarModuloRevendedor()}
 function abrirLojaPublica(token){document.body.innerHTML='<div class="rv-public-body"><div class="rv-public-header"><h1>Sofisticatto</h1><p>Carregando loja...</p></div></div>';carregarLojaPublica(token)}
 async function carregarLojaPublica(token){const {data:cli,error}=await sb.from('clientes').select('*').or(`loja_token.eq.${token},id.eq.${token}`).eq('ativo',true).single();if(error||!cli){document.body.innerHTML='<div class="rv-public-body"><div class="rv-public-header"><h1>Loja não encontrada</h1><p>Confira o link enviado.</p></div></div>';return}rvLojaPublicaCliente=cli;const {data:prods}=await sb.from('distribuidor_produtos').select('*').eq('cliente_id',cli.id).eq('ativo',true).gt('estoque',0).order('nome');rvLojaPublicaProdutos=prods||[];renderLojaPublica()}
-function renderLojaPublica(){const c=rvLojaPublicaCliente;document.body.innerHTML=`<div class="rv-public-body"><div class="rv-public-header"><h1>${c.nome_fantasia||'Loja Sofisticatto'}</h1><p>Escolha os produtos e finalize seu pedido.</p></div><div id="rvPublicProdutos" class="rv-public-grid"></div><div id="rvPublicCart" class="rv-public-cart"></div></div>`;renderLojaPublicaProdutos();renderLojaPublicaCarrinho()}
-function renderLojaPublicaProdutos(){rvPublicProdutos.innerHTML=rvLojaPublicaProdutos.map(p=>`<div class="rv-public-card"><h3>${p.nome||''}</h3><p class="muted">Código: ${p.codigo||''} • Estoque: ${p.estoque||0}</p><div class="rv-public-price">${money(p.preco_venda)}</div><div class="row"><input id="qpub_${p.id}" type="number" min="1" max="${p.estoque||1}" value="1"><button class="btn ok" onclick="addPublicCart('${p.id}')">Adicionar</button></div></div>`).join('')||'<div class="catalog-empty">Nenhum produto disponível no momento.</div>'}
+function renderLojaPublica(){const c=rvLojaPublicaCliente;const logo=c.logo_url?`<img class="rv-public-logo" src="${c.logo_url}" onerror="this.style.display='none'">`:'';document.body.innerHTML=`<div class="rv-public-body"><div class="rv-public-header"><div class="rv-store-header-flex">${logo}<div><h1>${c.nome_fantasia||'Loja Sofisticatto'}</h1><p>Escolha os produtos e finalize seu pedido.</p></div></div></div><div id="rvPublicProdutos" class="rv-public-grid"></div><div id="rvPublicCart" class="rv-public-cart"></div></div>`;renderLojaPublicaProdutos();renderLojaPublicaCarrinho()}
+function renderLojaPublicaProdutos(){rvPublicProdutos.innerHTML=rvLojaPublicaProdutos.map(p=>{const capa=rvFotoCapaProduto(p);return `<div class="rv-public-card">${capa?`<img class="rv-public-img" src="${capa}" loading="lazy" onerror="this.style.display='none'">`:''}<h3>${p.nome||''}</h3><p class="muted">Código: ${p.codigo||''} • Estoque: ${p.estoque||0}</p><div class="rv-public-price">${money(p.preco_venda)}</div><div class="row"><input id="qpub_${p.id}" type="number" min="1" max="${p.estoque||1}" value="1"><button class="btn ok" onclick="addPublicCart('${p.id}')">Adicionar</button></div></div>`}).join('')||'<div class="catalog-empty">Nenhum produto disponível no momento.</div>'}
 function addPublicCart(id){const p=rvLojaPublicaProdutos.find(x=>x.id===id);if(!p)return;const q=Number(document.getElementById('qpub_'+id)?.value)||1;const ex=rvCarrinhoPublico.find(i=>i.id===id);if(ex)ex.quantidade+=q;else rvCarrinhoPublico.push({...p,quantidade:q});renderLojaPublicaCarrinho()}
 function renderLojaPublicaCarrinho(){if(!document.getElementById('rvPublicCart'))return;const total=rvCarrinhoPublico.reduce((s,p)=>s+Number(p.preco_venda||0)*Number(p.quantidade||0),0);rvPublicCart.innerHTML=`<h3>Carrinho</h3>${rvCarrinhoPublico.map((p,i)=>`<div class="rv-public-cart-row"><span>${p.quantidade}x ${p.nome}</span><b>${money(Number(p.preco_venda)*Number(p.quantidade))}</b><button class="btn red" onclick="rvCarrinhoPublico.splice(${i},1);renderLojaPublicaCarrinho()">X</button></div>`).join('')||'<p class="muted">Carrinho vazio.</p>'}<h2 style="margin-top:10px">Total: ${money(total)}</h2><div class="field"><label>Seu nome</label><input id="pubNome"></div><div class="field"><label>WhatsApp</label><input id="pubWhats"></div><div class="field"><label>Observação</label><textarea id="pubObs"></textarea></div><button class="btn ok" style="width:100%" onclick="finalizarPedidoPublico()">Finalizar pedido</button>`}
 async function finalizarPedidoPublico(){if(!rvCarrinhoPublico.length)return alert('Adicione produtos ao carrinho');const nome=document.getElementById('pubNome').value.trim();const whats=document.getElementById('pubWhats').value.trim();if(!nome||!whats)return alert('Informe seu nome e WhatsApp');const total=rvCarrinhoPublico.reduce((s,p)=>s+Number(p.preco_venda||0)*Number(p.quantidade||0),0);const pedido={cliente_id:rvLojaPublicaCliente.id,nome_cliente:nome,whatsapp:whats,observacao:document.getElementById('pubObs').value,total,status:'novo'};const {data,error}=await sb.from('distribuidor_pedidos').insert(pedido).select().single();if(error)return alert(error.message);const itens=rvCarrinhoPublico.map(p=>({pedido_id:data.id,produto_id:p.id,codigo:p.codigo,nome:p.nome,quantidade:p.quantidade,preco_unitario:Number(p.preco_venda)||0,total:(Number(p.preco_venda)||0)*Number(p.quantidade)}));const r=await sb.from('distribuidor_pedido_itens').insert(itens);if(r.error)return alert(r.error.message);for(const p of rvCarrinhoPublico){await sb.from('distribuidor_produtos').update({estoque:Math.max(0,Number(p.estoque||0)-Number(p.quantidade||0))}).eq('id',p.id)}rvCarrinhoPublico=[];alert('Pedido enviado com sucesso!');await carregarLojaPublica(rvLojaPublicaCliente.loja_token||rvLojaPublicaCliente.id)}
