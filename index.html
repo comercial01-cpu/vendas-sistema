@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=B-4WYCKhZ4nxOLvUc-Zw3h9oLcQZx5ur5senOp89cB7ip816IFYgT3NXN34MAoIb-dIdi0o4_6MCBH5D8-hG-qPkVjU4J7Zp8MyxILR9F95jQZ_rSUUHnDT9xk0JW7O0UxOOUmSebGNsYKop6qO2YGqU9Vx_4UqxIVU97fu1fmtcBXFZ3xzsD0oCiBgTMO55hdiVE0pzkJ2X-hykze54JlgZbLGflu448qCCqqDUcUaJuHS4VeCnY-kmcAMz8RMIPwcWAJ4FRipXOkNmDpKqYF6oKbVxn2K-T5vPSB0YiMpdsCuJXuZqtqW-F-XcwJpz" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -766,6 +766,23 @@ async function gerarImagemOrcamento(id,baixar=true){
     return {pedido,itens,blob,arquivo,canvas};
   }catch(e){console.error(e);toast('Não foi possível gerar a imagem do orçamento');return null}
 }
+
+async function compartilharImagemNoCelular(blob, arquivo, titulo='Orçamento'){
+  if(!blob) return false;
+  const file=new File([blob], arquivo || 'orcamento.png', {type:'image/png'});
+  // No celular, isso abre a tela nativa de compartilhamento. Escolha WhatsApp e depois a conversa do cliente.
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({files:[file], title:titulo});
+      return true;
+    }catch(e){
+      console.warn('Compartilhamento cancelado/falhou:', e);
+      return false;
+    }
+  }
+  return false;
+}
+
 async function enviarPedidoWhatsApp(id){
   const pedido=(window.todosPedidos||[]).find(p=>p.id===id); if(!pedido)return toast('Pedido não encontrado');
   const itens=await buscarItensPedido(id); const {texto,cliente}=dadosPedidoFormatados(pedido,itens);
@@ -774,17 +791,15 @@ async function enviarPedidoWhatsApp(id){
   const foneLimpo=(cliente.whatsapp||'').replace(/\D/g,'');
   let fone=foneLimpo;
   if(fone && !fone.startsWith('55')) fone='55'+fone;
-  const msg=`Olá! Segue o orçamento da Sofisticatto.\n\nTotal: ${money(pedido.total)}\n\nA imagem do orçamento foi gerada para envio.`;
+  const msg=`Olá! Segue o orçamento da Sofisticatto.\n\nTotal: ${money(pedido.total)}`;
   if(gerado?.blob){
-    const file=new File([gerado.blob],gerado.arquivo,{type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      try{
-        await navigator.share({files:[file],text:msg,title:'Orçamento Sofisticatto'});
-        return;
-      }catch(e){console.warn('Compartilhamento cancelado/falhou:',e)}
+    const compartilhado=await compartilharImagemNoCelular(gerado.blob, gerado.arquivo, 'Orçamento Sofisticatto');
+    if(compartilhado){
+      toast('Escolha o WhatsApp e a conversa do cliente para enviar a imagem.');
+      return;
     }
     await gerarImagemOrcamento(id,true);
-    toast('Imagem baixada. Agora anexe no WhatsApp.');
+    toast('Imagem baixada. Agora escolha/anexe no WhatsApp.');
   }
   const url=`https://wa.me/${fone}?text=${encodeURIComponent(msg+'\n\n'+texto)}`;
   window.open(url,'_blank');
@@ -2408,14 +2423,15 @@ async function enviarPedidoRevendedorWhatsApp(id){
   toast('Gerando imagem do orçamento da loja...');
   const gerado=await gerarImagemOrcamentoRevendedor(id,false);
   let fone=(pedido.whatsapp||'').replace(/\D/g,'');if(fone&&!fone.startsWith('55'))fone='55'+fone;
-  const msg=`Olá, ${pedido.nome_cliente||''}! Segue o orçamento da sua compra.\n\nTotal: ${money(pedido.total)}\n\nA imagem do orçamento foi gerada para envio.`;
+  const msg=`Olá, ${pedido.nome_cliente||''}! Segue o orçamento da sua compra.\n\nTotal: ${money(pedido.total)}`;
   if(gerado?.blob){
-    const file=new File([gerado.blob],gerado.arquivo,{type:'image/png'});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){
-      try{await navigator.share({files:[file],text:msg,title:'Orçamento da loja'});return}catch(e){console.warn('Compartilhamento cancelado/falhou:',e)}
+    const compartilhado=await compartilharImagemNoCelular(gerado.blob, gerado.arquivo, 'Orçamento da loja');
+    if(compartilhado){
+      toast('Escolha o WhatsApp e a conversa do cliente para enviar a imagem.');
+      return;
     }
     await gerarImagemOrcamentoRevendedor(id,true);
-    toast('Imagem baixada. Agora anexe no WhatsApp do cliente.');
+    toast('Imagem baixada. Agora escolha/anexe no WhatsApp do cliente.');
   }
   const texto=dadosPedidoRevendedorFormatados(pedido,itens);
   window.open(`https://wa.me/${fone}?text=${encodeURIComponent(msg+'\n\n'+texto)}`,'_blank');
