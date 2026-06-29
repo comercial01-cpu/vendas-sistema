@@ -4,10 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=B-4WYCKhZ4nxOLvUc-Zw3h9oLcQZx5ur5senOp89cB7ip816IFYgT3NXN34MAoIb-dIdi0o4_6MCBH5D8-hG-qPkVjU4J7Zp8MyxILR9F95jQZ_rSUUHnDT9xk0JW7O0UxOOUmSebGNsYKop6qO2YGqU9Vx_4UqxIVU97fu1fmtcBXFZ3xzsD0oCiBgTMO55hdiVE0pzkJ2X-hykze54JlgZbLGflu448qCCqqDUcUaJuHS4VeCnY-kmcAMz8RMIPwcWAJ4FRipXOkNmDpKqYF6oKbVxn2K-T5vPSB0YiMpdsCuJXuZqtqW-F-XcwJpz" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=zP0WwmcpIpOhS733erwkmouw1GyH4tK7W5r-qgwQzIJJOxUYzrGJv6oNHVrM9UZZCog-UXIBXbOirkyI2ByiC30Pe9_3Ee4kxsn1937ro2bXKkv7o6G3gjaqoirqAAQecOu70heZKOmS5ikcqhoKidNgDUgRhnJxTpjAM7mDh3WVhejBiKSNhd7cVsQcb6A_QQtqIqlp3YOYV9A3EsTgAjAlinlUkL0v7MfKdvqhrwZ2oDqdxNrZwDi1aAm9wlRaBTJGj_MHMVWslWXbzhNORmn90P1WQ7W4O3LBa50meF3-rjN0sKAyJzY-QeMc0sc8" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
@@ -444,6 +441,38 @@
 </div>
 
 <script>
+
+const lazyScripts = {};
+function carregarScriptLazy(src){
+  if(lazyScripts[src]) return lazyScripts[src];
+  lazyScripts[src]=new Promise((resolve,reject)=>{
+    const ja=[...document.scripts].find(s=>s.src===src);
+    if(ja){resolve();return;}
+    const s=document.createElement('script');
+    s.src=src; s.async=true;
+    s.onload=()=>resolve();
+    s.onerror=()=>reject(new Error('Falha ao carregar: '+src));
+    document.head.appendChild(s);
+  });
+  return lazyScripts[src];
+}
+async function garantirXLSX(){
+  if(window.XLSX) return true;
+  try{ await carregarScriptLazy('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'); return !!window.XLSX; }
+  catch(e){ console.error(e); toast('Não consegui carregar a biblioteca de Excel. Verifique a internet.'); return false; }
+}
+async function garantirPdfJS(){
+  if(!window.pdfjsLib){
+    try{ await carregarScriptLazy('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'); }
+    catch(e){ console.error(e); toast('Não consegui carregar o leitor do catálogo. Use Baixar/Abrir PDF.'); return false; }
+  }
+  if(window.pdfjsLib){
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    return true;
+  }
+  return false;
+}
+
 // COLE AQUI OS DADOS DO SEU SUPABASE
 const SUPABASE_URL = 'https://bqyyaamhvrbdesmkerzo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bvOCd5SNwwezYNpHYDwgOQ_Ejmo8Mtc';
@@ -937,7 +966,7 @@ function dropPlanilhaProdutos(ev){
 }
 async function importarPlanilhaProdutos(file){
   if(!file) return;
-  if(typeof XLSX==='undefined') return toast('Biblioteca de Excel não carregou. Verifique a internet e tente novamente.');
+  if(!(await garantirXLSX())) return;
   resultadoImportProdutos.classList.remove('hidden');
   resultadoImportProdutos.innerHTML='Lendo planilha...';
   try{
@@ -1159,13 +1188,7 @@ function renderCatalogo(){
 }
 
 let flipbooks=new WeakMap();
-function configurarPdfJs(){
-  if(window.pdfjsLib){
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-    return true;
-  }
-  return false;
-}
+async function configurarPdfJs(){ return await garantirPdfJS(); }
 async function abrirRevistaCatalogo(btn){
   const card=btn.closest('.flip-start');
   const flip=card?.nextElementSibling;
@@ -1175,7 +1198,7 @@ async function abrirRevistaCatalogo(btn){
   await inicializarFlipbookUnico(flip);
 }
 async function inicializarFlipbookUnico(box){
-  if(!configurarPdfJs()) { toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
+  if(!(await configurarPdfJs())) { toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
   if(flipbooks.has(box)) return;
   const url=box.getAttribute('data-pdf-url');
   const status=box.querySelector('[data-flip-status]');
@@ -1421,13 +1444,7 @@ function renderCatalogo(){
   const prev=document.getElementById('catalogoGerentePreview'); if(prev) prev.innerHTML=html;
 }
 
-function configurarPdfJs(){
-  if(window.pdfjsLib){
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-    return true;
-  }
-  return false;
-}
+async function configurarPdfJs(){ return await garantirPdfJS(); }
 async function abrirRevistaCatalogo(btn){
   const card=btn.closest('.flip-start');
   const flip=card?.nextElementSibling;
@@ -1437,7 +1454,7 @@ async function abrirRevistaCatalogo(btn){
   await inicializarFlipbookUnico(flip);
 }
 async function inicializarFlipbookUnico(box){
-  if(!configurarPdfJs()) { toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
+  if(!(await configurarPdfJs())) { toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
   if(flipbooks.has(box)) return;
   const url=box.getAttribute('data-pdf-url');
   const status=box.querySelector('[data-flip-status]');
@@ -1829,7 +1846,7 @@ document.addEventListener('keydown',e=>{
 const abrirCatalogoTelaCheiaOriginal = window.abrirCatalogoTelaCheia;
 async function abrirCatalogoLeituraDireta(url,nome,paginaInicial=1){
   if(!url) return toast('Nenhum catálogo publicado ainda');
-  if(!configurarPdfJs()){ toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
+  if(!(await configurarPdfJs())){ toast('PDF.js não carregou. Tente abrir o PDF rápido.'); return; }
   fecharCatalogoTelaCheia(true);
   const antigo=document.getElementById('catalogReaderOverlay'); if(antigo) antigo.remove();
   const overlay=document.createElement('div');
