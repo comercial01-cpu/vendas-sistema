@@ -223,6 +223,11 @@
 @media(max-width:900px){.pedido-vitrine-head{flex-direction:column}.pedido-vitrine-tools{grid-template-columns:1fr}.pedido-vitrine-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pedido-prod-body{padding:10px}.pedido-prod-body h4{font-size:13px;min-height:34px}.pedido-prod-price{font-size:17px}.pedido-prod-actions{grid-template-columns:55px 1fr}.pedido-prod-actions .btn{font-size:12px;padding:10px 5px}.pedido-prod-modal-gallery{grid-template-columns:1fr}.pedido-cart-mini{font-size:12px}.pedido-cart-drawer{top:0;right:0;bottom:0;width:min(92vw,410px);border-radius:22px 0 0 22px}.pedido-cart-floating{display:flex}.pedido-cart-floating:not(.show){display:none}.pedido-cart-head{padding:13px}.pedido-cart-body{padding:10px 13px}}
 @media(max-width:380px){.pedido-vitrine-grid{grid-template-columns:1fr}}
 </style>
+
+<style id="produtoEditModalCss">
+.prod-edit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.prod-edit-grid.two{grid-template-columns:repeat(2,1fr)}.prod-edit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.prod-edit-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:10px}.prod-edit-photo{position:relative;background:#f3f0ff;border-radius:14px;overflow:hidden;min-height:110px;border:1px solid #eee}.prod-edit-photo img{width:100%;height:110px;object-fit:cover;display:block}.prod-edit-photo .tag{position:absolute;left:6px;top:6px;background:#0008;color:#fff;border-radius:999px;padding:4px 7px;font-size:10px}.prod-edit-photo button{position:absolute;right:6px;bottom:6px;padding:7px 9px!important;border-radius:10px!important;font-size:11px!important}.prod-edit-drop{border:2px dashed #b6a8ff;background:#fbfaff;border-radius:16px;padding:12px;text-align:center}.prod-edit-drop .btn{margin:4px}.prod-edit-thumb-empty{height:110px;display:flex;align-items:center;justify-content:center;color:#777;font-size:12px;text-align:center;padding:8px}.prod-edit-modal-note{background:#f6f3ff;border:1px solid #e5ddff;border-radius:14px;padding:10px;margin:10px 0;color:#5a4fa3;font-size:13px}@media(max-width:900px){.prod-edit-grid,.prod-edit-grid.two{grid-template-columns:1fr}.prod-edit-photos{grid-template-columns:repeat(2,1fr)}.modal-card{max-height:96vh}.modal-body{padding:14px}.modal-actions{padding:0 14px 14px}}
+</style>
+
 </head>
 <body>
 <div id="login" class="login">
@@ -889,6 +894,11 @@ async function imprimirPedido(id){
   .catalog-reader-canvas{border-radius:2px!important}
 }
 </style>
+
+<style id="produtoEditModalCss">
+.prod-edit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.prod-edit-grid.two{grid-template-columns:repeat(2,1fr)}.prod-edit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.prod-edit-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:10px}.prod-edit-photo{position:relative;background:#f3f0ff;border-radius:14px;overflow:hidden;min-height:110px;border:1px solid #eee}.prod-edit-photo img{width:100%;height:110px;object-fit:cover;display:block}.prod-edit-photo .tag{position:absolute;left:6px;top:6px;background:#0008;color:#fff;border-radius:999px;padding:4px 7px;font-size:10px}.prod-edit-photo button{position:absolute;right:6px;bottom:6px;padding:7px 9px!important;border-radius:10px!important;font-size:11px!important}.prod-edit-drop{border:2px dashed #b6a8ff;background:#fbfaff;border-radius:16px;padding:12px;text-align:center}.prod-edit-drop .btn{margin:4px}.prod-edit-thumb-empty{height:110px;display:flex;align-items:center;justify-content:center;color:#777;font-size:12px;text-align:center;padding:8px}.prod-edit-modal-note{background:#f6f3ff;border:1px solid #e5ddff;border-radius:14px;padding:10px;margin:10px 0;color:#5a4fa3;font-size:13px}@media(max-width:900px){.prod-edit-grid,.prod-edit-grid.two{grid-template-columns:1fr}.prod-edit-photos{grid-template-columns:repeat(2,1fr)}.modal-card{max-height:96vh}.modal-body{padding:14px}.modal-actions{padding:0 14px 14px}}
+</style>
+
 </head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${statusPedidoTexto(pedido.status)}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div></body></html>`;
   const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
 }
@@ -2742,7 +2752,12 @@ async function imprimirPedidoRevendedor(id){
   const pedido=rvPedidos.find(p=>p.id===id);if(!pedido)return toast('Pedido não encontrado');
   const itens=await buscarItensPedidoRevendedor(id);const loja=rvCliente||clienteRevendedorAtual()||{};
   const linhas=itens.map(i=>`<tr><td>${i.codigo||''}</td><td>${i.nome||''}</td><td>${i.quantidade||0}</td><td>${money(i.preco_unitario)}</td><td>${money(i.total)}</td></tr>`).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido da Loja</title><style>body{font-family:Arial;padding:24px;color:#333}h1{color:#5a4fa3}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f3f0ff}.total{margin-top:18px;font-size:22px;font-weight:bold;color:#16a34a}@media print{button{display:none}}</style></head><body><button onclick="window.print()">Imprimir</button><h1>${loja.nome_fantasia||'Sofisticatto'}</h1><h2>Orçamento / Pedido da loja</h2><p><b>Cliente:</b> ${pedido.nome_cliente||''}<br><b>WhatsApp:</b> ${pedido.whatsapp||''}<br><b>Status:</b> ${pedido.status||'novo'}</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>${linhas}</table><p><b>Observação:</b> ${pedido.observacao||'-'}</p><div class="total">Total: ${money(pedido.total)}</div></body></html>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido da Loja</title><style>body{font-family:Arial;padding:24px;color:#333}h1{color:#5a4fa3}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f3f0ff}.total{margin-top:18px;font-size:22px;font-weight:bold;color:#16a34a}@media print{button{display:none}}</style>
+<style id="produtoEditModalCss">
+.prod-edit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.prod-edit-grid.two{grid-template-columns:repeat(2,1fr)}.prod-edit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.prod-edit-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:10px}.prod-edit-photo{position:relative;background:#f3f0ff;border-radius:14px;overflow:hidden;min-height:110px;border:1px solid #eee}.prod-edit-photo img{width:100%;height:110px;object-fit:cover;display:block}.prod-edit-photo .tag{position:absolute;left:6px;top:6px;background:#0008;color:#fff;border-radius:999px;padding:4px 7px;font-size:10px}.prod-edit-photo button{position:absolute;right:6px;bottom:6px;padding:7px 9px!important;border-radius:10px!important;font-size:11px!important}.prod-edit-drop{border:2px dashed #b6a8ff;background:#fbfaff;border-radius:16px;padding:12px;text-align:center}.prod-edit-drop .btn{margin:4px}.prod-edit-thumb-empty{height:110px;display:flex;align-items:center;justify-content:center;color:#777;font-size:12px;text-align:center;padding:8px}.prod-edit-modal-note{background:#f6f3ff;border:1px solid #e5ddff;border-radius:14px;padding:10px;margin:10px 0;color:#5a4fa3;font-size:13px}@media(max-width:900px){.prod-edit-grid,.prod-edit-grid.two{grid-template-columns:1fr}.prod-edit-photos{grid-template-columns:repeat(2,1fr)}.modal-card{max-height:96vh}.modal-body{padding:14px}.modal-actions{padding:0 14px 14px}}
+</style>
+
+</head><body><button onclick="window.print()">Imprimir</button><h1>${loja.nome_fantasia||'Sofisticatto'}</h1><h2>Orçamento / Pedido da loja</h2><p><b>Cliente:</b> ${pedido.nome_cliente||''}<br><b>WhatsApp:</b> ${pedido.whatsapp||''}<br><b>Status:</b> ${pedido.status||'novo'}</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>${linhas}</table><p><b>Observação:</b> ${pedido.observacao||'-'}</p><div class="total">Total: ${money(pedido.total)}</div></body></html>`;
   const w=window.open('','_blank');w.document.write(html);w.document.close();w.focus();
 }
 async function marcarPedidoRevendedor(id,status){const {error}=await sb.from('distribuidor_pedidos').update({status}).eq('id',id);if(error)return toast(error.message);toast('Pedido atualizado');await carregarModuloRevendedor()}
@@ -2884,6 +2899,110 @@ function fecharDetalheProdutoPublico(){document.getElementById('rvProductModalOv
 <style id="rvLojaGridProfissionalCss">
 .rv-store-pro .rv-public-header{margin-bottom:12px}.rv-store-tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;background:#fff;border-radius:18px;padding:12px;box-shadow:0 8px 22px #0000000d;margin-bottom:16px}.rv-store-tools input,.rv-store-tools select{height:46px}.rv-public-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;align-items:stretch!important}.rv-product-card-pro{padding:0!important;overflow:hidden;display:flex;flex-direction:column;min-height:100%;border:1px solid #eee;transition:transform .2s ease,box-shadow .2s ease}.rv-product-card-pro:hover{transform:translateY(-3px);box-shadow:0 14px 34px #00000018}.rv-card-image-wrap{position:relative;aspect-ratio:1/1;background:#f3f0ff;cursor:pointer;overflow:hidden}.rv-product-card-pro .rv-public-img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:0!important;margin:0!important;display:block}.rv-no-img{display:flex!important;align-items:center;justify-content:center;color:#8a82bb;font-weight:bold;background:#f3f0ff}.rv-card-content{padding:12px;display:flex;flex-direction:column;gap:6px;flex:1}.rv-card-content h3{font-size:15px;line-height:1.25;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.rv-card-code{font-size:11px;color:#777}.rv-card-category{font-size:12px;color:#5a4fa3;background:#f3f0ff;border-radius:999px;padding:5px 8px;width:max-content;max-width:100%}.rv-product-card-pro .rv-public-price{font-size:21px!important;margin:2px 0!important}.rv-stock-line{font-size:12px;color:#166534;background:#dcfce7;border-radius:999px;padding:5px 8px;width:max-content;max-width:100%}.rv-stock-line.low{color:#991b1b;background:#fee2e2}.rv-card-actions{display:grid;grid-template-columns:70px 1fr;gap:8px;margin-top:auto}.rv-card-actions input{padding:10px;text-align:center}.rv-detail-btn{width:100%;padding:10px!important}.rv-badge-row{position:absolute;left:8px;top:8px;display:flex;gap:5px;flex-wrap:wrap;z-index:2}.rv-badge-row.static{position:static;margin-bottom:8px}.rv-badge{font-size:10px;font-weight:bold;border-radius:999px;padding:5px 7px;background:#fff;color:#5a4fa3;box-shadow:0 4px 12px #0002}.rv-badge.danger{background:#fee2e2;color:#991b1b}.rv-badge.new{background:#dcfce7;color:#166534}.rv-badge.promo{background:#fef3c7;color:#92400e}.rv-badge.photos{background:#eef2ff;color:#3730a3}.rv-product-modal-overlay{position:fixed;inset:0;background:#0009;z-index:5000;display:flex;align-items:center;justify-content:center;padding:18px}.rv-product-modal{background:#fff;border-radius:22px;width:min(980px,96vw);max-height:92vh;overflow:auto;padding:18px;position:relative}.rv-product-close{position:absolute;right:14px;top:14px;z-index:2}.rv-product-detail-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.rv-detail-main{width:100%;aspect-ratio:1/1;object-fit:cover;background:#f3f0ff;border-radius:18px}.rv-detail-gallery{display:flex;gap:8px;margin-top:10px;overflow:auto}.rv-detail-thumb{width:76px;height:76px;object-fit:cover;border-radius:12px;border:2px solid transparent;cursor:pointer;background:#f3f0ff}.rv-detail-thumb.active{border-color:#5a4fa3}.rv-detail-price{font-size:30px!important}.rv-detail-actions{margin-top:18px;max-width:360px}@media(max-width:1200px){.rv-public-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.rv-public-body.rv-has-cart{padding-right:360px}}@media(max-width:900px){.rv-public-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.rv-store-tools{grid-template-columns:1fr;padding:10px}.rv-product-card-pro{border-radius:16px!important}.rv-card-content{padding:10px}.rv-card-content h3{font-size:13px;min-height:34px}.rv-product-card-pro .rv-public-price{font-size:18px!important}.rv-card-actions{grid-template-columns:58px 1fr}.rv-card-actions .btn{font-size:12px;padding:10px 6px}.rv-detail-btn{font-size:12px}.rv-product-detail-grid{grid-template-columns:1fr}.rv-product-modal{padding:14px;width:96vw}.rv-product-close{position:sticky;display:block;margin-left:auto;top:0}.rv-detail-main{border-radius:14px}.rv-detail-price{font-size:24px!important}}@media(max-width:380px){.rv-public-grid{grid-template-columns:1fr!important}}
 </style>
+
+
+<script id="produtoEditModalScript">
+(function(){
+function peEsc(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+function peImgs(v){try{return imagensProdutoArray(v)}catch(e){return []}}
+function peRvImgs(v){try{return rvImagensArray(v)}catch(e){return peImgs(v)}}
+function peSetModal(titulo,body,actions){modalPedidoTitulo.textContent=titulo;modalPedidoContent.innerHTML=body;modalPedidoActions.innerHTML=actions||'';modalPedido.classList.remove('hidden')}
+function peGalleryHtml(prefix,capa,imgs){
+  const arr=[]; if(capa)arr.push({url:capa,tipo:'capa',idx:-1}); (imgs||[]).forEach((u,i)=>arr.push({url:u,tipo:'galeria',idx:i}));
+  if(!arr.length)return '<div class="prod-edit-photo"><div class="prod-edit-thumb-empty">Nenhuma foto cadastrada</div></div>';
+  return arr.map(f=>`<div class="prod-edit-photo"><img src="${peEsc(f.url)}" onerror="this.parentElement.style.display='none'"><span class="tag">${f.tipo==='capa'?'Capa':'Foto '+(f.idx+1)}</span><button class="btn red" type="button" onclick="${prefix}RemoverFoto('${f.tipo}',${f.idx})">Excluir</button></div>`).join('')
+}
+window.peAtualizarGaleriaCatalogo=function(){
+  const capa=document.getElementById('modalPrImagemUrl')?.value||'';
+  const imgs=peImgs(document.getElementById('modalPrImagens')?.value);
+  const el=document.getElementById('modalPrGaleria'); if(el)el.innerHTML=peGalleryHtml('catalogo',capa,imgs);
+}
+window.catalogoRemoverFoto=function(tipo,idx){
+  if(tipo==='capa'){document.getElementById('modalPrImagemUrl').value=''}
+  else{const t=document.getElementById('modalPrImagens');const imgs=peImgs(t.value);imgs.splice(idx,1);t.value=imgs.join('\n')}
+  peAtualizarGaleriaCatalogo();
+}
+window.editarProdutoCatalogo=function(codigo){
+  const p=(produtos||[]).find(x=>String(x.codigo)===String(codigo)); if(!p)return toast('Produto não encontrado');
+  const imgs=peImgs(p.imagens);
+  const body=`<div class="prod-edit-modal-note">Edite o produto sem sair da posição atual da lista. Para excluir foto, clique no botão vermelho da imagem e depois em <b>Salvar alterações</b>.</div>
+    <input id="modalPrOriginalCodigo" type="hidden" value="${peEsc(p.codigo||'')}"><input id="modalPrId" type="hidden" value="${peEsc(p.id||'')}">
+    <div class="prod-edit-grid"><div class="field"><label>Código</label><input id="modalPrCodigo" value="${peEsc(p.codigo||'')}"></div><div class="field"><label>Nome/Descrição</label><input id="modalPrNome" value="${peEsc(p.nome||p.descricao||'')}"></div><div class="field"><label>Preço catálogo</label><input id="modalPrPreco" type="number" step="0.01" value="${Number(p.preco_catalogo||0)}"></div></div>
+    <div class="prod-edit-grid"><div class="field"><label>Categoria</label><input id="modalPrCat" value="${peEsc(p.categoria||'')}"></div><div class="field"><label>Linha</label><input id="modalPrLinha" value="${peEsc(p.linha||'')}"></div><div class="field"><label>Unidades por caixa</label><input id="modalPrCaixa" type="number" min="1" value="${Number(p.unidades_caixa||p.numero_da_caixa||1)}"></div></div>
+    <div class="prod-edit-grid two"><div class="field"><label>Foto capa (URL)</label><input id="modalPrImagemUrl" value="${peEsc(p.imagem_url||'')}" oninput="peAtualizarGaleriaCatalogo()"></div><div class="field"><label>Galeria de fotos (URLs)</label><textarea id="modalPrImagens" oninput="peAtualizarGaleriaCatalogo()">${peEsc(imgs.join('\n'))}</textarea></div></div>
+    <div class="prod-edit-drop"><b>Adicionar fotos</b><br><span class="muted">Pode usar câmera no celular ou escolher da galeria.</span><br>
+      <input id="modalPrCapaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoCatalogoModal('capa',this.files[0])">
+      <input id="modalPrCapaGaleria" type="file" accept="image/*" class="hidden" onchange="uploadFotoProdutoCatalogoModal('capa',this.files[0])">
+      <input id="modalPrGaleriaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoCatalogoModal('galeria',this.files[0])">
+      <input id="modalPrGaleriaArquivos" type="file" accept="image/*" multiple class="hidden" onchange="uploadFotoProdutoCatalogoModal('galeria',this.files)">
+      <button class="btn light" type="button" onclick="modalPrCapaCamera.click()">📷 Trocar capa</button><button class="btn light" type="button" onclick="modalPrCapaGaleria.click()">🖼 Capa da galeria</button><button class="btn light" type="button" onclick="modalPrGaleriaCamera.click()">📷 Foto extra</button><button class="btn light" type="button" onclick="modalPrGaleriaArquivos.click()">🖼 Várias fotos</button>
+    </div><div id="modalPrGaleria" class="prod-edit-photos"></div>`;
+  peSetModal('Editar produto do catálogo',body,`<button class="btn ok" onclick="salvarProdutoCatalogoModal()">Salvar alterações</button><button class="btn light" onclick="fecharModalPedido()">Cancelar</button>`);
+  peAtualizarGaleriaCatalogo();
+}
+window.uploadFotoProdutoCatalogoModal=async function(tipo,files){
+  const lista=files instanceof FileList || Array.isArray(files)?Array.from(files):(files?[files]:[]); if(!lista.length)return;
+  const codigo=(document.getElementById('modalPrCodigo')?.value||'produto').trim()||'produto'; const urls=[]; toast('Enviando foto...');
+  for(const file of lista){
+    if(!file || !String(file.type||'').startsWith('image/')){toast('Escolha apenas imagens');continue}
+    const nomeSeguro=(file.name||'foto.jpg').replace(/[^a-zA-Z0-9_.-]/g,'_');
+    const path=`produtos/${codigo}/${Date.now()}_${Math.random().toString(16).slice(2)}_${nomeSeguro}`;
+    const {error}=await sb.storage.from('produtos').upload(path,file,{upsert:true,contentType:file.type||'image/jpeg',cacheControl:'3600'});
+    if(error){console.error(error);toast('Erro ao enviar foto. Verifique o bucket produtos.');continue}
+    const {data}=sb.storage.from('produtos').getPublicUrl(path); if(data?.publicUrl)urls.push(data.publicUrl);
+  }
+  if(!urls.length)return;
+  if(tipo==='capa')document.getElementById('modalPrImagemUrl').value=urls[0];
+  else{const t=document.getElementById('modalPrImagens');t.value=[...peImgs(t.value),...urls].join('\n')}
+  peAtualizarGaleriaCatalogo(); toast('Foto adicionada');
+}
+window.salvarProdutoCatalogoModal=async function(){
+  const id=document.getElementById('modalPrId')?.value||''; const original=document.getElementById('modalPrOriginalCodigo')?.value||'';
+  const obj={codigo:modalPrCodigo.value.trim(),nome:modalPrNome.value.trim(),preco_catalogo:Number(modalPrPreco.value)||0,categoria:modalPrCat.value.trim(),linha:modalPrLinha.value.trim(),unidades_caixa:Number(modalPrCaixa.value)||1,imagem_url:modalPrImagemUrl.value.trim()||null,imagens:peImgs(modalPrImagens.value),ativo:true};
+  if(!obj.codigo||!obj.nome)return toast('Informe código e nome/descrição');
+  let res;if(id)res=await sb.from('produtos').update(obj).eq('id',id);else res=await sb.from('produtos').update(obj).eq('codigo',original||obj.codigo);
+  if(res.error)return toast('Erro ao salvar produto: '+res.error.message);
+  toast('Produto atualizado');fecharModalPedido();await carregarProdutos();renderProdutos();renderPedidoVitrine?.();
+}
+window.peAtualizarGaleriaRevendedor=function(){
+  const capa=document.getElementById('modalRvImagemUrl')?.value||''; const imgs=peRvImgs(document.getElementById('modalRvImagens')?.value); const el=document.getElementById('modalRvGaleria'); if(el)el.innerHTML=peGalleryHtml('revendedor',capa,imgs);
+}
+window.revendedorRemoverFoto=function(tipo,idx){
+  if(tipo==='capa'){document.getElementById('modalRvImagemUrl').value=''}else{const t=document.getElementById('modalRvImagens');const imgs=peRvImgs(t.value);imgs.splice(idx,1);t.value=imgs.join('\n')}
+  peAtualizarGaleriaRevendedor();
+}
+window.editarProdutoRevendedor=function(id){
+  const p=(rvProdutos||[]).find(x=>x.id===id); if(!p)return toast('Produto não encontrado'); const imgs=peRvImgs(p.imagens);
+  const body=`<div class="prod-edit-modal-note">Edite o produto da loja sem precisar voltar ao início. As fotos excluídas só saem depois de salvar.</div>
+    <input id="modalRvId" type="hidden" value="${peEsc(p.id||'')}">
+    <div class="prod-edit-grid"><div class="field"><label>Código</label><input id="modalRvCodigo" value="${peEsc(p.codigo||'')}"></div><div class="field"><label>Produto</label><input id="modalRvNome" value="${peEsc(p.nome||'')}"></div><div class="field"><label>Categoria</label><input id="modalRvCategoria" value="${peEsc(p.categoria||'')}"></div></div>
+    <div class="prod-edit-grid"><div class="field"><label>Preço custo</label><input id="modalRvCusto" type="number" step="0.01" value="${Number(p.preco_custo||0)}"></div><div class="field"><label>Preço venda</label><input id="modalRvVenda" type="number" step="0.01" value="${Number(p.preco_venda||0)}"></div><div class="field"><label>Origem</label><select id="modalRvOrigem"><option value="proprio" ${p.origem==='proprio'?'selected':''}>Próprio</option><option value="sofisticatto" ${p.origem==='sofisticatto'?'selected':''}>Sofisticatto</option></select></div></div>
+    <div class="prod-edit-grid two"><div class="field"><label>Estoque</label><input id="modalRvEstoque" type="number" min="0" value="${Number(p.estoque||0)}"></div><div class="field"><label>Estoque mínimo</label><input id="modalRvEstoqueMin" type="number" min="0" value="${Number(p.estoque_minimo||0)}"></div></div>
+    <div class="prod-edit-grid two"><div class="field"><label>Foto capa (URL)</label><input id="modalRvImagemUrl" value="${peEsc(p.imagem_url||'')}" oninput="peAtualizarGaleriaRevendedor()"></div><div class="field"><label>Galeria de fotos (URLs)</label><textarea id="modalRvImagens" oninput="peAtualizarGaleriaRevendedor()">${peEsc(imgs.join('\n'))}</textarea></div></div>
+    <div class="prod-edit-drop"><b>Adicionar fotos</b><br><span class="muted">Use a câmera do celular ou escolha várias imagens.</span><br>
+      <input id="modalRvCapaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoRevendedorModal('capa',this.files[0])">
+      <input id="modalRvCapaGaleria" type="file" accept="image/*" class="hidden" onchange="uploadFotoProdutoRevendedorModal('capa',this.files[0])">
+      <input id="modalRvGaleriaCamera" type="file" accept="image/*" capture="environment" class="hidden" onchange="uploadFotoProdutoRevendedorModal('galeria',this.files[0])">
+      <input id="modalRvGaleriaArquivos" type="file" accept="image/*" multiple class="hidden" onchange="uploadFotoProdutoRevendedorModal('galeria',this.files)">
+      <button class="btn light" type="button" onclick="modalRvCapaCamera.click()">📷 Trocar capa</button><button class="btn light" type="button" onclick="modalRvCapaGaleria.click()">🖼 Capa da galeria</button><button class="btn light" type="button" onclick="modalRvGaleriaCamera.click()">📷 Foto extra</button><button class="btn light" type="button" onclick="modalRvGaleriaArquivos.click()">🖼 Várias fotos</button>
+    </div><div id="modalRvGaleria" class="prod-edit-photos"></div>`;
+  peSetModal('Editar produto da loja',body,`<button class="btn ok" onclick="salvarProdutoRevendedorModal()">Salvar alterações</button><button class="btn light" onclick="fecharModalPedido()">Cancelar</button>`);
+  peAtualizarGaleriaRevendedor();
+}
+window.uploadFotoProdutoRevendedorModal=async function(tipo,files){
+  const id=document.getElementById('modalRvId')?.value||''; const prod=(rvProdutos||[]).find(x=>x.id===id)||{}; const urls=await uploadArquivosLoja(files,`produtos/${prod.codigo||id||'produto'}`); if(!urls.length)return;
+  if(tipo==='capa')document.getElementById('modalRvImagemUrl').value=urls[0]; else{const t=document.getElementById('modalRvImagens');t.value=[...peRvImgs(t.value),...urls].join('\n')}
+  peAtualizarGaleriaRevendedor();
+}
+window.salvarProdutoRevendedorModal=async function(){
+  const id=document.getElementById('modalRvId')?.value||''; if(!id)return toast('Produto não encontrado');
+  const obj={codigo:modalRvCodigo.value.trim(),nome:modalRvNome.value.trim(),categoria:modalRvCategoria.value.trim(),preco_custo:Number(modalRvCusto.value)||0,preco_venda:Number(modalRvVenda.value)||0,estoque:Number(modalRvEstoque.value)||0,estoque_minimo:Number(modalRvEstoqueMin.value)||0,origem:modalRvOrigem.value,imagem_url:modalRvImagemUrl.value.trim()||null,imagens:peRvImgs(modalRvImagens.value),ativo:true,updated_at:new Date().toISOString()};
+  if(!obj.codigo||!obj.nome)return toast('Informe código e nome do produto');
+  const {error}=await sb.from('distribuidor_produtos').update(obj).eq('id',id); if(error)return toast('Erro ao salvar produto: '+error.message);
+  toast('Produto atualizado');fecharModalPedido();await carregarModuloRevendedor();
+}
+})();
+</script>
 
 </body>
 </html>
