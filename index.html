@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=tWfLmTowjgO-NKAStMlspiX_WWYkrVth1thmMYM9q0H4Q2y7JvxP4Dj1OlZIi5OTicDzSkgSAWaJEhfj8vcGF47B9bANia--O8i0z6wPH-JIkxlXc1pSr6t_IZ2VNghgj5JxkhHhDmUs-UCde4CbJSEsi_UZtWWOPWE-hABvgnrJHKCS8bAmgIMKzel4gqmmbCZ1fcZonSl7xweal9mobDrRIF11x8NNQvJqDIJ9k23IMXr7HI7pZrmb9L1PzngA_EqtVQAqDxW0gtGPfKS8J8rgu7aFsL5izrAmVbUJg8POVDYmajhyi_QqZioOLNTe" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=b3F0s8fO7hzwzWnz6WubOK6sx_X7jvhJqpOlETsGHwmlasBjqfals1iYAL8u7HtnDIr6hWC-s07SgY2wcWTcqTGipov4PJXSoLBJdgxonJuawjGPoWfcp1t9VIaZoMPKCJ5bnWMT6WbWUHP43WK0Ug0b-0Tsm_z6i1AEwRyYHSnZ-QM4Qgmy_DKmJOItaHEI1X-2cWjTvsQ1QxfSh-KzWGIej6yi97lkkHZjN57z4st-w2-t0zVprhYrCYq81UWbrT_Vb1Iw0zFSBOUeb9WEnYkRYAMrC9JGI-6IgXsih2dloix81s6UsQT72JuywmeR" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
@@ -1070,8 +1070,20 @@ async function salvarProduto(){
   if(error)return toast(error.message);
   toast('Produto salvo');limparFormProduto();await carregarProdutos();renderProdutos()
 }
-function renderProdutos(){listaProdutos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Caixa</th><th>Fotos</th><th>Ação</th></tr>${produtos.map(p=>{const imgs=imagensProdutoArray(p.imagens);const capa=p.imagem_url||imgs[0]||'';const semPreco=Number(p.preco_catalogo||0)<=0;return `<tr style="${semPreco?'background:#fff7ed':''}"><td>${capa?`<img class="prod-thumb" src="${capa}" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo}</td><td>${p.nome}${semPreco?' <span class="pill warn">sem preço</span>':''}</td><td>${p.categoria||''}</td><td>${money(p.preco_catalogo)}</td><td>${p.unidades_caixa||1} un</td><td>${(capa?1:0)+imgs.length} foto(s)</td><td><button class="btn light" onclick="editarProdutoCatalogo('${p.codigo}')">Editar</button> <button class="btn" onclick="verFotosProduto('${p.codigo}')">Ver fotos</button></td></tr>`}).join('')}</table></div>`}
+function renderProdutos(){listaProdutos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Caixa</th><th>Fotos</th><th>Ação</th></tr>${produtos.map(p=>{const imgs=imagensProdutoArray(p.imagens);const capa=p.imagem_url||imgs[0]||'';const semPreco=Number(p.preco_catalogo||0)<=0;return `<tr style="${semPreco?'background:#fff7ed':''}"><td>${capa?`<img class="prod-thumb" src="${capa}" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo}</td><td>${p.nome}${semPreco?' <span class="pill warn">sem preço</span>':''}</td><td>${p.categoria||''}</td><td>${money(p.preco_catalogo)}</td><td>${p.unidades_caixa||1} un</td><td>${(capa?1:0)+imgs.length} foto(s)</td><td><button class="btn light" onclick="editarProdutoCatalogo('${p.codigo}')">Editar</button> <button class="btn" onclick="verFotosProduto('${p.codigo}')">Ver fotos</button> <button class="btn red" onclick="excluirProdutoCatalogo('${p.codigo}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
 function editarProdutoCatalogo(codigo){const p=produtos.find(x=>String(x.codigo)===String(codigo));if(!p)return;prCodigo.value=p.codigo||'';prNome.value=p.nome||'';prPreco.value=p.preco_catalogo||0;prCat.value=p.categoria||'';prLinha.value=p.linha||'';prCaixa.value=p.unidades_caixa||1;prImagemUrl.value=p.imagem_url||'';prImagens.value=imagensProdutoArray(p.imagens).join('\n');showSec('produtos');titulo.textContent='Editar Produto'}
+async function excluirProdutoCatalogo(codigo){
+  const prod=produtos.find(x=>String(x.codigo)===String(codigo));
+  const nome=prod?.nome||codigo;
+  if(!confirm(`Deseja excluir/desativar o produto ${nome}? Ele não aparecerá mais no cadastro, pedidos e vitrine.`))return;
+  const {error}=await sb.from('produtos').update({ativo:false}).eq('codigo',codigo);
+  if(error)return toast('Erro ao excluir produto: '+error.message);
+  toast('Produto excluído');
+  await carregarProdutos();
+  renderProdutos();
+  renderPedidoVitrine();
+}
+
 function verFotosProduto(codigo){const p=produtos.find(x=>String(x.codigo)===String(codigo));if(!p)return;const imgs=[p.imagem_url,...imagensProdutoArray(p.imagens)].filter(Boolean);modalPedidoTitulo.textContent='Fotos do produto';modalPedidoContent.innerHTML=`<h3>${p.codigo} - ${p.nome}</h3>${imgs.length?`<div class="prod-gallery">${imgs.map(url=>`<a href="${url}" target="_blank"><img src="${url}" onerror="this.style.display='none'"></a>`).join('')}</div>`:'<div class="catalog-empty">Nenhuma foto cadastrada.</div>'}`;modalPedidoActions.innerHTML='<button class="btn light" onclick="fecharModalPedido()">Fechar</button>';modalPedido.classList.remove('hidden')}
 async function uploadFotoProduto(tipo,files){
   const codigo=(prCodigo.value||'produto').trim()||'produto';
