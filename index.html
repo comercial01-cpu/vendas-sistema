@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=cwYUbC11qlLVc2a7XFyAV1mnjIE3d1kZZWIlo2Ge484H8a1zGefOq275eTVn79W2R9pPqWmGoTdTABXsVDTQHHHstiDaIQZme-Z26wVIeHo1-VNBoooVvASBGju2v5fL4byrWOqP2PTpQ1kxNzmgUaihNUs6hWvEZxA3DTFPPrlzYXBGKXc8Ce8B--5KNnK1Fl5PL0HMlXw9nzZIE5iPlGTVl4jh413KcFcSitrSNYiqaBqQYyeubc165vxi-37i7SfmW5Lmfi37nr-zzfa7wEqG20bfb1bQBJ3z9W5GmbSpJ5t5XZ3UEs1ENuiDNV1H" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
@@ -571,50 +571,6 @@ async function garantirPdfJS(){
 }
 
 // COLE AQUI OS DADOS DO SEU SUPABASE
-
-// ===== OTIMIZAÇÃO DE CARREGAMENTO PARA CELULAR =====
-// O sistema não carrega vitrines, catálogo, imagens e loja automaticamente no login.
-// Cada módulo é carregado apenas quando a aba correspondente é aberta.
-const abasCarregadasSobDemanda = {};
-function dispositivoMovelLeve(){
-  return window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
-}
-async function garantirProdutosCarregados(){
-  if(produtos && produtos.length) return;
-  await carregarProdutos();
-}
-async function carregarAbaSobDemanda(id){
-  try{
-    if(id==='pedido'){
-      await garantirProdutosCarregados();
-      renderSelects();
-      renderPedidoVitrine();
-      renderCarrinho();
-      return;
-    }
-    if(id==='produtos'){
-      await garantirProdutosCarregados();
-      renderProdutos();
-      return;
-    }
-    if(id==='catalogo' || id==='config'){
-      renderCatalogo();
-      return;
-    }
-    if(id==='lojaRevendedor' || id==='produtosRevendedor' || id==='pedidosRevendedor'){
-      if(usuario?.role==='cliente' && !abasCarregadasSobDemanda.revendedor){
-        abasCarregadasSobDemanda.revendedor=true;
-        await carregarModuloRevendedor();
-      }
-      if(typeof renderCarrinhoPublico==='function') renderCarrinhoPublico();
-      return;
-    }
-  }catch(e){
-    console.error('Erro ao carregar aba sob demanda:', id, e);
-    toast('Erro ao carregar esta aba. Tente atualizar a página.');
-  }
-}
-
 const SUPABASE_URL = 'https://bqyyaamhvrbdesmkerzo.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bvOCd5SNwwezYNpHYDwgOQ_Ejmo8Mtc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -625,7 +581,7 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 async function login(){const email=loginEmail.value.trim();const senha=loginSenha.value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('email',email).eq('senha',senha).eq('ativo',true).single();if(error||!data)return toast('Login inválido');usuario=data;localStorage.setItem('sof_user',JSON.stringify(usuario));iniciar()}
 function logout(){localStorage.removeItem('sof_user');location.reload()}
 async function iniciar(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');userNome.textContent=usuario.nome;userRole.textContent=usuario.role;document.querySelectorAll('.only-gerente').forEach(e=>e.style.display=usuario.role==='gerente'?'block':'none');document.querySelectorAll('.only-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'block':'none');document.querySelectorAll('.cliente-vendedora').forEach(e=>e.style.display=(usuario.role==='cliente'||usuario.role==='vendedora')?'block':'none');document.querySelectorAll('.not-cliente').forEach(e=>e.style.display=usuario.role==='cliente'?'none':'block');const formProd=document.querySelector('#produtos .card');if(formProd)formProd.style.display=usuario.role==='gerente'?'block':'none';await carregarTudo();if(usuario.role==='cliente'){btnSalvarPedido.textContent='Enviar orçamento para vendedora';pDesc.value=70;pDesc.readOnly=true;pCliente.disabled=true;if(pDesc.parentElement)pDesc.parentElement.style.display='none';if(pJust.parentElement)pJust.parentElement.style.display='none';if(clientes.length===1)pCliente.value=clientes[0].id;}else{pCliente.disabled=false;if(pDesc.parentElement)pDesc.parentElement.style.display='flex';if(pJust.parentElement)pJust.parentElement.style.display='flex';}if(usuario.role==='cliente'){document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active'));const btn=[...document.querySelectorAll('.navbtn')].find(b=>b.textContent.trim()==='Dashboard');if(btn)btn.classList.add('active');showSec('dashboard',btn)}}
-async function showSec(id,btn){
+function showSec(id,btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById(id);
   if(!sec){
@@ -639,24 +595,8 @@ async function showSec(id,btn){
   if(typeof titulo!=='undefined' && titulo) titulo.textContent=btn?btn.textContent:'Dashboard';
   if(typeof side!=='undefined' && side) side.classList.remove('open');
   if(typeof renderCarrinhoPedidoDrawer==='function') renderCarrinhoPedidoDrawer();
-  await carregarAbaSobDemanda(id);
 }
-async function carregarTudo(){
-  // Carregamento inicial leve: login/dashboard primeiro.
-  // Produtos, loja, catálogo e vitrines carregam quando a aba for aberta.
-  await Promise.all([carregarConfig(),carregarUsuarios(),carregarClientes()]);
-  await carregarPedidos();
-  renderSelects();
-  renderClientes();
-  renderUsuarios();
-  renderCarrinho();
-  if(!dispositivoMovelLeve()){
-    setTimeout(async()=>{
-      try{await garantirProdutosCarregados();renderPedidoVitrine();if(usuario?.role==='gerente')renderProdutos();}
-      catch(e){console.warn('Pré-carregamento de produtos adiado falhou:',e)}
-    },600);
-  }
-}
+async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho();renderPedidoVitrine();renderCatalogo()}
 async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config={...config,...data};if(typeof cfgDesc!=='undefined')cfgDesc.value=data.desconto_aprovacao??70;if(typeof cfgCatalogoNome!=='undefined')cfgCatalogoNome.value=data.catalogo_nome||'';if(typeof cfgCatalogoUrl!=='undefined')cfgCatalogoUrl.value=data.catalogo_url||''}}
 async function carregarUsuarios(){const {data}=await sb.from('usuarios').select('*').order('nome');vendedoras=(data||[]).filter(u=>u.role==='vendedora');window.todosUsuarios=data||[]}
 async function carregarProdutos(){const {data}=await sb.from('produtos').select('*').eq('ativo',true).order('nome');produtos=data||[]}
@@ -1162,7 +1102,7 @@ async function salvarProduto(){
   if(error)return toast(error.message);
   toast('Produto salvo');limparFormProduto();await carregarProdutos();renderProdutos()
 }
-function renderProdutos(){listaProdutos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Caixa</th><th>Fotos</th><th>Ação</th></tr>${produtos.map(p=>{const imgs=imagensProdutoArray(p.imagens);const capa=p.imagem_url||imgs[0]||'';const semPreco=Number(p.preco_catalogo||0)<=0;return `<tr style="${semPreco?'background:#fff7ed':''}"><td>${capa?`<img class="prod-thumb" src="${capa}" loading="lazy" decoding="async" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo}</td><td>${p.nome}${semPreco?' <span class="pill warn">sem preço</span>':''}</td><td>${p.categoria||''}</td><td>${money(p.preco_catalogo)}</td><td>${p.unidades_caixa||1} un</td><td>${(capa?1:0)+imgs.length} foto(s)</td><td><button class="btn light" onclick="editarProdutoCatalogo('${p.codigo}')">Editar</button> <button class="btn" onclick="verFotosProduto('${p.codigo}')">Ver fotos</button> <button class="btn red" onclick="excluirProdutoCatalogo('${p.codigo}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
+function renderProdutos(){listaProdutos.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Caixa</th><th>Fotos</th><th>Ação</th></tr>${produtos.map(p=>{const imgs=imagensProdutoArray(p.imagens);const capa=p.imagem_url||imgs[0]||'';const semPreco=Number(p.preco_catalogo||0)<=0;return `<tr style="${semPreco?'background:#fff7ed':''}"><td>${capa?`<img class="prod-thumb" src="${capa}" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo}</td><td>${p.nome}${semPreco?' <span class="pill warn">sem preço</span>':''}</td><td>${p.categoria||''}</td><td>${money(p.preco_catalogo)}</td><td>${p.unidades_caixa||1} un</td><td>${(capa?1:0)+imgs.length} foto(s)</td><td><button class="btn light" onclick="editarProdutoCatalogo('${p.codigo}')">Editar</button> <button class="btn" onclick="verFotosProduto('${p.codigo}')">Ver fotos</button> <button class="btn red" onclick="excluirProdutoCatalogo('${p.codigo}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
 function editarProdutoCatalogo(codigo){const p=produtos.find(x=>String(x.codigo)===String(codigo));if(!p)return;prCodigo.value=p.codigo||'';prNome.value=p.nome||'';prPreco.value=p.preco_catalogo||0;prCat.value=p.categoria||'';prLinha.value=p.linha||'';prCaixa.value=p.unidades_caixa||1;prImagemUrl.value=p.imagem_url||'';prImagens.value=imagensProdutoArray(p.imagens).join('\n');showSec('produtos');titulo.textContent='Editar Produto'}
 async function excluirProdutoCatalogo(codigo){
   const prod=produtos.find(x=>String(x.codigo)===String(codigo));
@@ -2676,7 +2616,7 @@ async function salvarProdutoRevendedor(){const c=clienteRevendedorAtual();if(!c)
 function editarProdutoRevendedor(id){const p=rvProdutos.find(x=>x.id===id);if(!p)return;rvEditProdutoId=id;rvCodigo.value=p.codigo||'';rvNome.value=p.nome||'';rvCategoria.value=p.categoria||'';rvCusto.value=p.preco_custo||0;rvVenda.value=p.preco_venda||0;rvEstoque.value=p.estoque||0;rvEstoqueMin.value=p.estoque_minimo||0;rvOrigem.value=p.origem||'proprio';if(document.getElementById('rvImagemUrl'))rvImagemUrl.value=p.imagem_url||'';if(document.getElementById('rvImagens'))rvImagens.value=rvImagensTexto(p.imagens);renderPreviewFotosProdutoRevendedor();btnSalvarProdutoRev.textContent='Atualizar produto';btnCancelarProdutoRev.classList.remove('hidden')}
 function cancelarProdutoRevendedor(){rvEditProdutoId=null;limparFormProdutoRevendedor();if(document.getElementById('btnSalvarProdutoRev'))btnSalvarProdutoRev.textContent='Salvar produto';if(document.getElementById('btnCancelarProdutoRev'))btnCancelarProdutoRev.classList.add('hidden')}
 async function excluirProdutoRevendedor(id){if(!confirm('Excluir este produto da sua loja?'))return;const {error}=await sb.from('distribuidor_produtos').update({ativo:false}).eq('id',id);if(error)return toast(error.message);toast('Produto excluído');await carregarModuloRevendedor()}
-async function importarCatalogoSofisticattoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!produtos.length){await garantirProdutosCarregados();}if(!produtos.length)return toast('Nenhum produto Sofisticatto carregado');const registros=produtos.map(p=>({cliente_id:c.id,produto_id:p.id,codigo:p.codigo,nome:p.nome,categoria:p.categoria||'',preco_custo:Number(p.preco_catalogo)||0,preco_venda:Number(p.preco_catalogo)||0,estoque:0,estoque_minimo:5,origem:'sofisticatto',imagem_url:p.imagem_url||null,imagens:rvImagensArray(p.imagens),ativo:true}));const {error}=await sb.from('distribuidor_produtos').upsert(registros,{onConflict:'cliente_id,codigo'});if(error)return toast(error.message);toast('Produtos Sofisticatto adicionados/atualizados na sua loja com fotos do cadastro');await carregarModuloRevendedor()}
+async function importarCatalogoSofisticattoRevendedor(){const c=clienteRevendedorAtual();if(!c)return toast('Usuário não vinculado a um Distribuidor/Revendedor');if(!produtos.length)return toast('Nenhum produto Sofisticatto carregado');const registros=produtos.map(p=>({cliente_id:c.id,produto_id:p.id,codigo:p.codigo,nome:p.nome,categoria:p.categoria||'',preco_custo:Number(p.preco_catalogo)||0,preco_venda:Number(p.preco_catalogo)||0,estoque:0,estoque_minimo:5,origem:'sofisticatto',imagem_url:p.imagem_url||null,imagens:rvImagensArray(p.imagens),ativo:true}));const {error}=await sb.from('distribuidor_produtos').upsert(registros,{onConflict:'cliente_id,codigo'});if(error)return toast(error.message);toast('Produtos Sofisticatto adicionados/atualizados na sua loja com fotos do cadastro');await carregarModuloRevendedor()}
 
 function gerenciarFotosProdutoRevendedor(id){
   const p=rvProdutos.find(x=>x.id===id);if(!p)return;
