@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sofisticatto Vendas</title>
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=wtRqi4nqSXyjGcCHz2yvPU5PovI08depAaNq5rKwJSfqYGLVrK3glAqDjCENbbk77eHGdq1ZH-Zs_twfGIYMlsKipnt5U6OwJcIb12wve5QQwzpx4-ASNTpLb3GYTQlJ7bIEHHuzHcQJKXvLr5fHmGE8QXDduDhfWo-gw5Tf1hvYgtDrHA8GfF59jmPD4Q9ab4bGvVxiEG5NHGczqAt0sSMz3BIkDZkpicrJMjOv7uCj5b0HedTxp-ELT9sqQ7lGe7iX_8foNN4rs0S-Vnnu_BxQ97fH9xWweAoVMGjMyWJxm30yT7fo18cjZ6sKtWW8" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=tWfLmTowjgO-NKAStMlspiX_WWYkrVth1thmMYM9q0H4Q2y7JvxP4Dj1OlZIi5OTicDzSkgSAWaJEhfj8vcGF47B9bANia--O8i0z6wPH-JIkxlXc1pSr6t_IZ2VNghgj5JxkhHhDmUs-UCde4CbJSEsi_UZtWWOPWE-hABvgnrJHKCS8bAmgIMKzel4gqmmbCZ1fcZonSl7xweal9mobDrRIF11x8NNQvJqDIJ9k23IMXr7HI7pZrmb9L1PzngA_EqtVQAqDxW0gtGPfKS8J8rgu7aFsL5izrAmVbUJg8POVDYmajhyi_QqZioOLNTe" charset="UTF-8"></script><script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root{--roxo:#5a4fa3;--roxo2:#7b6bd6;--bg:#f6f3fb;--txt:#393653;--ok:#16a34a;--red:#dc2626;--yellow:#f59e0b;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}body{background:var(--bg);color:var(--txt);min-height:100vh}.hidden{display:none!important}
@@ -203,6 +203,26 @@
 }
 </style>
 
+
+<style id="pedidoVitrineCss">
+/* Vitrine profissional dentro da aba Novo Pedido */
+.pedido-vitrine-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.pedido-vitrine-tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.pedido-vitrine-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.pedido-prod-card{background:#fff;border:1px solid #eee;border-radius:18px;overflow:hidden;box-shadow:0 8px 22px #0000000d;display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+.pedido-prod-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px #00000018}
+.pedido-prod-img-wrap{position:relative;aspect-ratio:1/1;background:#f3f0ff;cursor:pointer;overflow:hidden}
+.pedido-prod-img{width:100%;height:100%;object-fit:cover;display:block;background:#f3f0ff}
+.pedido-prod-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#8a82bb;font-weight:bold;background:#f3f0ff;text-align:center;padding:10px}
+.pedido-prod-badges{position:absolute;left:8px;top:8px;display:flex;gap:5px;flex-wrap:wrap;z-index:2}
+.pedido-badge{font-size:10px;font-weight:bold;border-radius:999px;padding:5px 7px;background:#fff;color:#5a4fa3;box-shadow:0 4px 12px #0002}
+.pedido-badge.fotos{background:#eef2ff;color:#3730a3}.pedido-badge.caixa{background:#dcfce7;color:#166534}
+.pedido-prod-body{padding:12px;display:flex;flex-direction:column;gap:7px;flex:1}
+.pedido-prod-code{font-size:11px;color:#777}.pedido-prod-body h4{font-size:15px;line-height:1.25;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.pedido-prod-cat{font-size:12px;color:#5a4fa3;background:#f3f0ff;border-radius:999px;padding:5px 8px;width:max-content;max-width:100%}.pedido-prod-price{font-size:20px;font-weight:bold;color:#16a34a}.pedido-prod-sub{font-size:12px;color:#666}.pedido-prod-actions{display:grid;grid-template-columns:64px 1fr;gap:8px;margin-top:auto}.pedido-prod-actions input{padding:10px;text-align:center}.pedido-prod-actions .btn{padding:10px 8px}.pedido-prod-more{width:100%;padding:9px!important}.pedido-cart-mini{position:sticky;bottom:10px;margin-top:12px;background:#5a4fa3;color:#fff;border-radius:16px;padding:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 12px 32px #5a4fa344;z-index:3}.pedido-cart-mini b{font-size:15px}.pedido-prod-modal-gallery{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.pedido-prod-modal-main{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;background:#f3f0ff}.pedido-prod-modal-thumbs{display:flex;gap:8px;margin-top:10px;overflow:auto}.pedido-prod-modal-thumb{width:76px;height:76px;object-fit:cover;border-radius:12px;border:2px solid transparent;cursor:pointer}.pedido-prod-modal-thumb.active{border-color:#5a4fa3}
+@media(max-width:1200px){.pedido-vitrine-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.pedido-vitrine-head{flex-direction:column}.pedido-vitrine-tools{grid-template-columns:1fr}.pedido-vitrine-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pedido-prod-body{padding:10px}.pedido-prod-body h4{font-size:13px;min-height:34px}.pedido-prod-price{font-size:17px}.pedido-prod-actions{grid-template-columns:55px 1fr}.pedido-prod-actions .btn{font-size:12px;padding:10px 5px}.pedido-prod-modal-gallery{grid-template-columns:1fr}.pedido-cart-mini{font-size:12px}}
+@media(max-width:380px){.pedido-vitrine-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -252,7 +272,7 @@
         <h2>Novo Pedido</h2>
         <div class="row3">
           <div class="field"><label>Cliente</label><select id="pCliente"></select></div>
-          <div class="field"><label>Desconto geral (%)</label><input id="pDesc" type="number" value="70" min="0" max="100" oninput="renderCarrinho()"></div>
+          <div class="field"><label>Desconto geral (%)</label><input id="pDesc" type="number" value="70" min="0" max="100" oninput="renderCarrinho();renderPedidoVitrine()"></div>
           <div class="field"><label>Justificativa do desconto</label><input id="pJust" placeholder="Obrigatório se passar da margem"></div>
         </div>
       </div>
@@ -264,6 +284,27 @@
           <div class="field"><label>&nbsp;</label><button class="btn ok" onclick="addCarrinho()">Adicionar</button></div>
         </div>
         <div id="preview" class="calcbox hidden"></div>
+      </div>
+      <div class="card pedido-vitrine-card" style="margin-top:14px">
+        <div class="pedido-vitrine-head">
+          <div>
+            <h3>Vitrine de produtos</h3>
+            <p class="muted">Pesquise por código, nome, categoria ou linha e adicione direto no carrinho.</p>
+          </div>
+          <button class="btn light" onclick="renderPedidoVitrine()">Atualizar vitrine</button>
+        </div>
+        <div class="pedido-vitrine-tools">
+          <input id="pedidoBuscaVitrine" placeholder="Buscar por código, produto, categoria ou linha" oninput="renderPedidoVitrine()">
+          <select id="pedidoCategoriaVitrine" onchange="renderPedidoVitrine()"><option value="">Todas as categorias</option></select>
+          <select id="pedidoOrdemVitrine" onchange="renderPedidoVitrine()">
+            <option value="nome">Ordenar por nome</option>
+            <option value="codigo">Ordenar por código</option>
+            <option value="menor">Menor preço</option>
+            <option value="maior">Maior preço</option>
+            <option value="fotos">Produtos com foto</option>
+          </select>
+        </div>
+        <div id="pedidoVitrineProdutos" class="pedido-vitrine-grid"></div>
       </div>
       <div class="card" style="margin-top:14px">
         <h3>Carrinho</h3>
@@ -551,7 +592,7 @@ function showSec(id,btn){
   if(typeof titulo!=='undefined' && titulo) titulo.textContent=btn?btn.textContent:'Dashboard';
   if(typeof side!=='undefined' && side) side.classList.remove('open');
 }
-async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho();renderCatalogo()}
+async function carregarTudo(){await Promise.all([carregarConfig(),carregarUsuarios(),carregarProdutos(),carregarClientes()]);await carregarPedidos();renderSelects();renderProdutos();renderClientes();renderUsuarios();renderCarrinho();renderPedidoVitrine();renderCatalogo()}
 async function carregarConfig(){const {data}=await sb.from('configuracoes_venda').select('*').eq('id',1).single();if(data){config={...config,...data};if(typeof cfgDesc!=='undefined')cfgDesc.value=data.desconto_aprovacao??70;if(typeof cfgCatalogoNome!=='undefined')cfgCatalogoNome.value=data.catalogo_nome||'';if(typeof cfgCatalogoUrl!=='undefined')cfgCatalogoUrl.value=data.catalogo_url||''}}
 async function carregarUsuarios(){const {data}=await sb.from('usuarios').select('*').order('nome');vendedoras=(data||[]).filter(u=>u.role==='vendedora');window.todosUsuarios=data||[]}
 async function carregarProdutos(){const {data}=await sb.from('produtos').select('*').eq('ativo',true).order('nome');produtos=data||[]}
@@ -594,7 +635,80 @@ function renderSelects(){pCliente.innerHTML=clientes.length?clientes.map(c=>`<op
 function buscarProdutoCodigo(){prodAtual=produtos.find(p=>p.codigo==buscaCodigo.value.trim());previewProduto()}
 function previewProduto(){if(!prodAtual){preview.classList.add('hidden');return}const q=Number(qtdProd.value)||1, cx=prodAtual.unidades_caixa||1, fechadas=Math.floor(q/cx), av=q%cx, desc=Number(pDesc.value)||0, pc=Number(prodAtual.preco_catalogo), pf=pc*(1-desc/100);preview.classList.remove('hidden');preview.innerHTML=`<b>${prodAtual.nome}</b><br>Código: ${prodAtual.codigo}<br>Valor catálogo: <b>${money(pc)}</b><br>Seu desconto: <b>${desc}%</b><br>Seu preço: <b>${money(pf)}</b><br>📦 Caixa fechada: <b>${cx} un</b> | Valor da caixa: <b>${money(pf*cx)}</b><br>${fechadas>0?'✅ '+fechadas+' caixa(s) fechada(s)<br>':''}${av>0?'➕ '+av+' unidade(s) avulsa(s)<br>':''}${av>0?'💡 Faltam '+(cx-av)+' unidade(s) para completar uma caixa.':''}`}
 function addCarrinho(){if(!prodAtual)return toast('Digite um código válido');const q=Number(qtdProd.value)||1;carrinho.push({...prodAtual,quantidade:q});renderCarrinho();buscaCodigo.value='';qtdProd.value=1;prodAtual=null;preview.classList.add('hidden')}
-function renderCarrinho(){const desc=Number(pDesc.value)||0;let subtotal=0,total=0;cartBody.innerHTML=carrinho.map((p,i)=>{const pc=Number(p.preco_catalogo), pf=pc*(1-desc/100), q=Number(p.quantidade), cx=p.unidades_caixa||1, fechadas=Math.floor(q/cx), av=q%cx;subtotal+=pc*q;total+=pf*q;return `<tr><td>${p.codigo}</td><td>${p.nome}</td><td>${q}</td><td>${fechadas} cx + ${av} un</td><td>${money(pc*q)}</td><td>${money(pf*q)}</td><td><button class="btn red" onclick="carrinho.splice(${i},1);renderCarrinho()">X</button></td></tr>`}).join('');totaisPedido.innerHTML=`Subtotal catálogo: <b>${money(subtotal)}</b><br>Desconto: <b>${desc}% (${money(subtotal-total)})</b><br>Total final: <b>${money(total)}</b><br>${desc>Number(config.desconto_aprovacao)?'<span class="pill warn">Vai para aprovação da gerente</span>':'<span class="pill ok">Dentro da margem sem aprovação</span>'}`;previewProduto()}
+function renderCarrinho(){const desc=Number(pDesc.value)||0;let subtotal=0,total=0;cartBody.innerHTML=carrinho.map((p,i)=>{const pc=Number(p.preco_catalogo), pf=pc*(1-desc/100), q=Number(p.quantidade), cx=p.unidades_caixa||1, fechadas=Math.floor(q/cx), av=q%cx;subtotal+=pc*q;total+=pf*q;return `<tr><td>${p.codigo}</td><td>${p.nome}</td><td>${q}</td><td>${fechadas} cx + ${av} un</td><td>${money(pc*q)}</td><td>${money(pf*q)}</td><td><button class="btn red" onclick="carrinho.splice(${i},1);renderCarrinho();renderPedidoVitrine()">X</button></td></tr>`}).join('');totaisPedido.innerHTML=`Subtotal catálogo: <b>${money(subtotal)}</b><br>Desconto: <b>${desc}% (${money(subtotal-total)})</b><br>Total final: <b>${money(total)}</b><br>${desc>Number(config.desconto_aprovacao)?'<span class="pill warn">Vai para aprovação da gerente</span>':'<span class="pill ok">Dentro da margem sem aprovação</span>'}`;previewProduto()}
+
+function pedidoProdutoImagens(p){return [p?.imagem_url,...imagensProdutoArray(p?.imagens)].filter(Boolean)}
+function atualizarCategoriasPedidoVitrine(){
+  const sel=document.getElementById('pedidoCategoriaVitrine'); if(!sel)return;
+  const atual=sel.value;
+  const cats=[...new Set((produtos||[]).map(p=>p.categoria||'').filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));
+  sel.innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option value="${escaparHtml(c)}">${escaparHtml(c)}</option>`).join('');
+  if(cats.includes(atual)) sel.value=atual;
+}
+function produtosPedidoFiltrados(){
+  const busca=(document.getElementById('pedidoBuscaVitrine')?.value||'').toLowerCase().trim();
+  const cat=(document.getElementById('pedidoCategoriaVitrine')?.value||'').toLowerCase().trim();
+  const ordem=document.getElementById('pedidoOrdemVitrine')?.value||'nome';
+  let lista=[...(produtos||[])].filter(p=>p.ativo!==false);
+  if(busca) lista=lista.filter(p=>`${p.codigo||''} ${p.nome||''} ${p.descricao||''} ${p.categoria||''} ${p.linha||''}`.toLowerCase().includes(busca));
+  if(cat) lista=lista.filter(p=>String(p.categoria||'').toLowerCase()===cat);
+  if(ordem==='fotos') lista=lista.filter(p=>pedidoProdutoImagens(p).length);
+  lista.sort((a,b)=>{
+    if(ordem==='codigo') return String(a.codigo||'').localeCompare(String(b.codigo||''),'pt-BR',{numeric:true});
+    if(ordem==='menor') return Number(a.preco_catalogo||0)-Number(b.preco_catalogo||0);
+    if(ordem==='maior') return Number(b.preco_catalogo||0)-Number(a.preco_catalogo||0);
+    return String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR');
+  });
+  return lista;
+}
+function renderPedidoVitrine(){
+  const alvo=document.getElementById('pedidoVitrineProdutos'); if(!alvo)return;
+  atualizarCategoriasPedidoVitrine();
+  const desc=Number(document.getElementById('pDesc')?.value||0);
+  const lista=produtosPedidoFiltrados();
+  const totalQtd=carrinho.reduce((s,p)=>s+Number(p.quantidade||0),0);
+  const totalValor=carrinho.reduce((s,p)=>s+(Number(p.preco_catalogo||0)*(1-desc/100)*Number(p.quantidade||0)),0);
+  alvo.innerHTML=lista.map(p=>{
+    const imgs=pedidoProdutoImagens(p); const capa=imgs[0]||''; const cx=Number(p.unidades_caixa||1); const pc=Number(p.preco_catalogo||0); const pf=pc*(1-desc/100); const id=String(p.codigo||p.id).replace(/[^a-zA-Z0-9_-]/g,'_');
+    return `<div class="pedido-prod-card">
+      <div class="pedido-prod-img-wrap" onclick="abrirDetalheProdutoPedido('${escaparHtml(String(p.codigo||''))}')">
+        ${capa?`<img class="pedido-prod-img" src="${escaparHtml(capa)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;pedido-prod-noimg&quot;>Sem foto</div>'">`:`<div class="pedido-prod-noimg">Sem foto</div>`}
+        <div class="pedido-prod-badges">${imgs.length>1?`<span class="pedido-badge fotos">${imgs.length} fotos</span>`:''}<span class="pedido-badge caixa">Cx ${cx} un</span></div>
+      </div>
+      <div class="pedido-prod-body">
+        <div class="pedido-prod-code">Código: ${escaparHtml(p.codigo||'-')}</div>
+        <h4 title="${escaparHtml(p.nome||'')}">${escaparHtml(p.nome||'')}</h4>
+        ${p.categoria?`<div class="pedido-prod-cat">${escaparHtml(p.categoria)}</div>`:''}
+        <div class="pedido-prod-price">${money(pf)}</div>
+        <div class="pedido-prod-sub">Catálogo: ${money(pc)} • Caixa: ${money(pf*cx)}</div>
+        <div class="pedido-prod-actions"><input id="qpedido_${id}" type="number" min="1" value="1"><button class="btn ok" onclick="adicionarPedidoVitrine('${escaparHtml(String(p.codigo||''))}')">Adicionar</button></div>
+        <button class="btn light pedido-prod-more" onclick="abrirDetalheProdutoPedido('${escaparHtml(String(p.codigo||''))}')">Ver fotos/detalhes</button>
+      </div>
+    </div>`;
+  }).join('')||'<div class="catalog-empty">Nenhum produto encontrado na vitrine.</div>';
+  alvo.insertAdjacentHTML('afterend', '');
+  const old=document.getElementById('pedidoCartMini'); if(old)old.remove();
+  if(carrinho.length){
+    const mini=document.createElement('div');mini.id='pedidoCartMini';mini.className='pedido-cart-mini';mini.innerHTML=`<b>🛒 ${totalQtd} item(ns) no carrinho</b><span>${money(totalValor)}</span>`;
+    alvo.parentElement.appendChild(mini);
+  }
+}
+function adicionarPedidoVitrine(codigo){
+  const p=(produtos||[]).find(x=>String(x.codigo)===String(codigo)); if(!p)return toast('Produto não encontrado');
+  const id=String(p.codigo||p.id).replace(/[^a-zA-Z0-9_-]/g,'_');
+  const q=Number(document.getElementById('qpedido_'+id)?.value)||1;
+  carrinho.push({...p,quantidade:q});
+  renderCarrinho();renderPedidoVitrine();toast('Produto adicionado ao carrinho');
+}
+function abrirDetalheProdutoPedido(codigo){
+  const p=(produtos||[]).find(x=>String(x.codigo)===String(codigo)); if(!p)return;
+  const imgs=pedidoProdutoImagens(p); const cx=Number(p.unidades_caixa||1); const desc=Number(pDesc.value)||0; const pc=Number(p.preco_catalogo||0); const pf=pc*(1-desc/100);
+  const gal=imgs.map((src,i)=>`<img src="${escaparHtml(src)}" class="pedido-prod-modal-thumb ${i===0?'active':''}" onclick="document.getElementById('pedidoProdModalMain').src=this.src;document.querySelectorAll('.pedido-prod-modal-thumb').forEach(x=>x.classList.remove('active'));this.classList.add('active')">`).join('');
+  modalPedidoTitulo.textContent='Produto do pedido';
+  modalPedidoContent.innerHTML=`<div class="pedido-prod-modal-gallery"><div>${imgs[0]?`<img id="pedidoProdModalMain" class="pedido-prod-modal-main" src="${escaparHtml(imgs[0])}">`:`<div class="pedido-prod-modal-main pedido-prod-noimg">Sem foto</div>`}<div class="pedido-prod-modal-thumbs">${gal}</div></div><div><p class="pedido-prod-code">Código: ${escaparHtml(p.codigo||'-')}</p><h2>${escaparHtml(p.nome||'')}</h2>${p.categoria?`<p class="pedido-prod-cat">${escaparHtml(p.categoria)}</p>`:''}<div class="pedido-prod-price" style="font-size:30px">${money(pf)}</div><p class="muted">Valor catálogo: ${money(pc)} • Desconto: ${desc}%</p><p>📦 Caixa fechada: <b>${cx} unidades</b><br>Valor da caixa: <b>${money(pf*cx)}</b></p><div class="pedido-prod-actions" style="max-width:360px;margin-top:16px"><input id="qpedido_modal_${escaparHtml(String(p.codigo||''))}" type="number" min="1" value="${cx}"><button class="btn ok" onclick="const el=document.getElementById('qpedido_${String(p.codigo||p.id).replace(/[^a-zA-Z0-9_-]/g,'_')}'); if(el)el.value=document.getElementById('qpedido_modal_${escaparHtml(String(p.codigo||''))}').value; adicionarPedidoVitrine('${escaparHtml(String(p.codigo||''))}'); fecharModalPedido();">Adicionar</button></div></div></div>`;
+  modalPedidoActions.innerHTML='<button class="btn light" onclick="fecharModalPedido()">Fechar</button>';
+  modalPedido.classList.remove('hidden');
+}
 async function salvarPedido(){
   if(!pCliente.value||!carrinho.length)return toast('Selecione cliente e produtos');
   const cliente=clientes.find(c=>c.id===pCliente.value); if(!cliente)return toast('Cliente não encontrado');
