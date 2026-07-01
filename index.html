@@ -1287,38 +1287,7 @@ async function imprimirPedido(id){
 </style>
 
 </head><body><button onclick="window.print()">Imprimir</button><h1>Sofisticatto Cosméticos</h1><h2>Pedido ${pedido.numero||pedido.id}</h2><p><b>Cliente:</b> ${pedido.clientes?.nome_fantasia||cliente.nome_fantasia||''}<br><b>Status:</b> ${statusPedidoTexto(pedido.status)}<br><b>Desconto:</b> ${pedido.desconto_percentual||0}%</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Caixas</th><th>Catálogo</th><th>Final</th></tr>${linhasItens}</table><div class="total">Subtotal: ${money(pedido.subtotal)}<br>Desconto: ${money(pedido.desconto_valor)}<br>Total final: ${money(pedido.total)}</div>
-<style id="ajusteFinalProdutoModalDescricao">
-/* Correção visual: evita o selo "Novo" por cima do texto dos produtos no celular */
-.rv-public-grid .rv-badge.new{display:none!important}
-.rv-card-image-wrap .rv-badge-row{position:absolute!important;left:8px!important;top:8px!important;right:8px!important;z-index:3!important;pointer-events:none}
-.rv-card-content{position:relative!important;z-index:2!important;background:#fff!important}
-.prod-thumb{cursor:pointer;transition:.2s}.prod-thumb:hover{transform:scale(1.06)}
-.img-prod-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9000;display:flex;align-items:center;justify-content:center;padding:18px}
-.img-prod-modal{background:#fff;border-radius:22px;width:min(1050px,96vw);max-height:94vh;overflow:auto;box-shadow:0 28px 90px #0008;position:relative;padding:18px}
-.img-prod-close{position:absolute;right:14px;top:14px;z-index:3}
-.img-prod-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start}.img-prod-main{width:100%;max-height:72vh;object-fit:contain;background:#f7f4ff;border-radius:18px}.img-prod-thumbs{display:flex;gap:8px;overflow:auto;margin-top:10px;padding-bottom:4px}.img-prod-thumbs img{width:78px;height:78px;object-fit:cover;border-radius:12px;border:2px solid transparent;cursor:pointer;background:#f3f0ff}.img-prod-thumbs img.active{border-color:#5a4fa3}.img-prod-price{font-size:28px;font-weight:bold;color:#16a34a;margin:10px 0}.img-prod-info h2{padding-right:50px}.img-prod-desc{background:#f6f3ff;border:1px solid #e5ddff;border-radius:14px;padding:12px;margin-top:12px;white-space:pre-wrap;line-height:1.4}.img-prod-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.img-prod-meta span{background:#f3f0ff;color:#5a4fa3;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:bold}
-@media(max-width:900px){.img-prod-overlay{padding:8px}.img-prod-modal{width:98vw;max-height:96vh;padding:12px;border-radius:18px}.img-prod-grid{grid-template-columns:1fr;gap:12px}.img-prod-main{max-height:55vh}.img-prod-info h2{font-size:20px}.img-prod-price{font-size:24px}.img-prod-close{position:sticky;top:0;margin-left:auto;display:block}}
-</style>
-<script id="imagemProdutoFlutuanteFinal">
-function _sofEsc(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
-function _sofImgsProduto(p){try{return [p?.imagem_url,...(typeof rvImagensArray==='function'?rvImagensArray(p?.imagens):imagensProdutoArray(p?.imagens))].filter(Boolean)}catch(e){try{return [p?.imagem_url,...imagensProdutoArray(p?.imagens)].filter(Boolean)}catch(_){return [p?.imagem_url].filter(Boolean)}}}
-function abrirImagemProdutoFlutuante(prod){
-  if(!prod)return; const imgs=_sofImgsProduto(prod); const primeira=imgs[0]||'';
-  const preco=Number(prod.preco_venda||prod.preco_catalogo||0);
-  const desc=prod.descricao||prod.descricao_completa||'Produto disponível na loja.';
-  const gal=imgs.map((u,i)=>`<img src="${_sofEsc(u)}" class="${i===0?'active':''}" onclick="document.getElementById('imgProdMain').src=this.src;document.querySelectorAll('.img-prod-thumbs img').forEach(x=>x.classList.remove('active'));this.classList.add('active')">`).join('');
-  const html=`<div class="img-prod-modal"><button class="btn light img-prod-close" onclick="fecharImagemProdutoFlutuante()">Fechar</button><div class="img-prod-grid"><div>${primeira?`<img id="imgProdMain" class="img-prod-main" src="${_sofEsc(primeira)}">`:`<div class="img-prod-main" style="display:flex;align-items:center;justify-content:center;color:#8a82bb;font-weight:bold">Sem foto</div>`}<div class="img-prod-thumbs">${gal}</div></div><div class="img-prod-info"><p class="muted">Código: ${_sofEsc(prod.codigo||'-')}</p><h2>${_sofEsc(prod.nome||prod.descricao||'Produto')}</h2><div class="img-prod-meta">${prod.categoria?`<span>${_sofEsc(prod.categoria)}</span>`:''}${prod.linha?`<span>${_sofEsc(prod.linha)}</span>`:''}${prod.unidades_caixa?`<span>Caixa ${_sofEsc(prod.unidades_caixa)} un</span>`:''}</div>${preco?`<div class="img-prod-price">${money(preco)}</div>`:''}<div class="img-prod-desc">${_sofEsc(desc)}</div></div></div></div>`;
-  let ov=document.getElementById('imgProdOverlay'); if(ov)ov.remove(); ov=document.createElement('div'); ov.id='imgProdOverlay'; ov.className='img-prod-overlay'; ov.innerHTML=html; ov.addEventListener('click',e=>{if(e.target===ov)fecharImagemProdutoFlutuante()}); document.body.appendChild(ov);
-}
-function fecharImagemProdutoFlutuante(){document.getElementById('imgProdOverlay')?.remove()}
-function abrirImagemProdutoCatalogo(codigo){const p=(produtos||[]).find(x=>String(x.codigo)===String(codigo));abrirImagemProdutoFlutuante(p)}
-// Reforço: deixa as fotos da loja abrirem o balão com imagem grande em qualquer dispositivo
-try{
-  const _abrirDetalheProdutoPublicoOriginal=window.abrirDetalheProdutoPublico;
-  window.abrirDetalheProdutoPublico=function(id){const p=(rvLojaPublicaProdutos||[]).find(x=>x.id===id); if(p){abrirImagemProdutoFlutuante(p); return;} if(typeof _abrirDetalheProdutoPublicoOriginal==='function')return _abrirDetalheProdutoPublicoOriginal(id)};
-}catch(e){console.warn(e)}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharImagemProdutoFlutuante()});
-</script>
+
 
 </body></html>`;
   const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.focus();
@@ -3372,38 +3341,7 @@ async function imprimirPedidoRevendedor(id){
 </style>
 
 </head><body><button onclick="window.print()">Imprimir</button><h1>${loja.nome_fantasia||'Sofisticatto'}</h1><h2>Orçamento / Pedido da loja</h2><p><b>Cliente:</b> ${pedido.nome_cliente||''}<br><b>WhatsApp:</b> ${pedido.whatsapp||''}<br><b>Status:</b> ${pedido.status||'novo'}</p><table><tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>${linhas}</table><p><b>Observação:</b> ${pedido.observacao||'-'}</p><div class="total">Total: ${money(pedido.total)}</div>
-<style id="ajusteFinalProdutoModalDescricao">
-/* Correção visual: evita o selo "Novo" por cima do texto dos produtos no celular */
-.rv-public-grid .rv-badge.new{display:none!important}
-.rv-card-image-wrap .rv-badge-row{position:absolute!important;left:8px!important;top:8px!important;right:8px!important;z-index:3!important;pointer-events:none}
-.rv-card-content{position:relative!important;z-index:2!important;background:#fff!important}
-.prod-thumb{cursor:pointer;transition:.2s}.prod-thumb:hover{transform:scale(1.06)}
-.img-prod-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9000;display:flex;align-items:center;justify-content:center;padding:18px}
-.img-prod-modal{background:#fff;border-radius:22px;width:min(1050px,96vw);max-height:94vh;overflow:auto;box-shadow:0 28px 90px #0008;position:relative;padding:18px}
-.img-prod-close{position:absolute;right:14px;top:14px;z-index:3}
-.img-prod-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start}.img-prod-main{width:100%;max-height:72vh;object-fit:contain;background:#f7f4ff;border-radius:18px}.img-prod-thumbs{display:flex;gap:8px;overflow:auto;margin-top:10px;padding-bottom:4px}.img-prod-thumbs img{width:78px;height:78px;object-fit:cover;border-radius:12px;border:2px solid transparent;cursor:pointer;background:#f3f0ff}.img-prod-thumbs img.active{border-color:#5a4fa3}.img-prod-price{font-size:28px;font-weight:bold;color:#16a34a;margin:10px 0}.img-prod-info h2{padding-right:50px}.img-prod-desc{background:#f6f3ff;border:1px solid #e5ddff;border-radius:14px;padding:12px;margin-top:12px;white-space:pre-wrap;line-height:1.4}.img-prod-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.img-prod-meta span{background:#f3f0ff;color:#5a4fa3;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:bold}
-@media(max-width:900px){.img-prod-overlay{padding:8px}.img-prod-modal{width:98vw;max-height:96vh;padding:12px;border-radius:18px}.img-prod-grid{grid-template-columns:1fr;gap:12px}.img-prod-main{max-height:55vh}.img-prod-info h2{font-size:20px}.img-prod-price{font-size:24px}.img-prod-close{position:sticky;top:0;margin-left:auto;display:block}}
-</style>
-<script id="imagemProdutoFlutuanteFinal">
-function _sofEsc(v){return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
-function _sofImgsProduto(p){try{return [p?.imagem_url,...(typeof rvImagensArray==='function'?rvImagensArray(p?.imagens):imagensProdutoArray(p?.imagens))].filter(Boolean)}catch(e){try{return [p?.imagem_url,...imagensProdutoArray(p?.imagens)].filter(Boolean)}catch(_){return [p?.imagem_url].filter(Boolean)}}}
-function abrirImagemProdutoFlutuante(prod){
-  if(!prod)return; const imgs=_sofImgsProduto(prod); const primeira=imgs[0]||'';
-  const preco=Number(prod.preco_venda||prod.preco_catalogo||0);
-  const desc=prod.descricao||prod.descricao_completa||'Produto disponível na loja.';
-  const gal=imgs.map((u,i)=>`<img src="${_sofEsc(u)}" class="${i===0?'active':''}" onclick="document.getElementById('imgProdMain').src=this.src;document.querySelectorAll('.img-prod-thumbs img').forEach(x=>x.classList.remove('active'));this.classList.add('active')">`).join('');
-  const html=`<div class="img-prod-modal"><button class="btn light img-prod-close" onclick="fecharImagemProdutoFlutuante()">Fechar</button><div class="img-prod-grid"><div>${primeira?`<img id="imgProdMain" class="img-prod-main" src="${_sofEsc(primeira)}">`:`<div class="img-prod-main" style="display:flex;align-items:center;justify-content:center;color:#8a82bb;font-weight:bold">Sem foto</div>`}<div class="img-prod-thumbs">${gal}</div></div><div class="img-prod-info"><p class="muted">Código: ${_sofEsc(prod.codigo||'-')}</p><h2>${_sofEsc(prod.nome||prod.descricao||'Produto')}</h2><div class="img-prod-meta">${prod.categoria?`<span>${_sofEsc(prod.categoria)}</span>`:''}${prod.linha?`<span>${_sofEsc(prod.linha)}</span>`:''}${prod.unidades_caixa?`<span>Caixa ${_sofEsc(prod.unidades_caixa)} un</span>`:''}</div>${preco?`<div class="img-prod-price">${money(preco)}</div>`:''}<div class="img-prod-desc">${_sofEsc(desc)}</div></div></div></div>`;
-  let ov=document.getElementById('imgProdOverlay'); if(ov)ov.remove(); ov=document.createElement('div'); ov.id='imgProdOverlay'; ov.className='img-prod-overlay'; ov.innerHTML=html; ov.addEventListener('click',e=>{if(e.target===ov)fecharImagemProdutoFlutuante()}); document.body.appendChild(ov);
-}
-function fecharImagemProdutoFlutuante(){document.getElementById('imgProdOverlay')?.remove()}
-function abrirImagemProdutoCatalogo(codigo){const p=(produtos||[]).find(x=>String(x.codigo)===String(codigo));abrirImagemProdutoFlutuante(p)}
-// Reforço: deixa as fotos da loja abrirem o balão com imagem grande em qualquer dispositivo
-try{
-  const _abrirDetalheProdutoPublicoOriginal=window.abrirDetalheProdutoPublico;
-  window.abrirDetalheProdutoPublico=function(id){const p=(rvLojaPublicaProdutos||[]).find(x=>x.id===id); if(p){abrirImagemProdutoFlutuante(p); return;} if(typeof _abrirDetalheProdutoPublicoOriginal==='function')return _abrirDetalheProdutoPublicoOriginal(id)};
-}catch(e){console.warn(e)}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharImagemProdutoFlutuante()});
-</script>
+
 
 </body></html>`;
   const w=window.open('','_blank');w.document.write(html);w.document.close();w.focus();
