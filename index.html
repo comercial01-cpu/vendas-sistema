@@ -436,6 +436,10 @@
 body.img-prod-open{overflow:hidden!important}
 @media(max-width:900px){#imgProdOverlay.img-prod-overlay{padding:8px!important;align-items:center!important}#imgProdOverlay .img-prod-modal{width:98vw!important;max-height:96dvh!important;border-radius:18px!important;padding:12px!important}#imgProdOverlay .img-prod-grid{grid-template-columns:1fr!important;gap:12px!important}#imgProdOverlay .img-prod-main{max-height:54dvh!important;border-radius:14px!important}#imgProdOverlay .img-prod-close{position:sticky!important;top:0!important;margin-left:auto!important;display:block!important}.img-prod-info h2{font-size:20px!important}.img-prod-price{font-size:24px!important}}
 </style>
+
+<style id="rvProdutosFiltrosCss">
+.rv-prod-filtros{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:10px;margin:14px 0 6px;align-items:center}.rv-prod-filtros input,.rv-prod-filtros select{width:100%}.rv-prod-filtros .btn{white-space:nowrap}.rv-prod-count{display:inline-block;background:#f3f0ff;color:#5a4fa3;border-radius:999px;padding:5px 10px;font-weight:bold}.rv-empty-list{background:#fff7ed;border:1px dashed #f59e0b;border-radius:14px;padding:14px;color:#92400e;margin-top:10px}@media(max-width:1100px){.rv-prod-filtros{grid-template-columns:1fr 1fr 1fr}}@media(max-width:700px){.rv-prod-filtros{grid-template-columns:1fr}.rv-prod-filtros .btn{width:100%}}
+</style>
 </head>
 <body>
 <div id="login" class="login">
@@ -657,6 +661,16 @@ body.img-prod-open{overflow:hidden!important}
       </div>
       <div class="card" style="margin-top:14px">
         <h2>Lista de produtos da loja</h2>
+        <p class="muted">Pesquise por código, nome ou categoria e filtre rapidamente os produtos da sua loja.</p>
+        <div class="rv-prod-filtros">
+          <input id="rvBuscaProdutos" placeholder="Buscar produto, código ou categoria" oninput="renderProdutosRevendedor()">
+          <select id="rvFiltroCategoria" onchange="renderProdutosRevendedor()"><option value="">Todas as categorias</option></select>
+          <select id="rvFiltroOrigem" onchange="renderProdutosRevendedor()"><option value="">Todas as origens</option><option value="sofisticatto">Sofisticatto</option><option value="proprio">Produto próprio</option></select>
+          <select id="rvFiltroEstoque" onchange="renderProdutosRevendedor()"><option value="">Todos os estoques</option><option value="baixo">Somente estoque baixo</option><option value="zerado">Somente zerados</option></select>
+          <select id="rvOrdenarProdutos" onchange="renderProdutosRevendedor()"><option value="nome">Ordenar por nome</option><option value="codigo">Ordenar por código</option><option value="preco_asc">Menor preço</option><option value="preco_desc">Maior preço</option><option value="estoque_asc">Menor estoque</option></select>
+          <button class="btn light" type="button" onclick="limparFiltrosProdutosRevendedor()">Limpar filtros</button>
+        </div>
+        <div id="rvResumoFiltros" class="muted" style="margin-top:8px"></div>
         <div id="listaProdutosRevendedor"></div>
       </div>
     </section>
@@ -2746,7 +2760,51 @@ function renderLojaRevendedorInfo(){const box=document.getElementById('lojaReven
 async function carregarProdutosRevendedor(){if(usuario?.role!=='cliente')return;const c=clienteRevendedorAtual();if(!c){rvProdutos=[];return}const {data,error}=await sb.from('distribuidor_produtos').select('*').eq('cliente_id',c.id).eq('ativo',true).order('nome');if(error){console.warn(error);rvProdutos=[];return}rvProdutos=data||[]}
 async function carregarPedidosRevendedor(){if(usuario?.role!=='cliente')return;const c=clienteRevendedorAtual();if(!c){rvPedidos=[];return}const {data,error}=await sb.from('distribuidor_pedidos').select('*').eq('cliente_id',c.id).order('created_at',{ascending:false});if(error){console.warn(error);rvPedidos=[];return}rvPedidos=data||[]}
 function atualizarKpisRevendedor(){const low=rvProdutos.filter(p=>Number(p.estoque||0)<=Number(p.estoque_minimo||0)).length;if(document.getElementById('rvKPedidos'))rvKPedidos.textContent=rvPedidos.length;if(document.getElementById('rvKTotal'))rvKTotal.textContent=money(rvPedidos.reduce((s,p)=>s+Number(p.total||0),0));if(document.getElementById('rvKProdutos'))rvKProdutos.textContent=rvProdutos.length;if(document.getElementById('rvKEstoqueBaixo'))rvKEstoqueBaixo.textContent=low}
-function renderProdutosRevendedor(){const el=document.getElementById('listaProdutosRevendedor');if(!el)return;if(!rvCliente){el.innerHTML='<div class="catalog-empty">Usuário ainda não vinculado a um Distribuidor/Revendedor.</div>';return}el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Origem</th><th>Custo</th><th>Venda</th><th>Estoque editável</th><th>Mínimo</th><th>Ação</th></tr>${rvProdutos.map(p=>{const baixo=Number(p.estoque||0)<=Number(p.estoque_minimo||0);const capa=rvFotoCapaProduto(p);const totalFotos=(capa?1:0)+rvImagensArray(p.imagens).length;return `<tr class="${baixo?'rv-low':''}"><td>${capa?`<img class="rv-prod-thumb" src="${capa}" loading="lazy" style="cursor:pointer" onclick="abrirImagemProdutoRevendedor('${p.id}')" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo||''}</td><td>${p.nome||''}<br><span class="muted">${totalFotos} foto(s)</span></td><td>${p.origem||''}</td><td>${money(p.preco_custo)}</td><td><b>${money(p.preco_venda)}</b></td><td><div class="rv-stock-cell"><input class="rv-stock-input ${baixo?'baixo':''}" type="number" min="0" value="${Number(p.estoque||0)}" data-old="${Number(p.estoque||0)}" onchange="atualizarEstoqueRevendedor('${p.id}',this)" onkeydown="if(event.key==='Enter'){this.blur()}"><span class="rv-stock-save" id="rvStockMsg_${p.id}">${baixo?'⚠️ baixo':''}</span></div></td><td>${p.estoque_minimo||0}</td><td><button class="btn light" onclick="editarProdutoRevendedor('${p.id}')">Editar</button> <button class="btn" onclick="gerenciarFotosProdutoRevendedor('${p.id}')">Fotos</button> <button class="btn red" onclick="excluirProdutoRevendedor('${p.id}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
+function atualizarSelectCategoriasRevendedor(lista=rvProdutos){
+  const sel=document.getElementById('rvFiltroCategoria');
+  if(!sel)return;
+  const atual=sel.value;
+  const cats=[...new Set((lista||[]).map(p=>(p.categoria||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  sel.innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option value="${String(c).replace(/"/g,'&quot;')}">${c}</option>`).join('');
+  sel.value=cats.includes(atual)?atual:'';
+}
+function limparFiltrosProdutosRevendedor(){
+  ['rvBuscaProdutos','rvFiltroCategoria','rvFiltroOrigem','rvFiltroEstoque'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  const ord=document.getElementById('rvOrdenarProdutos');if(ord)ord.value='nome';
+  renderProdutosRevendedor();
+}
+function produtosRevendedorFiltrados(){
+  const termo=(document.getElementById('rvBuscaProdutos')?.value||'').toLowerCase().trim();
+  const categoria=(document.getElementById('rvFiltroCategoria')?.value||'').trim();
+  const origem=(document.getElementById('rvFiltroOrigem')?.value||'').trim();
+  const estoqueFiltro=(document.getElementById('rvFiltroEstoque')?.value||'').trim();
+  const ordenar=(document.getElementById('rvOrdenarProdutos')?.value||'nome').trim();
+  let lista=[...(rvProdutos||[])];
+  if(termo){
+    lista=lista.filter(p=>[p.codigo,p.nome,p.categoria,p.origem].some(v=>String(v||'').toLowerCase().includes(termo)));
+  }
+  if(categoria)lista=lista.filter(p=>(p.categoria||'')===categoria);
+  if(origem)lista=lista.filter(p=>(p.origem||'')===origem);
+  if(estoqueFiltro==='baixo')lista=lista.filter(p=>Number(p.estoque||0)<=Number(p.estoque_minimo||0));
+  if(estoqueFiltro==='zerado')lista=lista.filter(p=>Number(p.estoque||0)<=0);
+  lista.sort((a,b)=>{
+    if(ordenar==='codigo')return String(a.codigo||'').localeCompare(String(b.codigo||''),'pt-BR',{numeric:true});
+    if(ordenar==='preco_asc')return Number(a.preco_venda||0)-Number(b.preco_venda||0);
+    if(ordenar==='preco_desc')return Number(b.preco_venda||0)-Number(a.preco_venda||0);
+    if(ordenar==='estoque_asc')return Number(a.estoque||0)-Number(b.estoque||0);
+    return String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR',{numeric:true});
+  });
+  return lista;
+}
+function renderProdutosRevendedor(){
+  const el=document.getElementById('listaProdutosRevendedor');if(!el)return;
+  if(!rvCliente){el.innerHTML='<div class="catalog-empty">Usuário ainda não vinculado a um Distribuidor/Revendedor.</div>';return}
+  atualizarSelectCategoriasRevendedor(rvProdutos);
+  const lista=produtosRevendedorFiltrados();
+  const resumo=document.getElementById('rvResumoFiltros');
+  if(resumo)resumo.innerHTML=`<span class="rv-prod-count">${lista.length}</span> produto(s) encontrado(s) de ${rvProdutos.length} cadastrado(s).`;
+  if(!lista.length){el.innerHTML='<div class="rv-empty-list">Nenhum produto encontrado com esses filtros.</div>';return}
+  el.innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Foto</th><th>Código</th><th>Produto</th><th>Origem</th><th>Custo</th><th>Venda</th><th>Estoque editável</th><th>Mínimo</th><th>Ação</th></tr>${lista.map(p=>{const baixo=Number(p.estoque||0)<=Number(p.estoque_minimo||0);const capa=rvFotoCapaProduto(p);const totalFotos=(capa?1:0)+rvImagensArray(p.imagens).length;return `<tr class="${baixo?'rv-low':''}"><td>${capa?`<img class="rv-prod-thumb" src="${capa}" loading="lazy" style="cursor:pointer" onclick="abrirImagemProdutoRevendedor('${p.id}')" onerror="this.style.display='none'">`:'-'}</td><td>${p.codigo||''}</td><td>${p.nome||''}<br><span class="muted">${totalFotos} foto(s)</span></td><td>${p.origem||''}</td><td>${money(p.preco_custo)}</td><td><b>${money(p.preco_venda)}</b></td><td><div class="rv-stock-cell"><input class="rv-stock-input ${baixo?'baixo':''}" type="number" min="0" value="${Number(p.estoque||0)}" data-old="${Number(p.estoque||0)}" onchange="atualizarEstoqueRevendedor('${p.id}',this)" onkeydown="if(event.key==='Enter'){this.blur()}"><span class="rv-stock-save" id="rvStockMsg_${p.id}">${baixo?'⚠️ baixo':''}</span></div></td><td>${p.estoque_minimo||0}</td><td><button class="btn light" onclick="editarProdutoRevendedor('${p.id}')">Editar</button> <button class="btn" onclick="gerenciarFotosProdutoRevendedor('${p.id}')">Fotos</button> <button class="btn red" onclick="excluirProdutoRevendedor('${p.id}')">Excluir</button></td></tr>`}).join('')}</table></div>`}
 async function atualizarEstoqueRevendedor(id,input){
   const novo=Math.max(0,Number(input.value)||0);
   input.value=novo;
